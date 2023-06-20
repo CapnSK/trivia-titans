@@ -1,0 +1,9 @@
+.chat-bubble{
+    background-color: #405fb9;
+    border-color: aliceblue;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 2em;
+    right: 3em;
+    box-shadow: 0.3em 0.3em 0.4em rgba(0,0,0,0.6);
+}
