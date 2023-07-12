@@ -1,0 +1,19 @@
+{
+  "name": "in-game-exp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "change_match_status.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.363.0",
+    "@aws-sdk/lib-dynamodb": "^3.365.0",
+    "aws-sdk": "^2.1413.0",
+    "axios": "^1.4.0"
+  }
+}
