@@ -1,5 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({region:"us-east-1"});
 const docClient = DynamoDBDocumentClient.from(client);
@@ -41,9 +41,9 @@ export const handler = async (event) => {
           }
       }
     } catch(e){
-      console.log(e);
+      console.error(e);
       responseBody = JSON.stringify(e);
-      statusCode = 200;
+      statusCode = 500;
     }
   return {
     statusCode,
