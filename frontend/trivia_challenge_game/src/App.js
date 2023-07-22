@@ -1,4 +1,5 @@
 import "./App.css";
+import { AuthContextProvider } from "./contexts";
 import Chat from './pages/Chat';
 import Header from './pages/Header';
 import Main from './pages/Main';
@@ -9,16 +10,11 @@ function App() {
 	const [loggedInUserContext, loggedInUserContextSetter] = useState({});
 	return (
 		<div className="App">
-			<Header loggedInUserContext={loggedInUserContext}></Header>
-			<Main userContextSetter={loggedInUserContextSetter}></Main>
-			<Chat></Chat>
-			{/* {
-				loggedInUserInfo ? 
-				<>
-					
-				</> :
-				<Auth userContextSetter={loggedInUserInfoSetter}></Auth>
-			} */}
+			<AuthContextProvider>
+				<Header loggedInUserContext={loggedInUserContext}></Header>
+				<Main userContextSetter={loggedInUserContextSetter}></Main>
+				<Chat></Chat>
+			</AuthContextProvider>
 		</div>
 	);
 }
