@@ -1,2 +1,1 @@
-export * from './authcontext';
-export * from './provider';
+export * from './AuthContext';
