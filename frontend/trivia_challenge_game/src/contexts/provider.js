@@ -18,6 +18,7 @@ export const AuthContextProvider = ({children}) => {
             authContextSetter((prevAuthContext) => {
                 console.info("old auth context is ", prevAuthContext);
                 console.info("setting auth context as ", newAuthContext);
+                //To Do: storing to localstorage part goes here
                 return newAuthContext;
             });
         }

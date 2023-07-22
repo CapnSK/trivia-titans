@@ -8,8 +8,8 @@ function RouteGuard(){
     console.log("Routeguard has recieved auth context as ", email, username, authToken, refreshToken);
     return (
         <>
-            Routeguard
-            {username && authToken ? <Outlet/> : <Navigate to={{pathname: "/login"}} relative={false}/>}
+            Routeguard Component<br/>
+            {username && authToken ? <Outlet/> : <Navigate to={{pathname: "unauth/login"}} relative={false}/>}
         </>
     );
 }

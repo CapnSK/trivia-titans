@@ -12,13 +12,8 @@ function Auth(props) {
     return (
         <>
 
-            Auth
+            Auth Component<br/>
             <Outlet />
-            {/* <Route path="/login" element={<Login />} />
-                <Route path="/signup" element={<SignUp />} />
-                <Route path="/confirm-email" element={<ConfirmEmail />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} /> */}
 
         </>
     );

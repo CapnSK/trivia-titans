@@ -8,8 +8,9 @@ function Login() {
     const navigate = useNavigate();
     console.info("Inside Login component");
     useEffect(() => {
-        setTimeout(()=>{
+        setTimeout(() => {
             console.info("Waiting for getting auth token data from backend");
+            //To Do: Check if local storage has authContext otherwise make network call (before show login form)
             setAuthContext({
                 username: "John Doe",
                 email: "jdoe@jdoe.com",
@@ -17,15 +18,15 @@ function Login() {
                 refreshToken: "blah2"
             });
             console.info("got auth data now routing to home component");
-            navigate("/auth/home",{ relative: false });
+            navigate("/home", { relative: false });
         }, 5000);
-}, []);
+    }, []);
 
-return (
-    <>
-        Login
-    </>
-);
+    return (
+        <>
+            Login Component<br />
+        </>
+    );
 }
 
 export default Login;

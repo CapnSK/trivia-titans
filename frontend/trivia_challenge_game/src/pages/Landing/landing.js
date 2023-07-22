@@ -2,7 +2,7 @@ function Landing(){
     console.info("Inside Landing component");
     return (
         <>
-            Landing
+            Landing Component<br/>
         </>
     );
 }
