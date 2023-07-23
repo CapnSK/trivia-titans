@@ -25,6 +25,7 @@ function App() {
 		// 	}
 		// </div>
 
+		// <div className="App">
 		// <BrowserRouter>
 		// 		<Routes>
 		// 			<Route element={<CreateTeam />} path="/createTeam" />
@@ -35,6 +36,7 @@ function App() {
 		// 			/>
 		// 		</Routes>
 		// 	</BrowserRouter>
+		// <div className="App">
 
 		<div className="App">
 			{
