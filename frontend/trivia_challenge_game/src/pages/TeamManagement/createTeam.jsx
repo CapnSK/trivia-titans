@@ -6,33 +6,28 @@ import { Box, TextField, Grid, Paper, Button } from "@mui/material";
 const CreateTeam = () => {
 	const navigate = useNavigate();
 	const handleCreateTeam = () => {
-		var teamName;
+		var teamName = "enigma";
+		var teamId;
+		const json_data = {teamName: "enigma", adminUserName: "arpitkumar", adminEmail: "arpit@gmail.com"}
 
-		// // Generate Team name from chatGPT lambda function
-		// axios({
-		// 	// Endpoint to send files
-		// 	url: `${process.env.REACT_APP_APIGATEWAY_URL}/generate_name/`,
-		// 	method: "GET",
-		// })
-		// 	// Handle the response from backend here
-		// 	.then((res) => {
-		// 		console.log("res: ", res);
-		// 		teamName = res;
-		// 	});
-
-		teamName = "enigma";
+		console.log(`${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`)
 
 		axios({
 			// Endpoint to send files
 			url: `${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`,
 			method: "POST",
-			data: { teamName: teamName },
+			data: json_data,
 		})
 			// Handle the response from backend here
 			.then((res) => {
-				console.log("res: ", res);
-				if (res.status == 200) {
-					navigate("/inviteTeam");
+				console.log("res: ", res['data']);
+				
+				if (res['data'] == "team already exist") {
+					alert('Team already exist');
+				}
+				else {
+					teamId = res['data'];
+					navigate("/inviteTeam",  { state: { data: teamId } });
 				}
 			});
 	};

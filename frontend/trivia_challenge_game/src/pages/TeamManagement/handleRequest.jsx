@@ -5,8 +5,8 @@ const HandleRequest = () => {
 	console.log(teamId);
 	return (
 		<div>
-			<Button onClick={handleAccept}>Accept</Button>
-			<Button onClick={handleDeny}>Deny</Button>
+			{/* <Button onClick={handleAccept}>Accept</Button>
+			<Button onClick={handleDeny}>Deny</Button> */}
 		</div>
 	);
 };

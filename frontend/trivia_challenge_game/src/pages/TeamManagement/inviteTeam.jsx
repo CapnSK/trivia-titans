@@ -1,9 +1,20 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
+import { useLocation } from "react-router-dom";
 
 const InviteTeam = () => {
 	const [invitedEmails, setInvitedEmails] = useState([]);
+	// const { teamId } = props.location.state;
+
+	// Destructure the location prop
+	const props = useLocation()
+	console.log(props['state']['data'])
+
+	// Check if the location object exists and has the state property
+	// const teamId = location && location.state ? location.state.data : null;
+	
+	// console.log(teamId);
 
 	const handleSubmitForm = (event) => {
 		event.preventDefault();
@@ -16,6 +27,8 @@ const InviteTeam = () => {
 		 * @returns A JSON object with the email and password values.
 		 */
 		const data_json = {
+			id: props['state']['data'],
+			userName: "xyz",
 			email: data.get("email"),
 		};
 
@@ -34,7 +47,16 @@ const InviteTeam = () => {
 		})
 			// Handle the response from backend here
 			.then((res) => {
-				console.log("res: ", res);
+				console.log("res: ", res['data']);
+				if (res['data'] == "member exist") {
+					alert("Member already exist")
+				}
+				else if (res['data'] == "number exceed") {
+					alert("Maximum send invitation limit exceed (4 invitations only)")
+				}
+				else {
+
+				}
 			});
 	};
 
