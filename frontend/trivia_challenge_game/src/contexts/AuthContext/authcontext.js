@@ -3,8 +3,8 @@ import { createContext } from "react";
 export const AuthContext = createContext({
     username: undefined,
     email: undefined,
-    authToken: undefined,
-    refreshToken: undefined,
+    accessId: undefined,
+    tokenId: undefined,
     setAuthContext: () => {
         throw new Error("setAuthContext function must have a consumer implementation")
     }

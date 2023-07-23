@@ -1,17 +1,20 @@
-import "./App.css";
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
 import { AuthContextProvider } from "./contexts";
 import Chat from './pages/Chat';
 import Header from './pages/Header';
 import Main from './pages/Main';
 import { Routes, Route, BrowserRouter } from "react-router-dom";
 
+import Navbar from './pages/Navbar';
 import { useState } from "react";
 import CreateTeam from "./pages/TeamManagement/createTeam";
 import InviteTeam from "./pages/TeamManagement/inviteTeam";
 import HandleRequest from "./pages/TeamManagement/handleRequest";
 
+
+
 function App() {
-	const [loggedInUserContext, loggedInUserContextSetter] = useState({});
 	return (
 		// <div className="App">
 		// 	{
@@ -39,15 +42,15 @@ function App() {
 		// <div className="App">
 
 		<div className="App">
-			{
-				loggedInUserInfo ? 
-				<>
-					<Header></Header>
-					<Main></Main>
-					<Chat></Chat>
-				</> :
-				<Auth userContextSetter={loggedInUserInfoSetter}></Auth>
-			}
+			<AuthContextProvider>
+				<Navbar></Navbar>
+				<div className="auth-wrapper">
+          			<div className="auth-inner">
+				<Main ></Main>
+					</div>
+				</div>
+				<Chat></Chat>
+			</AuthContextProvider>
 		</div>
 		
 	);

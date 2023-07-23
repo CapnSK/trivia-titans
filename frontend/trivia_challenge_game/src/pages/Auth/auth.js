@@ -8,13 +8,9 @@ function Auth(props) {
     //     token: "<actual-token>",
     //     id: "<unique-id across platform>"
     // });
-    console.info("Inside Auth component");
     return (
         <>
-
-            Auth Component<br/>
             <Outlet />
-
         </>
     );
 }
