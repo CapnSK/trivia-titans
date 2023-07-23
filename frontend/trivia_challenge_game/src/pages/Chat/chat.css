@@ -2,8 +2,21 @@
     background-color: #405fb9;
     border-color: aliceblue;
     border-radius: 50%;
+    width: 4em;
+    height: 4em;
     position: fixed;
     bottom: 2em;
     right: 3em;
     box-shadow: 0.3em 0.3em 0.4em rgba(0,0,0,0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.chat-bubble:hover{
+    cursor: pointer;
+}
+
+.chat-bubble:active{
+    transform: translateY(5%);
 }
