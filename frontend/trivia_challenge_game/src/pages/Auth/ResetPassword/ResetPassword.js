@@ -34,6 +34,7 @@ const ResetPassword = () => {
         // You can display an error message or handle the error in another way
       }
     } catch (error) {
+      alert(error.response.data.message)
       console.log(error)
       // There was an error making the API call
       // You can display an error message or handle the error in another way

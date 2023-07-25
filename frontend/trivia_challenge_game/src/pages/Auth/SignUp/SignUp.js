@@ -22,7 +22,7 @@ function SignUp(){
       const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY + '/signup', JSON.stringify({"email": email,"username": username,"password": password }))
       const data = response.data
       if (data.authenticated) {
-        console.log('redirect')
+        // console.log('redirect')
         // User was successfully authenticated
         // You can redirect them to a protected route or update the UI
         alert('Sign up successful')
@@ -35,7 +35,8 @@ function SignUp(){
         // You can display an error message or handle the error in another way
       }
     } catch (error) {
-      console.log(error)
+      alert(error.response.data.message)
+      console.error(error)
       // There was an error making the API call
       // You can display an error message or handle the error in another way
     }
