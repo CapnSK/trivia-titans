@@ -16,21 +16,21 @@ def lambda_handler(event, context):
 
         x['id'] = str(uuid.uuid1())
         x['start_time'] = str(datetime.now())
-        response = {
+        response_json = {
             "result": "",
             "statusCode": 400
         }
 
         try:
             response = dynamo.put_item(Item=x)
-            response['result'] = "Successfully added the question."
-            response['statusCode'] = 201
+            response_json['result'] = "Successfully added the question."
+            response_json['statusCode'] = 201
 
         except Exception as e:
-            response['result'] = "Failed to save question. " + str(e)
-            response['statusCode'] = 400
+            response_json['result'] = "Failed to save question. " + str(e)
+            response_json['statusCode'] = 400
 
-        return response
+        return response_json
 
     response = ddb_create(event)
 
