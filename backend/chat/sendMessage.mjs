@@ -5,7 +5,7 @@ const sendMessage = async (client, ids, message) => {
                 await client.postToConnection({
                     "ConnectionId": id,
                     "Data": Buffer.from(JSON.stringify(message))
-                }).promise();
+                });
             } catch(e){
                 console.log("error trying to send message to id "+id, e);
             }

@@ -1,26 +1,26 @@
 import handleNewConnection from "./handleNewConnection.mjs";
 import closeConnection from "./closeConnection.mjs"
 import sendMessage from "./sendMessage.mjs"
-import AWS from "aws-sdk";
+import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 
 const WS_API_POST_URL = `https://orzh9gsny1.execute-api.us-east-1.amazonaws.com/dev`;
-const client = new AWS.ApiGatewayManagementApi({endpoint: WS_API_POST_URL});
+const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
 
 const names = {};
 
 const handler = async (event) => {
   const { connectionId, routeKey } = event.requestContext;
   let body = {};
-  try{
-    if(event.body){
+  try {
+    if (event.body) {
       body = JSON.parse(event.body);
     }
-  } catch(e){
-    console.log("Error parsing body",e);
+  } catch (e) {
+    console.log("Error parsing body", e);
   }
-  
-  
-  switch(routeKey){
+
+
+  switch (routeKey) {
     case "$connect":
       await handleNewConnection(event);
       break;
@@ -39,16 +39,16 @@ const handler = async (event) => {
       break;
     case "sendPrivate":
       await sendMessage(
-        client, 
-        [Object.keys(names).find(key => names[key] === body.to)].filter(id=>!!id), 
-        body.message
+        client,
+        [Object.keys(names).find(key => names[key] === body.to)].filter(id => !!id),
+        { userMessage: { [names[connectionId]]: body.message, messageType: "private" } }
       );
       break;
     case "sendPublic":
       await sendMessage(
-        client, 
-        Object.keys(names).filter((conId)=>conId !== connectionId), 
-        body.message
+        client,
+        Object.keys(names).filter((conId) => conId !== connectionId),
+        { userMessage: { [names[connectionId]]: body.message, messageType: "public" } }
       );
       break;
   }
