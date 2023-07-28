@@ -1,0 +1,81 @@
+{
+    "headers": {
+        "Accept-Encoding": "gzip, deflate, br",
+        "Accept-Language": "en-US,en;q=0.9",
+        "Cache-Control": "no-cache",
+        "Host": "ryblzhit4f.execute-api.us-east-1.amazonaws.com",
+        "Origin": "http://localhost:3000",
+        "Pragma": "no-cache",
+        "Sec-WebSocket-Extensions": "permessage-deflate; client_max_window_bits",
+        "Sec-WebSocket-Key": "3tl67KZFh+k5vdPyqHn+bg==",
+        "Sec-WebSocket-Version": "13",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+        "X-Amzn-Trace-Id": "Root=1-64c2d404-053c0651242a24837771f5d8",
+        "X-Forwarded-For": "156.57.122.229",
+        "X-Forwarded-Port": "443",
+        "X-Forwarded-Proto": "https"
+    },
+    "multiValueHeaders": {
+        "Accept-Encoding": [
+            "gzip, deflate, br"
+        ],
+        "Accept-Language": [
+            "en-US,en;q=0.9"
+        ],
+        "Cache-Control": [
+            "no-cache"
+        ],
+        "Host": [
+            "ryblzhit4f.execute-api.us-east-1.amazonaws.com"
+        ],
+        "Origin": [
+            "http://localhost:3000"
+        ],
+        "Pragma": [
+            "no-cache"
+        ],
+        "Sec-WebSocket-Extensions": [
+            "permessage-deflate; client_max_window_bits"
+        ],
+        "Sec-WebSocket-Key": [
+            "3tl67KZFh+k5vdPyqHn+bg=="
+        ],
+        "Sec-WebSocket-Version": [
+            "13"
+        ],
+        "User-Agent": [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
+        ],
+        "X-Amzn-Trace-Id": [
+            "Root=1-64c2d404-053c0651242a24837771f5d8"
+        ],
+        "X-Forwarded-For": [
+            "156.57.122.229"
+        ],
+        "X-Forwarded-Port": [
+            "443"
+        ],
+        "X-Forwarded-Proto": [
+            "https"
+        ]
+    },
+    "requestContext": {
+        "routeKey": "$connect",
+        "eventType": "CONNECT",
+        "extendedRequestId": "IvYQwEceIAMFdWw=",
+        "requestTime": "27/Jul/2023:20:31:00 +0000",
+        "messageDirection": "IN",
+        "stage": "dev",
+        "connectedAt": 1690489860587,
+        "requestTimeEpoch": 1690489860589,
+        "identity": {
+            "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36",
+            "sourceIp": "156.57.122.229"
+        },
+        "requestId": "IvYQwEceIAMFdWw=",
+        "domainName": "ryblzhit4f.execute-api.us-east-1.amazonaws.com",
+        "connectionId": "IvYQweR5IAMCEXw=",
+        "apiId": "ryblzhit4f"
+    },
+    "isBase64Encoded": false
+}

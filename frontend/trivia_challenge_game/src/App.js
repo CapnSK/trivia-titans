@@ -11,49 +11,57 @@ import { useState } from "react";
 import CreateTeam from "./pages/TeamManagement/createTeam";
 import InviteTeam from "./pages/TeamManagement/inviteTeam";
 import HandleRequest from "./pages/TeamManagement/handleRequest";
-
+import webSocketClient from './lib/sockets/websockets';
 
 
 function App() {
-	return (
-		// <div className="App">
-		// 	{
-		// 		loggedInUserInfo ? 
-		// 		<>
-		// 			<Header></Header>
-		// 			<Main></Main>
-		// 			<Chat></Chat>
-		// 		</> :
-		// 		<Auth userContextSetter={loggedInUserInfoSetter}></Auth>
-		// 	}
-		// </div>
+	// socket.on("connect", ()=>{
+	// 	console.log("connected with websocket api of backend");
+	// });
+	// socket.connect();
+	const URL = `${process.env.REACT_APP_WS_APIGATEWAY_URL}`;
+	console.log(URL);
+	try{
+		webSocketClient.create({
+			URL, 
+			onOpen: (c) => {
+				try{
+					console.log("connection opened", c);
+					webSocketClient.sendMessage({
+						action: "sendMessage",
+						data: "First web socket message sent"
+					});
+				} catch(e){
+					console.log(e);
+				}
+			},
+			onClose: (c) => console.log("connection closed", c) 
+		});
+	} catch(e){
+		console.log(e);
+	}
 
-		// <div className="App">
-		// <BrowserRouter>
-		// 		<Routes>
-		// 			<Route element={<CreateTeam />} path="/createTeam" />
-		// 			<Route element={<InviteTeam />} path="/inviteTeam" />
-		// 			<Route
-		// 				path="/invitation-request/:teamId"
-		// 				component={HandleRequest}
-		// 			/>
-		// 		</Routes>
-		// 	</BrowserRouter>
-		// <div className="App">
 
-		<div className="App">
-			<AuthContextProvider>
+
+// const wsObj = new WebSocket(URL);
+// wsObj.addEventListener("open", (ev) => {
+// 	console.log("connectedto ws api", ev);
+// });
+
+return (
+	<div className="App">
+		<AuthContextProvider>
 				<Navbar></Navbar>
 				<div className="auth-wrapper">
-          			<div className="auth-inner">
-				<Main ></Main>
+					<div className="auth-inner">
+						<Main ></Main>
 					</div>
 				</div>
 				<Chat></Chat>
 			</AuthContextProvider>
-		</div>
-		
-	);
+	</div>
+
+);
 }
 
 export default App;

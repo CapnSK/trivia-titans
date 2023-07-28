@@ -9,6 +9,7 @@ import ForgotPassword from "../Auth/ForgotPassword";
 import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
+import InGame from "../InGame/ingame";
 
 function Main() {
     return (
@@ -25,7 +26,9 @@ function Main() {
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
-                        <Route element={<Landing/>} path="/home"/>
+                        <Route element={<Landing/>} path="/home">
+                            <Route path="/home/in-game" element={<InGame/>}/>
+                        </Route>
                         <Route path="/" element={<Navigate to="/home" replace/>}/>
                     </Route>
                 </Routes>
