@@ -1,6 +1,6 @@
 import handleNewConnection from "./handleNewConnection.mjs";
 import closeConnection from "./closeConnection.mjs"
-import sendMessage from "./sendMessage.mjs"
+import {sendMessage, sendChatHistory} from "./sendMessage.mjs"
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 
 const WS_API_POST_URL = `https://orzh9gsny1.execute-api.us-east-1.amazonaws.com/dev`;
@@ -49,6 +49,14 @@ const handler = async (event) => {
         client,
         Object.keys(names).filter((conId) => conId !== connectionId),
         { userMessage: { [names[connectionId]]: body.message, messageType: "public" } }
+      );
+      break;
+    case "getChatHistory":
+      //To Do: implement a method to return chat history for a user
+      await sendChatHistory(
+        client,
+        names[connectionId],
+        connectionId
       );
       break;
   }
