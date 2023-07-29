@@ -17,6 +17,7 @@ const SecondFactorAuthentication = () => {
   const [answer1, setAnswer1] = useState(null);
   const [answer2, setAnswer2] = useState(null);
   const [answer3, setAnswer3] = useState(null);
+  const [randomQuestionText, setRandomQuestionText] = useState(null);
 
   const navigate = useNavigate();
 
@@ -44,14 +45,13 @@ const SecondFactorAuthentication = () => {
   }
 
   useEffect(() => {
-    try{
-      checkIf2ndFactorAuthenticationExists();
-      setLoading(false);
-    }
-    catch (error) {
-      alert(error.response.data.message)
-      navigate('/unauth/login')
-    }
+      try {
+        checkIf2ndFactorAuthenticationExists();
+        setLoading(false);
+      } catch (error) {
+        alert(error.response.data.message);
+        navigate('/unauth/login');
+      }
   }, []);
 
   const handleValidate2FAInputChange = (event) => {
@@ -125,50 +125,64 @@ const SecondFactorAuthentication = () => {
     }
   }
 
-  if (loading) return (<div>Loading...</div>);
+  useEffect(() => {
+    if (MfaExists) {
+      setRandomQuestionText(questions[questionId]);
+    }
+  }, [MfaExists, questions, questionId]);
 
-  if (MfaExists) {
-    const randomQuestionText = questions[questionId];
-    return (
-      <form onSubmit={validate2Fa}>
-        <h3>2FA Authentication</h3>
-        <div>
-          <label>{`${randomQuestionText}`}</label>
-          <input type="text" className='form-control' placeholder='your answer' name="answer" onChange={handleValidate2FAInputChange}/>
-          <br/>
-          <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
+
+  return (
+    loading ? 
+      <div className="auth-inner"> 
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <h3>2FA Authentication</h3>
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-      </form>
-    );
-  }
-
-  else if (!MfaExists) {
-    return (
-      <form onSubmit={setup2Fa}>
-        <h3>Setup 2FA Authentication</h3>
-        {questions && (
-          <div>
-            {Object.entries(questions).reverse().map(([questionId, questionText]) => (
-              <div key={questionId}>
-                <label>{`${questionId}: ${questionText}`}</label>
-                <input type="text" className='form-control' placeholder='your answer' name={questionId} onChange={handleSetup2FAInputChange}/>
-                <br/>          
+      </div>
+    :
+      MfaExists ?
+        <div className="auth-inner"> 
+          <form onSubmit={validate2Fa}>
+            <h3>2FA Authentication</h3>
+            <div>
+              <label>{`${randomQuestionText}`}</label>
+              <input type="text" className='form-control' placeholder='your answer' name="answer" onChange={handleValidate2FAInputChange}/>
+              <br/>
+              <div className="d-grid">
+                <button type="submit" className="btn btn-primary">
+                  Submit
+                </button>
               </div>
-            ))}
-            <div className="d-grid">
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
             </div>
-          </div>
-        )}
-      </form>
-    );
-  };
+          </form>
+        </div>
+      :
+        <div className="auth-inner">
+          <form onSubmit={setup2Fa}>
+            <h3>Setup 2FA Authentication</h3>
+            {questions && (
+              <div>
+                {Object.entries(questions).reverse().map(([questionId, questionText]) => (
+                  <div key={questionId}>
+                    <label>{`${questionId}: ${questionText}`}</label>
+                    <input type="text" className='form-control' placeholder='your answer' name={questionId} onChange={handleSetup2FAInputChange}/>
+                    <br/>          
+                  </div>
+                ))}
+                <div className="d-grid">
+                  <button type="submit" className="btn btn-primary">
+                    Submit
+                  </button>
+                </div>
+              </div>
+            )}
+          </form>
+        </div>
+  );
+
 }
 
 export default SecondFactorAuthentication;

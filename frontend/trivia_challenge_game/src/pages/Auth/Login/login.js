@@ -24,6 +24,7 @@ const Login = () => {
   window.addEventListener('load', async () => {
     // Check if the user is already logged in
     // If they are, redirect them to the home page
+    setLoading(true)
     try{
       const user = JSON.parse(localStorage.getItem('user'))
       // Check if user obj has 4 keys and they are not null or empty
@@ -48,7 +49,7 @@ const Login = () => {
       // alert(error.response.data.message)
       console.error(error)
     }
-    setLoading(true)
+    setLoading(false)
     // Check if the 'code' parameter is present in the URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('access_token')) {
@@ -104,75 +105,86 @@ const Login = () => {
     }
   }
 
-  if (loading) {
-    return (
-      <form onSubmit={handleSubmit}>
-        <h3>Login</h3>
-        <div className="mb-3">
-          <label>Username or email</label>
-          <input
-            type="text"
-            name="email"
-            className="form-control"
-            placeholder="Enter email"
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="mb-3">
-          <label>Password</label>
-          <input
-            type="password"
-            name="password"
-            className="form-control"
-            placeholder="Enter password"
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="mb-3">
-          <div className="custom-control custom-checkbox">
-            <input
-              type="checkbox"
-              className="custom-control-input"
-              id="customCheck1"
-              onChange={handleInputChange}
-            />
-            <label className="custom-control-label" htmlFor="customCheck1">
-              &nbsp; Remember me
-            </label>
-            <p className="forgot-password text-right">
-              <a href="/unauth/forgot-password">Forgot password?</a>
-            </p>
+
+  return (
+    loading ?
+      <div className="auth-inner">      
+        <div className="d-flex justify-content-center">
+          <div className="spinner-border" role="status">
+            <span className="visually-hidden">Loading...</span>
           </div>
         </div>
-        <div className="d-grid">
-          <button type="submit" className="btn btn-primary">
-            Submit
+      </div>
+
+    :
+      <div className="auth-inner"> 
+        <form onSubmit={handleSubmit}>
+          <h3>Login</h3>
+          <div className="mb-3">
+            <label>Username or email</label>
+            <input
+              type="text"
+              name="email"
+              className="form-control"
+              placeholder="Enter email"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-3">
+            <label>Password</label>
+            <input
+              type="password"
+              name="password"
+              className="form-control"
+              placeholder="Enter password"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="mb-3">
+            <div className="custom-control custom-checkbox">
+              <input
+                type="checkbox"
+                className="custom-control-input"
+                id="customCheck1"
+                onChange={handleInputChange}
+              />
+              <label className="custom-control-label" htmlFor="customCheck1">
+                &nbsp; Remember me
+              </label>
+              <p className="forgot-password text-right">
+                <a href="/unauth/forgot-password">Forgot password?</a>
+              </p>
+            </div>
+          </div>
+          <div className="d-grid">
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </div>
+          <div className="social-login">
+            <br></br>
+          <p>or login with:</p>
+          <button type="button" className="btn btn-link btn-floating mx-1">
+            <a href={SOCIAL_SIGN_IN_URL}>
+              {/* <i className="fab fa-facebook-f" style={{ color: '#3b5998' }}></i> */}
+              <FontAwesomeIcon icon={['fab', 'fa-facebook-f']} style={{ color: '#3b5998' }}/>
+            </a>
           </button>
-        </div>
-        <div className="social-login">
-          <br></br>
-        <p>or login with:</p>
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <a href={SOCIAL_SIGN_IN_URL}>
-            {/* <i className="fab fa-facebook-f" style={{ color: '#3b5998' }}></i> */}
-            <FontAwesomeIcon icon={['fab', 'fa-facebook-f']} style={{ color: '#3b5998' }}/>
-          </a>
-        </button>
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <a href={SOCIAL_SIGN_IN_URL}>
-            {/* <i className="fab fa-google" style={{ color: '#db4437' }}></i> */}
-            <FontAwesomeIcon icon={['fab', 'google']} style={{ color: '#db4437' }}/>
-          </a>
-        </button>
-        <button type="button" className="btn btn-link btn-floating mx-1">
-          <a href={SOCIAL_SIGN_IN_URL}>
-            {/* <i className="fab fa-amazon" style={{ color: '#ff9900' }}></i> */}
-            <FontAwesomeIcon icon={['fab', 'amazon'] }  style={{ color: '#ff9900' }}/>
-          </a>
-        </button>
-        </div>
-      </form>
-    )
-  }
+          <button type="button" className="btn btn-link btn-floating mx-1">
+            <a href={SOCIAL_SIGN_IN_URL}>
+              {/* <i className="fab fa-google" style={{ color: '#db4437' }}></i> */}
+              <FontAwesomeIcon icon={['fab', 'google']} style={{ color: '#db4437' }}/>
+            </a>
+          </button>
+          <button type="button" className="btn btn-link btn-floating mx-1">
+            <a href={SOCIAL_SIGN_IN_URL}>
+              {/* <i className="fab fa-amazon" style={{ color: '#ff9900' }}></i> */}
+              <FontAwesomeIcon icon={['fab', 'amazon'] }  style={{ color: '#ff9900' }}/>
+            </a>
+          </button>
+          </div>
+       </form>
+      </div>
+  )
 }
 export default Login

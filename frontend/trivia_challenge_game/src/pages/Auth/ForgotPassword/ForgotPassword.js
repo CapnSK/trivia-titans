@@ -41,24 +41,26 @@ const ForgotPassword = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Forgot Password?</h3>
-      <div className="mb-3">
-        <label>Enter your username: </label>
-        <input
-          type="text"
-          className="form-control"
-          name="username"
-          placeholder="Enter your username"
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
-      </div>
-    </form>
+    <div className="auth-inner"> 
+      <form onSubmit={handleSubmit}>
+        <h3>Forgot Password?</h3>
+        <div className="mb-3">
+          <label>Enter your username: </label>
+          <input
+            type="text"
+            className="form-control"
+            name="username"
+            placeholder="Enter your username"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">
+            Submit
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }
 

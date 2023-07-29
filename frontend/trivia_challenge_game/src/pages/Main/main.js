@@ -8,6 +8,7 @@ import ConfirmEmail from "../Auth/ConfirmEmail";
 import ForgotPassword from "../Auth/ForgotPassword";
 import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
+import Leaderboard from "../Leaderboard";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
 
 function Main() {
@@ -26,7 +27,8 @@ function Main() {
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
                         <Route element={<Landing/>} path="/home"/>
-                        <Route path="/" element={<Navigate to="/home" replace/>}/>
+                        <Route path="/" element={<Navigate to="/leaderboard" replace/>}/>
+                        <Route element={<Leaderboard/>} path="/leaderboard"/>
                     </Route>
                 </Routes>
             </Router>

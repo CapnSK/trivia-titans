@@ -12,9 +12,8 @@
             answers:{
                 questionId: "1", //question being referred
                 answerOptionId: "2" // answer given by the team
-            },
-        }, //does not store entire team instance, but just a team_id
-        // leaderboard: Array<leaderboard_item>
+            },  
+        }, 
     }
 ]
 

@@ -45,9 +45,7 @@ function App() {
 			<AuthContextProvider>
 				<Navbar></Navbar>
 				<div className="auth-wrapper">
-          			<div className="auth-inner">
 				<Main ></Main>
-					</div>
 				</div>
 				<Chat></Chat>
 			</AuthContextProvider>

@@ -40,24 +40,26 @@ const ConfirmEmail = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Verify your email</h3>
-      <div className="mb-3">
-        <label>Enter the code sent to your email at {email}</label>
-        <input
-          type="text"
-          className="form-control"
-          name="code"
-          placeholder="Enter the code sent to your email..."
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Verify
-        </button>
-      </div>
-    </form>
+    <div className="auth-inner"> 
+      <form onSubmit={handleSubmit}>
+        <h3>Verify your email</h3>
+        <div className="mb-3">
+          <label>Enter the code sent to your email at {email}</label>
+          <input
+            type="text"
+            className="form-control"
+            name="code"
+            placeholder="Enter the code sent to your email..."
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">
+            Verify
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }
 

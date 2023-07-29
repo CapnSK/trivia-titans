@@ -43,47 +43,49 @@ function SignUp(){
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Sign Up</h3>
-      <div className="mb-3">
-        <label>Email</label>
-        <input
-          type="email"
-          name="email"
-          className="form-control"
-          placeholder="john@gmail.com"
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="mb-3">
-        <label>Username</label>
-        <input
-          type="text"
-          className="form-control"
-          name="username"
-          placeholder="Username"
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="mb-3">
-        <label>Password</label>
-        <input
-          type="password"
-          name="password"
-          className="form-control"
-          placeholder="Enter password"
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Sign Up
-        </button>
-      </div>
-      <p className="forgot-password text-right">
-        Already registered?<a href="login">Login here!</a>
-      </p>
-    </form>
+    <div className="auth-inner"> 
+      <form onSubmit={handleSubmit}>
+        <h3>Sign Up</h3>
+        <div className="mb-3">
+          <label>Email</label>
+          <input
+            type="email"
+            name="email"
+            className="form-control"
+            placeholder="john@gmail.com"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Username</label>
+          <input
+            type="text"
+            className="form-control"
+            name="username"
+            placeholder="Username"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Password</label>
+          <input
+            type="password"
+            name="password"
+            className="form-control"
+            placeholder="Enter password"
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">
+            Sign Up
+          </button>
+        </div>
+        <p className="forgot-password text-right">
+          Already registered?<a href="login">Login here!</a>
+        </p>
+      </form>
+    </div>
   )
 }
 
