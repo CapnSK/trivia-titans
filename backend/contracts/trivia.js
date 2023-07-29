@@ -13,7 +13,8 @@
         }, //category, subcategory, difficulty - mandatory tags
         time_limit: 30,
         leaderboard: ['1'],
-        start_time: Date.now(), //timestamp of the start time -> can convert it to human readable date format later
+        start_time: Date.now(),//timestamp of the start time -> can convert it to human readable date format later
+        maxPoints: 15
     },
     {
         id: "trivia 2",
@@ -30,6 +31,8 @@
         time_limit: 30,
         leaderboard: ['1'],
         start_time: Date.now(), //timestamp of the start time -> can convert it to human readable date format later
+        maxPoints: 15
+
     },
     {
         id: "trivia 3",
@@ -46,5 +49,7 @@
         time_limit: 30,
         leaderboard: ['1'],
         start_time: Date.now(), //timestamp of the start time -> can convert it to human readable date format later
+        maxPoints: 15
+
     }
 ]

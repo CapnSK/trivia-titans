@@ -1,15 +1,17 @@
-import { useContext } from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { AuthContext } from "../../contexts";
+import { localStorageUtil } from "../../util";
 
 function RouteGuard(){
-    console.info("Inside Routeguard component");
-    const { email, username, authToken, refreshToken } = useContext(AuthContext);
-    console.log("Routeguard has recieved auth context as ", email, username, authToken, refreshToken);
+    // const { email, username, accessId, tokenId} = useContext(AuthContext);
+    if (localStorageUtil.getItem('user') === null) {
+        return <Navigate to={{pathname: "unauth/login"}} relative={false}/>
+    }
+    const username = localStorageUtil.getItem('user')['username'];
+    const accessId = localStorageUtil.getItem('user')['accessId'];
+    // console.log("Routeguard has recieved auth context as ", email, username, accessId, tokenId);
     return (
         <>
-            Routeguard Component<br/>
-            {username && authToken ? <Outlet/> : <Navigate to={{pathname: "unauth/login"}} relative={false}/>}
+            {username && accessId ? <Outlet/> : <Navigate to={{pathname: "unauth/login"}} relative={false}/>}
         </>
     );
 }

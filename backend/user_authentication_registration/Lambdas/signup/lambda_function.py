@@ -52,12 +52,22 @@ def lambda_handler(event, context):
     except client.exceptions.UsernameExistsException as e:
                     # The user was authenticated successfully
             return {
-                        "statusCode": HTTPStatus.INTERNAL_SERVER_ERROR,
+                        "statusCode": HTTPStatus.BAD_REQUEST,
                         "headers": {
                             "Content-Type": "application/json",
                             'Access-Control-Allow-Origin': '*'
                         },
                         "body": json.dumps({"authenticated": False,"message":str(e).split(":")[1]})
+                    }
+    except client.exceptions.InvalidPasswordException as e:
+                    # The user was authenticated successfully
+            return {
+                        "statusCode": HTTPStatus.BAD_REQUEST,
+                        "headers": {
+                            "Content-Type": "application/json",
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        "body": json.dumps({"authenticated": False,"message":"Password must have uppercase, lowercase, number and special character"})
                     }
     except Exception as e:
                     # The user was authenticated successfully

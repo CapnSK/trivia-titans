@@ -1,7 +1,3 @@
-# There are 2 firestore documents. 
-# Cognito-2nd_Factor_Authentication-Questions: has only one document which has 3 predefined questions, with field names Question 1, Question 2, and Question 3.
-# Cognito-2nd_Factor_Authentication-Users: has documents named with user's username. If a document exists, it means that the user has set up 2nd factor authentication.
-
 import json
 import firebase_admin
 from firebase_admin import firestore
@@ -16,17 +12,32 @@ db = firestore.client()
 
 @functions_framework.http
 def checkIf2ndFactorAuthenticationExists(request):
+    # Set CORS headers for the preflight request
+    if request.method == 'OPTIONS':
+        headers = {
+            'Access-Control-Allow-Origin': '*',
+            'Access-Control-Allow-Methods': 'POST',
+            'Access-Control-Allow-Headers': 'Content-Type',
+            'Access-Control-Max-Age': '3600'
+        }
+        return ('', 204, headers)
+
+    # Set CORS headers for the main request
+    headers = {
+        'Access-Control-Allow-Origin': '*'
+    }
+
     # Get the request body
     request_json = request.get_json(silent=True)
 
     if not request_json or 'username' not in request_json:
-        return json.dumps({'status': HTTPStatus.BAD_REQUEST, 'message': 'No username provided. Invalid Arugments!'})
+        return (json.dumps({'status': HTTPStatus.BAD_REQUEST, 'message': 'No username provided. Invalid Arguments!'}), 400, headers)
 
     # Get the username from the request body
     username = request_json['username']
 
     if username == '':
-        return json.dumps({'status': HTTPStatus.BAD_REQUEST, 'message': 'Empty username provided. Invalid Arugment Format!'})
+        return (json.dumps({'status': HTTPStatus.BAD_REQUEST, 'message': 'Empty username provided. Invalid Argument Format!'}), 400, headers)
 
     # Get the document from the firestore database
     doc_ref = db.collection(u'Cognito-2nd_Factor_Authentication-Users').document(username)
@@ -34,8 +45,7 @@ def checkIf2ndFactorAuthenticationExists(request):
 
     # If the document exists, return true
     if doc.exists:
-        return json.dumps({'status': HTTPStatus.OK, 'message': '2nd Factor Authentication Exists!'})
+        return (json.dumps({'status': HTTPStatus.OK, 'message': '2nd Factor Authentication Exists!'}), 200, headers)
     # If the document does not exist, return false
     else:
-        return json.dumps({'status': HTTPStatus.UNAUTHORIZED, 'message': '2nd Factor Authentication Does Not Exist!'})
-    
+        return (json.dumps({'status': HTTPStatus.UNAUTHORIZED, 'message': '2nd Factor Authentication Does Not Exist!'}), 401, headers)
