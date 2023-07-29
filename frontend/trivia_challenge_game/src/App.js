@@ -25,30 +25,31 @@ function App() {
 		// 	}
 		// </div>
 
-		// <div className="App">
-		// <BrowserRouter>
-		// 		<Routes>
-		// 			<Route element={<CreateTeam />} path="/createTeam" />
-		// 			<Route element={<InviteTeam />} path="/inviteTeam" />
-		// 			<Route
-		// 				path="/invitation-request/:teamId"
-		// 				component={HandleRequest}
-		// 			/>
-		// 		</Routes>
-		// 	</BrowserRouter>
-		// <div className="App">
-
 		<div className="App">
-			{
-				loggedInUserInfo ? 
-				<>
-					<Header></Header>
-					<Main></Main>
-					<Chat></Chat>
-				</> :
-				<Auth userContextSetter={loggedInUserInfoSetter}></Auth>
-			}
+			<BrowserRouter>
+				<Routes>
+					<Route element={<CreateTeam />} path="/createTeam" />
+					<Route element={<InviteTeam />} path="/inviteTeam/:teamId" />
+					<Route
+						path="/invitation-request/:teamId"
+						component={HandleRequest}
+					/>
+				</Routes>
+			</BrowserRouter>
 		</div>
+
+		
+		//  <div className="App">
+		// 	{
+		// 		loggedInUserInfo ? 
+		// 		<>
+		// 			<Header></Header>
+		// 			<Main></Main>
+		// 			<Chat></Chat>
+		// 		</> :
+		// 		<Auth userContextSetter={loggedInUserInfoSetter}></Auth>
+		// 	}
+		// </div>
 		
 	);
 }

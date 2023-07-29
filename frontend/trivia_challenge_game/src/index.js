@@ -4,10 +4,19 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+Kommunicate.init("10c6cffd89b4a33a4f8ad6915534f139a", {
+  automaticChatOpenOnNavigation: true,
+  popupWidget: true
+});
+
 root.render(
   <React.StrictMode>
     <App />
+    
   </React.StrictMode>
 );
 

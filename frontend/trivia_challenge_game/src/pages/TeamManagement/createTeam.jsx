@@ -27,7 +27,8 @@ const CreateTeam = () => {
 				}
 				else {
 					teamId = res['data'];
-					navigate("/inviteTeam",  { state: { data: teamId } });
+					// navigate("/inviteTeam",  { state: { data: teamId } });
+					navigate(`/inviteTeam/${teamId}`)
 				}
 			});
 	};
