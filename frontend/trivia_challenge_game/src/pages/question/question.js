@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar } from '@mui/material';
 import { Box } from '@mui/system';
+import Chip from '@mui/material/Chip'; // Add the Chip import
+import DeleteIcon from '@mui/icons-material/Delete';
 
 
 const QuestionForm = () => {
@@ -28,6 +30,8 @@ const QuestionForm = () => {
   const [categories, setCategories] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [difficulty, setDifficulty] = useState([]);
+  const [categoryResponse, setCategoryResponse] = useState([]);
+
 
   useEffect(() => {
     // Fetch categories from the API here
@@ -48,22 +52,61 @@ const QuestionForm = () => {
     setSubmissionStatus(null);
   };
 
-  const fetchCategories = () => {
-    // Simulating API call with a delay
-    setTimeout(() => {
-      const response = { "category": ["Science", "Technology", "Fiction", "Sports", "Food"] };
-      setCategories(response.category);
-    }, 1000); // Adjust the delay as needed
+  const getSubcategoriesByCategory = (categoryName) => {
+    console.log(categoryName);
+    console.log(categoryResponse);
+    const category = categoryResponse.find(item => item.name === categoryName);
+    console.log(category);
+    return category ? category.subcategory : [];
+  }
+
+  const handleAnswerChange = (event) => {
+    const selectedAnswers = Array.from(new Set(event.target.value));
+    console.log(selectedAnswers);
+    setFormData({ ...formData, answers: selectedAnswers });
   };
 
+  const handleRemoveAnswer = (answer) => {
+    const filteredAnswers = formData.answers.filter((ans) => ans !== answer);
+    setFormData({ ...formData, answers: filteredAnswers });
+  };
+
+  const getOptionLabel = (optionId) => {
+    const option = formData.options.find((opt) => opt.id === optionId);
+    return option ? option.label : '';
+  };
+
+  const fetchCategories = () => {
+    const apiUrl = 'https://afr8i80cnj.execute-api.us-east-1.amazonaws.com/questions/category';
+    const headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
+  
+    fetch(apiUrl, {
+      headers: headers
+    })
+      .then(response => response.json())
+      .then(data => {
+        // Assuming the response has the same structure as in the provided JSON data
+        console.log(data)
+        setCategories(data);
+        setCategoryResponse(data);
+        console.log(categoryResponse);
+      })
+      .catch(error => {
+        console.error('Error fetching categories:', error);
+      });
+  };
+  
+
   const fetchSubcategories = (selectedCategory) => {
-    // Simulating API call with a delay
     setTimeout(() => {
-      // Fetch subcategories based on the selected category from the API here
-      // For demonstration, let's populate subcategories randomly
-      const randomSubcategories = Array.from({ length: 5 }, (_, index) => `Subcategory ${index + 1}`);
-      setSubcategories(randomSubcategories);
-    }, 500); // Adjust the delay as needed
+      console.log(selectedCategory);
+      const subcategories = getSubcategoriesByCategory(selectedCategory);
+      console.log(subcategories);
+      setSubcategories(subcategories);
+    }, 500);
   };
 
   const handleInputChange = (event) => {
@@ -89,14 +132,6 @@ const QuestionForm = () => {
     });
   };
 
-  const handleAnswerChange = (event) => {
-    const { value } = event.target;
-    setFormData({
-      ...formData,
-      answers: [value],
-    });
-  };
-
   const handleCategoryChange = (event) => {
     const { value } = event.target;
     setFormData((prevFormData) => ({
@@ -109,6 +144,18 @@ const QuestionForm = () => {
     fetchSubcategories(value);
   };
 
+  const handleHintsChange = (event) => {
+    const { value } = event.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      tags: {
+        ...prevFormData.tags,
+        hints: value,
+      },
+    }));
+    fetchSubcategories(value);
+  }
+
   const handleSubcategoryChange = (event) => {
     const { value } = event.target;
     setFormData((prevFormData) => ({
@@ -119,6 +166,7 @@ const QuestionForm = () => {
       },
     }));
   };
+
   const handleDifficultyChange = (event) => {
     const { value } = event.target;
     setFormData((prevFormData) => ({
@@ -132,17 +180,14 @@ const QuestionForm = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Do something with the formData, e.g., save it to a database
     console.log(formData);
 
-    // Make the API request
     const url = 'https://kb3tz7tz83.execute-api.us-east-1.amazonaws.com/dev/question';
     const requestBody = {
       label: formData.label,
       options: formData.options,
       answers: formData.answers,
       tags: formData.tags,
-      hints: formData.hints,
       points: formData.points,
       time_limit: formData.time_limit,
     };
@@ -156,7 +201,7 @@ const QuestionForm = () => {
     axios.post(url, requestBody, config)
       .then((response) => {
         console.log('API Response:', response.data);
-        // Clear the form after successful submission
+        
         setFormData(initialFormData);
         setSubmissionStatus('success');
       })
@@ -172,7 +217,7 @@ return (
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
         <br />
-      {/* Display the response message */}
+      
       {submissionStatus === 'success' && (
         <Typography variant="h8" color="success">
             The new question was created Successfully
@@ -212,25 +257,36 @@ return (
           </div>
         ))}
         <br />
-        <FormControl fullWidth sx={{ my: 1 }}>
-          <InputLabel>Correct Answer</InputLabel>
-          <Select
-            name="answers"
-            value={formData.answers[0]}
-            onChange={handleAnswerChange}
-            required
-            label="Correct Answer"
-          >
-            <MenuItem value="" disabled>
-              Select an option
-            </MenuItem>
-            {formData.options.map((option) => (
-              <MenuItem key={option.id} value={option.id}>
-                {option.label}
-              </MenuItem>
+    <FormControl fullWidth sx={{ my: 1 }}>
+      <InputLabel>Correct Answer</InputLabel>
+      <Select
+        name="answers"
+        multiple
+        value={formData.answers}
+        onChange={handleAnswerChange}
+        required
+        label="Correct Answer"
+        renderValue={(selected) => (
+          <div>
+            {selected.map((value) => (
+              <Chip
+                key={value}
+                label={getOptionLabel(value)}
+                onDelete={() => handleRemoveAnswer(value)}
+                deleteIcon={<DeleteIcon />}
+              />
             ))}
-          </Select>
-        </FormControl>
+          </div>
+        )}
+      >
+        {formData.options.map((option) => (
+          <MenuItem key={option.label} value={option.label}>
+            {getOptionLabel(option.id)}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+
         <br />
         <FormControl fullWidth sx={{ my: 1 }}>
           <InputLabel>Category</InputLabel>
@@ -245,8 +301,8 @@ return (
               Select a category
             </MenuItem>
             {categories.map((category) => (
-              <MenuItem key={category} value={category}>
-                {category}
+              <MenuItem key={category.name} value={category.name}>
+                {category.name}
               </MenuItem>
             ))}
           </Select>
@@ -297,8 +353,8 @@ return (
             label="Hints"
             variant="outlined"
             name="hints"
-            value={formData.hints}
-            onChange={handleInputChange}
+            value={formData.tags.hints}
+            onChange={handleHintsChange}
           />
         </FormControl>
         <br />
@@ -330,19 +386,6 @@ return (
           Create Question
         </Button>
       </form>
-      {/* Snackbar for displaying the response message
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-        open={submissionStatus !== null}
-        autoHideDuration={3000} // Adjust the duration as needed (in milliseconds)
-        onClose={handleCloseSnackbar}
-      >
-        <Typography variant="h6" color={submissionStatus === 'success' ? 'success' : 'error'}>
-          {submissionStatus === 'success'
-            ? 'The new question was created Successfully'
-            : 'An error occurred while creating the question'}
-        </Typography>
-      </Snackbar> */}
     </Box>
   );
 };
