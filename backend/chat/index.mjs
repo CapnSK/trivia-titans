@@ -19,17 +19,23 @@ const handler = async (event) => {
     console.log("Error parsing body", e);
   }
 
-  const teamId = body.teamId;
-  if(!data_store[teamId]){
+  let teamId = body.teamId;
+  if(teamId && !data_store[teamId]){
     data_store[teamId]={};
   }
 
+  console.log("team id is "+teamId+" connection id is "+connectionId+" user id if present is "+(data_store[teamId] && data_store[teamId][connectionId] || "not present"));
+  console.log("for routeKey "+routeKey+" data store at the time of entering is ", data_store);
 
   switch (routeKey) {
     case "$connect":
       await handleNewConnection(event);
       break;
     case "$disconnect":
+      teamId = Object.keys(data_store).filter(key=>key).find(tId=>{
+        return Object.keys(data_store[tId]).findIndex(conId=> conId === connectionId) !== -1 ? true : false;
+      });
+      console.log("teamId for disconnect route is ", teamId);
       await sendMessage(client, Object.keys(data_store[teamId]), { systemMessage: `${data_store[teamId][connectionId]} has left` }, data_store[teamId]);
       await closeConnection(event);
       delete data_store[teamId][connectionId];
