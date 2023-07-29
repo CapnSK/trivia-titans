@@ -25,30 +25,30 @@ const handler = async (event) => {
       await handleNewConnection(event);
       break;
     case "$disconnect":
-      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has left` });
+      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has left` }, names);
       await closeConnection(event);
       delete names[connectionId];
-      await sendMessage(client, Object.keys(names), { members: Object.values(names) });
+      await sendMessage(client, Object.keys(names), { members: Object.values(names) }, names);
       break;
     case "$default":
       break;
     case "setName":
       names[connectionId] = body.name;
-      await sendMessage(client, Object.keys(names), { members: Object.values(names) });
-      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has joined the chat` });
+      await sendMessage(client, Object.keys(names), { members: Object.values(names) }, names);
+      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has joined the chat` }, names);
       break;
     case "sendPrivate":
       await sendMessage(
         client,
         [Object.keys(names).find(key => names[key] === body.to)].filter(id => !!id),
-        { userMessage: { [names[connectionId]]: body.message, messageType: "private" } }
+        { userMessage: { [names[connectionId]]: body.message, messageType: "private" } }, names
       );
       break;
     case "sendPublic":
       await sendMessage(
         client,
         Object.keys(names).filter((conId) => conId !== connectionId),
-        { userMessage: { [names[connectionId]]: body.message, messageType: "public" } }
+        { userMessage: { [names[connectionId]]: body.message, messageType: "public" } }, names
       );
       break;
     case "getChatHistory":
