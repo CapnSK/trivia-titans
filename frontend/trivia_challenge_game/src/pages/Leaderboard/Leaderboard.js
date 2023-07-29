@@ -1,7 +1,4 @@
-import {React, useState, useEffect} from 'react';
-import { useNavigate } from 'react-router-dom';
-// import { axiosJSON } from "../../../lib/axios";
-
+import {React, useState} from 'react';
 
 function Leaderboard(){
 
@@ -22,6 +19,7 @@ function Leaderboard(){
             <span style={{textAlign:"center"}}>See how you stack up against other teams and users!</span>
             <br></br>
             <iframe
+                title='Leaderboard'
                 width="100%"
                 height="500"
                 src={src}

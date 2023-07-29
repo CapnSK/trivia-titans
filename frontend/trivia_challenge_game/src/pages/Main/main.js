@@ -9,7 +9,7 @@ import ForgotPassword from "../Auth/ForgotPassword";
 import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import Leaderboard from "../Leaderboard";
-import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 
 function Main() {
     return (

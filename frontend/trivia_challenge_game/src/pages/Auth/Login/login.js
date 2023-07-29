@@ -8,7 +8,7 @@ const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEW
 const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL; 
 const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=35iqreqj2np431biljuh0pro63&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://frontend-at3rcdcdla-ue.a.run.app/"
 const Login = () => {
-  const { authContext, setAuthContext } = React.useContext(AuthContext);
+  const { setAuthContext } = React.useContext(AuthContext);
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()

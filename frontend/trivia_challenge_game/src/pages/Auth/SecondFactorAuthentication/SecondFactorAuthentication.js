@@ -6,7 +6,7 @@ import { AuthContext } from '../../../contexts/AuthContext/authcontext';
 const REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL;
 
 const SecondFactorAuthentication = () => {
-  const { authContext, setAuthContext } = React.useContext(AuthContext);
+  const { setAuthContext } = React.useContext(AuthContext);
   const location = useLocation();
   const { username, email, access_token, id_token } = location.state;
   const [MfaExists, setMFAExists] = useState(false);
@@ -43,15 +43,16 @@ const SecondFactorAuthentication = () => {
       setMFAExists(false);
     }
   }
-
+  
   useEffect(() => {
-      try {
-        checkIf2ndFactorAuthenticationExists();
-        setLoading(false);
-      } catch (error) {
-        alert(error.response.data.message);
-        navigate('/unauth/login');
-      }
+    try {
+      checkIf2ndFactorAuthenticationExists();
+      setLoading(false);
+    } catch (error) {
+      alert(error.response.data.message);
+      navigate('/unauth/login');
+    }
+  // eslint-disable-next-line
   }, []);
 
   const handleValidate2FAInputChange = (event) => {
