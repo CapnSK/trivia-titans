@@ -15,7 +15,7 @@ const sendMessage = async (client, ids, message, names) => {
             try{
                 await client.postToConnection({
                     "ConnectionId": id,
-                    "Data": Buffer.from(JSON.stringify(message))
+                    "Data": Buffer.from(JSON.stringify(message.members ? message : chatHistory[chatHistory.length-1]))
                 });
             } catch(e){
                 console.log("error trying to send message to id "+id, e);
