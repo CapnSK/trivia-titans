@@ -10,6 +10,7 @@ import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import QuestionForm from "../question";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
+import QuestionList from "../question/questionList";
 
 function Main() {
     return (
@@ -25,6 +26,8 @@ function Main() {
                         <Route element={<ConfirmEmail/>} path="/unauth/confirm-email" exact/>
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
                         <Route element={<QuestionForm/>} path="/unauth/question" exact/>
+                        <Route element={<QuestionList/>} path="/unauth/question/list" exact/>
+                        
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
                         <Route element={<Landing/>} path="/home"/>
