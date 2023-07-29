@@ -6,7 +6,7 @@ import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi
 const WS_API_POST_URL = `https://orzh9gsny1.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
 
-const names = {};
+const data_store = {};
 
 const handler = async (event) => {
   const { connectionId, routeKey } = event.requestContext;
@@ -19,43 +19,48 @@ const handler = async (event) => {
     console.log("Error parsing body", e);
   }
 
+  const teamId = body.teamId;
+  if(!data_store[teamId]){
+    data_store[teamId]={};
+  }
+
 
   switch (routeKey) {
     case "$connect":
       await handleNewConnection(event);
       break;
     case "$disconnect":
-      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has left` }, names);
+      await sendMessage(client, Object.keys(data_store[teamId]), { systemMessage: `${data_store[teamId][connectionId]} has left` }, data_store[teamId]);
       await closeConnection(event);
-      delete names[connectionId];
-      await sendMessage(client, Object.keys(names), { members: Object.values(names) }, names);
+      delete data_store[teamId][connectionId];
+      await sendMessage(client, Object.keys(data_store[teamId]), { members: Object.values(data_store[teamId]) }, data_store[teamId]);
       break;
     case "$default":
       break;
     case "setName":
-      names[connectionId] = body.name;
-      await sendMessage(client, Object.keys(names), { members: Object.values(names) }, names);
-      await sendMessage(client, Object.keys(names), { systemMessage: `${names[connectionId]} has joined the chat` }, names);
+      data_store[teamId][connectionId] = body.name;
+      await sendMessage(client, Object.keys(data_store[teamId]), { members: Object.values(data_store[teamId]) }, data_store[teamId]);
+      await sendMessage(client, Object.keys(data_store[teamId]), { systemMessage: `${data_store[teamId][connectionId]} has joined the chat` }, data_store[teamId]);
       break;
     case "sendPrivate":
       await sendMessage(
         client,
-        [Object.keys(names).find(key => names[key] === body.to)].filter(id => !!id),
-        { userMessage: { [names[connectionId]]: body.message, messageType: "private" } }, names
+        [Object.keys(data_store[teamId]).find(key => data_store[teamId][key] === body.to)].filter(id => !!id),
+        { userMessage: { [data_store[teamId][connectionId]]: body.message, messageType: "private" } }, data_store[teamId]
       );
       break;
     case "sendPublic":
       await sendMessage(
         client,
-        Object.keys(names).filter((conId) => conId !== connectionId),
-        { userMessage: { [names[connectionId]]: body.message, messageType: "public" } }, names
+        Object.keys(data_store[teamId]).filter((conId) => conId !== connectionId),
+        { userMessage: { [data_store[teamId][connectionId]]: body.message, messageType: "public" } }, data_store[teamId]
       );
       break;
     case "getChatHistory":
       //To Do: implement a method to return chat history for a user
       await sendChatHistory(
         client,
-        names[connectionId],
+        data_store[teamId][connectionId],
         connectionId
       );
       break;
