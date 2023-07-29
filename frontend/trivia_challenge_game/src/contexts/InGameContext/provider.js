@@ -7,6 +7,7 @@ export const InGameContextProvider = ({ children }) => {
         leader: undefined,
         members: undefined,
         triviaId: undefined,
+        matchInstanceId: undefined,
         _syncChannel: undefined,
     });
 
@@ -15,6 +16,7 @@ export const InGameContextProvider = ({ children }) => {
         leader: inGameContext.leader,
         members: inGameContext.members,
         triviaId: inGameContext.triviaId,
+        matchInstanceId: inGameContext.matchInstanceId,
         _syncChannel: inGameContext._syncChannel,
         setInGameContext: (newInGameContext) => {
             inGameContextSetter(oldInGameContext => {
@@ -25,7 +27,7 @@ export const InGameContextProvider = ({ children }) => {
             newInGameContext._syncChannel = openChannel(newInGameContext);
             return newInGameContext;
         }
-    }), [inGameContext.teamId, inGameContext.leader, inGameContext.members, inGameContext.triviaId, inGameContext._syncChannel]);
+    }), [inGameContext.teamId, inGameContext.leader, inGameContext.members, inGameContext.triviaId, inGameContext.matchInstanceId, inGameContext._syncChannel]);
 
     return (
         <InGameContext.Provider value={value}>{children}</InGameContext.Provider>
