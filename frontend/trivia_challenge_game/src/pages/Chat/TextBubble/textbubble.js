@@ -6,8 +6,6 @@ export const TextBubble = ({sender, recipient, message}) => {
         <>
             <div className={`bubble ${sender === recipient ? "self" : ""}`}>
                 <div className="header">
-                    {sender && recipient && sender !== recipient ? 
-                        (
                             <>
                                 <Typography variant="caption">
                                     {sender}
@@ -16,14 +14,6 @@ export const TextBubble = ({sender, recipient, message}) => {
                                     {recipient === "public" ? "All" : recipient}
                                 </Typography>
                             </>
-                        ) : 
-                        (
-                            <>
-                                <Typography variant="caption">
-                                    You
-                                </Typography>
-                            </>
-                        )}
                 </div>
                 <div className="body">
                     <Typography variant="body1">

@@ -17,7 +17,8 @@ function Chat() {
         message: "",
         recipient: undefined
     });
-    let { email, teamMates, teamName, username, teamId  } = useContext(ChatContext);
+    let { email, teamMates, teamName, username, teamId, setChatContext  } = useContext(ChatContext);
+    console.log(teamId)
     const [chatMembers, setChatMembers] = useState(teamMates);
     //To test chat component uncomment below hook
     // useEffect(()=>{
@@ -27,7 +28,8 @@ function Chat() {
     //             //will be populated as new people join the chat
     //         ],
     //         teamName: "titans",
-    //         username: "cooldude69_"+(Math.round(Math.random()*10))
+    //         username: "cooldude69_"+(Math.round(Math.random()*10)),
+    //         teamId: "teamTitans1221"
     //     });
     // }, []);
 
@@ -86,7 +88,7 @@ function Chat() {
     }
 
     useEffect(()=>{
-        if(username && teamMates && teamMates.length){
+        if(username && teamId){
             if(socket.current?.readyState !== WebSocket.OPEN){
                 socket.current = new WebSocket(`${process.env.REACT_APP_WS_APIGATEWAY_URL}`);
                 socket.current.addEventListener("open", onSocketOpen);
@@ -96,7 +98,7 @@ function Chat() {
                 });
             }
         }
-    }, [username, teamMates]);
+    }, [username, teamMates, teamId]);
 
     const toggleChatBubble = () => {
         setShowChatBox((oldshowChatBoxValue)=>{
