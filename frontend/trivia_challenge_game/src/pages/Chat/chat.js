@@ -19,28 +19,17 @@ function Chat() {
     });
     let { email, teamMates, teamName, username, setChatContext  } = useContext(ChatContext);
     const [chatMembers, setChatMembers] = useState(teamMates);
-
-    useEffect(()=>{
-        setChatContext({
-            email: "kulkarnisankalp21@gmail.com",
-            teamMates: [
-                {
-                    username:"Bob"
-                },
-                {
-                    username: "Alicedsadsada"
-                },
-                {
-                    username: "Alex"
-                },
-                {
-                    username: "John"
-                }
-            ],
-            teamName: "titans",
-            username: "cooldude69_"+(Math.round(Math.random()*10))
-        });
-    }, []);
+    //To test chat component uncomment below hook
+    // useEffect(()=>{
+    //     setChatContext({
+    //         email: "kulkarnisankalp21@gmail.com",
+    //         teamMates: [
+    //             //will be populated as new people join the chat
+    //         ],
+    //         teamName: "titans",
+    //         username: "cooldude69_"+(Math.round(Math.random()*10))
+    //     });
+    // }, []);
 
     const onSocketOpen = useCallback(()=>{
         setIsConnected(true);
