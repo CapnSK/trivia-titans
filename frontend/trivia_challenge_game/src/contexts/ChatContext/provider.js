@@ -7,6 +7,7 @@ export const ChatContextProvider = ({ children }) => {
         email: undefined,
         teamMates: undefined,
         teamName: undefined,
+        teamId: undefined,
     });
 
     const value = useMemo(() => ({
@@ -14,10 +15,11 @@ export const ChatContextProvider = ({ children }) => {
         email: chatContext.email,
         teamMates: chatContext.teamMates,
         teamName: chatContext.teamName,
+        teamId: chatContext.teamId,
         setChatContext: (newChatContext) => {
             chatContextSetter(newChatContext);
         }
-    }), [chatContext.username, chatContext.email, chatContext.teamMates, chatContext.teamName]);
+    }), [chatContext.username, chatContext.email, chatContext.teamMates, chatContext.teamName, chatContext.teamId]);
 
     return (
         <ChatContext.Provider value={value}>{children}</ChatContext.Provider>

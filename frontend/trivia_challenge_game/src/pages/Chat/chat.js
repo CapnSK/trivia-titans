@@ -17,7 +17,7 @@ function Chat() {
         message: "",
         recipient: undefined
     });
-    let { email, teamMates, teamName, username, setChatContext  } = useContext(ChatContext);
+    let { email, teamMates, teamName, username, teamId  } = useContext(ChatContext);
     const [chatMembers, setChatMembers] = useState(teamMates);
     //To test chat component uncomment below hook
     // useEffect(()=>{
@@ -35,9 +35,10 @@ function Chat() {
         setIsConnected(true);
         socket.current?.send(JSON.stringify({
             action:"setName",
-            name: username
+            name: username,
+            teamId: teamId
         }));
-    }, [username]);
+    }, [username, teamId]);
 
     const onSocketClose = useCallback(() =>{
         setIsConnected(false);
@@ -71,12 +72,14 @@ function Chat() {
         socket.current?.send(JSON.stringify({
             action: userInput.recipient === "ALL" ? "sendPublic": "sendPrivate",
             message: userInput.message,
-            to: userInput.recipient !== "ALL" ? userInput.recipient : undefined
+            to: userInput.recipient !== "ALL" ? userInput.recipient : undefined,
+            teamId: teamId
         }));
 
         setTimeout(()=>{
             socket.current?.send(JSON.stringify({
-                action: "getChatHistory"
+                action: "getChatHistory",
+                teamId: teamId
             }));
     
         }, 500);
