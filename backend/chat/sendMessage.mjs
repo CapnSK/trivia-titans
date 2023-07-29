@@ -20,7 +20,7 @@ const sendMessage = async (client, ids, message) => {
     }
 }
 
-const sendChatHistory = async (username, connectionId) => {
+const sendChatHistory = async (client, username, connectionId) => {
     if(username){
         const userSpecificChatHistory = chatHistory.filter(chat=>{
             if(chat.sender === username || chat.sender === "system" || chat.receiver === "ALL" || chat.receiver === username){
