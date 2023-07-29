@@ -37,17 +37,18 @@ const SecondFactorAuthentication = () => {
         // perform additional actions here if needed when 2FA does not exist
         setMFAExists(false);
       }
+      setLoading(false);
     }
     catch (error) {
       alert(error.response.data.message)
       setMFAExists(false);
+      setLoading(false);
     }
   }
   
   useEffect(() => {
     try {
       checkIf2ndFactorAuthenticationExists();
-      setLoading(false);
     } catch (error) {
       alert(error.response.data.message);
       navigate('/unauth/login');
@@ -136,9 +137,9 @@ const SecondFactorAuthentication = () => {
   return (
     loading ? 
       <div className="auth-inner"> 
+        <h3>2FA Authentication</h3>
         <div className="d-flex justify-content-center">
           <div className="spinner-border" role="status">
-            <h3>2FA Authentication</h3>
             <span className="visually-hidden">Loading...</span>
           </div>
         </div>
