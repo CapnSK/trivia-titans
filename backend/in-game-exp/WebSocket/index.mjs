@@ -43,99 +43,6 @@ const handler = async (event) => {
       break;
   }
 
-  async function removeClient(connectionId) {
-    try {
-      await removeConnection({connectionId});
-    } catch (e) {
-      console.log("error removing connection from db", e);
-    }
-  }
-
-  async function handleEvent(eventEmitted, connectionId) {
-    const eventType = eventEmitted.type;
-    const data = eventEmitted.data;
-    const context = eventEmitted.context;
-
-    //predefined variables because switch case does not allow multiple declarations
-    let username;
-    let matchInstanceId;
-    let questionId
-    if (eventType) {
-      try {
-        switch (eventType) {
-          case "INTRODUCE":
-            username = data.username;
-            await storeConnection({ username, connectionId });
-            break;
-          case "JOIN_GAME":
-            username = data.username;
-            const startTime = data.startTime;
-            matchInstanceId = context?.matchSpec?.matchInstanceId || "";
-            await addMatchInstanceIdToDB({connectionId, matchInstanceId});
-            await postEvent({
-              sender: username,
-              type: "JOIN_GAME",
-              data: {
-                gameStartTime: startTime,
-                matchInstanceId
-              }
-            });
-            break;
-          case "START_GAME":
-            await postEvent({
-              sender: username,
-              type: "START_GAME",
-              data: {
-                matchInstanceId
-              }
-            });
-            break;
-          case "MARK_ANSWER":
-            // const triviaId = context?.matchSpec?.triviaId || "";
-            // const teamId = context?.matchSpec?.teamId || "";
-            questionId = data.questionId;
-            const answerId = data.selectedOption;
-            await postEvent({
-              sender: username,
-              type: "MARK_ANSWER",
-              data: {
-                matchInstanceId,
-                questionId,
-                answerId
-              }
-            });
-          case "UPDATE_SCORE":
-            // const updatedScore = await update_score({
-            //   matchInstanceId,
-            //   questionId,
-            //   answerId
-            // });
-            await postEvent({
-              sender: "system",
-              type: "UPDATED_SCORE",
-              data: {
-                matchInstanceId,
-                score: 0
-              }
-            });
-            break;
-          case "NEXT_QUESTION":
-            questionId = data.questionId;
-            await postEvent({
-              sender: username,
-              type: "NEXT_QUESTION",
-              data: {
-                matchInstanceId,
-                questionId
-              }
-            });
-            break;
-        }
-      } catch (e) {
-        console.log("error performing action for the event emitted", eventEmitted, connectionId, e);
-      }
-    }
-  }
 
   const response = {
     statusCode: 200,
@@ -144,14 +51,123 @@ const handler = async (event) => {
   return response;
 };
 
-async function postEvent(event){
-  // const receivers = Object.entries(CONNECTIONS_CACHE).filter(([conId, username])=>{
-  //   return username !
-  // });
-  // await client.postToConnection({
-  //   "ConnectionId": id,
-  //   "Data": Buffer.from(JSON.stringify(message.members ? message : chatHistory[chatHistory.length-1]))
-  // });
+async function removeClient(connectionId) {
+  try {
+    await removeConnection({ connectionId });
+  } catch (e) {
+    console.log("error removing connection from db", e);
+  }
+}
+
+async function handleEvent(eventEmitted, connectionId) {
+  const eventType = eventEmitted.type;
+  const data = eventEmitted.data;
+  const context = eventEmitted.context;
+
+  //predefined variables because switch case does not allow multiple declarations
+  let username;
+  let matchInstanceId;
+  let questionId;
+  let teamId;
+  if (eventType) {
+    try {
+      switch (eventType) {
+        case "INTRODUCE":
+          teamId = context?.matchSpec?.teamId || ""
+          username = data.username;
+          await storeConnection({ username, connectionId, teamId });
+          break;
+        case "JOIN_GAME":
+          username = data.username;
+          teamId = context?.matchSpec?.teamId || ""
+          const startTime = data.startTime;
+          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+          await addMatchInstanceIdToDB({ connectionId, teamId, matchInstanceId });
+          await postEvent({
+            sender: username,
+            type: "JOIN_GAME",
+            data: {
+              gameStartTime: startTime,
+              matchInstanceId
+            }
+          });
+          break;
+        case "START_GAME":
+          await postEvent({
+            sender: username,
+            type: "START_GAME",
+            data: {
+              matchInstanceId
+            }
+          });
+          break;
+        case "MARK_ANSWER":
+          // const triviaId = context?.matchSpec?.triviaId || "";
+          teamId = context?.matchSpec?.teamId || "";
+          questionId = data.questionId;
+          const answerId = data.selectedOption;
+          await postEvent({
+            sender: username,
+            type: "MARK_ANSWER",
+            data: {
+              matchInstanceId,
+              questionId,
+              answerId
+            }
+          });
+        case "UPDATE_SCORE":
+          // const updatedScore = await update_score({
+          //   matchInstanceId,
+          //   questionId,
+          //   answerId
+          // });
+          await postEvent({
+            sender: "system",
+            type: "UPDATED_SCORE",
+            data: {
+              matchInstanceId,
+              score: 0
+            }
+          });
+          break;
+        case "NEXT_QUESTION":
+          questionId = data.questionId;
+          await postEvent({
+            sender: username,
+            type: "NEXT_QUESTION",
+            data: {
+              matchInstanceId,
+              questionId
+            }
+          });
+          break;
+      }
+    } catch (e) {
+      console.log("error performing action for the event emitted", eventEmitted, connectionId, e);
+    }
+  }
+}
+
+async function postEvent(event) {
+  const matchInstanceId = event.data?.matchInstanceId || "";
+  const receivers = Object.entries(CONNECTIONS_CACHE)
+  .filter(([conId, value])=>{
+    return value.matchInstanceId === matchInstanceId;
+  })
+  .map(([conId, value])=>{
+    return conId;
+  });
+  console.log("all the recievers are", receivers);
+  try{
+    await Promise.all(receivers.map(id=>{
+      return client.postToConnection({
+        "ConnectionId": id,
+        "Data": Buffer.from(JSON.stringify(event))
+      });
+    }));
+  } catch(e){
+    console.log("error posting event to all the ids")
+  }
 
   return Promise.resolve();
 }

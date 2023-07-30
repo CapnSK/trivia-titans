@@ -7,13 +7,14 @@ const TABLE_NAME = `csci5410-sdp12-ingame-connections`;
 
 let CONNECTIONS_CACHE = {};
 
-const storeConnection = async ({username, connectionId}) => {
+const storeConnection = async ({username, connectionId, teamId}) => {
     try{
         const command = new PutCommand({
             TableName: TABLE_NAME,
             Item: {
                 connection_id: connectionId,
-                username: username
+                username: username,
+                team_id: teamId
             }
         });
         await docClient.send(command);
@@ -25,19 +26,26 @@ const storeConnection = async ({username, connectionId}) => {
     }
 }
 
-const addMatchInstanceIdToDB = async({connectionId, matchInstanceId})=> {
+const addMatchInstanceIdToDB = async({connectionId, teamId, matchInstanceId})=> {
+    const connections = await fetchConnections();
+    CONNECTIONS_CACHE = _transformConnections(connections);
+    const connectionIds = getTeamSpecificConnections(teamId);
+    console.log(`setting current match instance id ${matchInstanceId} to all the connection ids of the team ${teamId}`, connectionIds);
     try{
-        const command = new UpdateCommand({
-            TableName: TABLE_NAME,
-            Key: {
-                connection_id: connectionId
-            },
-            UpdateExpression: "set match_instance_id = :mId",
-            ExpressionAttributeValues: {
-                ":mId": matchInstanceId
-            }
-        });
-        await docClient.send(command);
+        for(let conId of connectionIds){
+            const command = new UpdateCommand({
+                TableName: TABLE_NAME,
+                Key: {
+                    connection_id: conId
+                },
+                UpdateExpression: "set match_instance_id = :mId",
+                ExpressionAttributeValues: {
+                    ":mId": matchInstanceId
+                }
+            });
+            await docClient.send(command);
+        }
+        //once all items are set then update the cache with latest data
         const connections = await fetchConnections();
         CONNECTIONS_CACHE = _transformConnections(connections);
         console.log("connections are ", CONNECTIONS_CACHE);   
@@ -74,12 +82,21 @@ const fetchConnections = async ()=>{
     return result;
 }
 
+const getTeamSpecificConnections = (teamId)=>{
+    return Object.entries(CONNECTIONS_CACHE).filter(([key, value])=>{
+        return value.teamId === teamId;
+    }).map(([key, value])=>{
+        return key;
+    });
+}
+
 const _transformConnections = (connections)=>{
     const map={};
     connections.forEach(connection=>{
         map[connection.connection_id]={
             username: connection.username,
-            matchInstanceId: connection.match_instance_id
+            matchInstanceId: connection.match_instance_id,
+            teamId: connection.team_id
         }
     });
     return map;
