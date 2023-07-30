@@ -1,0 +1,15 @@
+{
+    "action": "emitEvent",
+    "event": {
+        "type": "INTRODUCE",
+        "context": {
+            "matchSpec": {
+                "teamId": "triviaTitans1221",
+                "triviaId": "trivia1"
+            }
+        },
+        "data": {
+            "username": "cooldude69"
+        }
+    }
+}
