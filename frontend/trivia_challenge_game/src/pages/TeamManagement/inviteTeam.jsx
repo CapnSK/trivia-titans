@@ -22,6 +22,9 @@ function InviteTeam() {
 
 	console.log(`teamID before useEffect: `, teamId);
 
+	const additionalData = {
+		teamId: teamId
+	  };
 	
 
 	
@@ -155,7 +158,7 @@ function InviteTeam() {
 				<h2>Team Details</h2>
 				{console.log(jsonTeamData)}
 				{console.log(typeof(jsonTeamData))}
-				<TeamDetailTable jsonData={jsonTeamData} />
+				<TeamDetailTable jsonData={jsonTeamData} {...additionalData}/>
 				</div>
 			)}
 		</Grid>

@@ -5,11 +5,11 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { fab } from '@fortawesome/free-brands-svg-icons';
+import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
 
 
 library.add(fab);
 
-import Kommunicate from "@kommunicate/kommunicate-chatbot-plugin";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 

@@ -1,10 +1,13 @@
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
 import { AuthContextProvider } from "./contexts";
 import Chat from './pages/Chat';
 import Main from './pages/Main';
 import Navbar from './pages/Navbar';
-
+import CreateTeam from './pages/TeamManagement/createTeam';
+import InviteTeam from './pages/TeamManagement/inviteTeam';
+import HandleRequest from "./pages/TeamManagement/handleRequest";
 
 
 function App() {

@@ -2,7 +2,13 @@ import React from 'react';
 import { useTable } from 'react-table';
 import MembersTable from './membersTable';
 
-const TeamDetailTable = ({ jsonData }) => {
+const TeamDetailTable = ({ jsonData , teamId}) => {
+  
+  const additionalData = {
+    teamName: jsonData['team_name'],
+    teamId: teamId
+  };
+
   const columns = React.useMemo(
     () => [
       {
@@ -29,7 +35,7 @@ const TeamDetailTable = ({ jsonData }) => {
           const { value } = cell;
           console.log("value")
           console.log(value)
-          return (<div>{value.length == 0 ? (<p>No members added</p>) : (<MembersTable members={value} />)}</div>);
+          return (<div>{value.length == 0 ? (<p>No members added</p>) : (<MembersTable members={value} {...additionalData}  />)}</div>);
         },
       },
     ],
