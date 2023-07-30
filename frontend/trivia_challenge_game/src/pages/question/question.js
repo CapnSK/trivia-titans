@@ -201,7 +201,6 @@ const QuestionForm = () => {
     axios.post(url, requestBody, config)
       .then((response) => {
         console.log('API Response:', response.data);
-        
         setFormData(initialFormData);
         setSubmissionStatus('success');
       })

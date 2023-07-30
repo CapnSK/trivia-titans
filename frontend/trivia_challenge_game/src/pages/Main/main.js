@@ -11,6 +11,7 @@ import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import QuestionForm from "../question";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
 import QuestionList from "../question/questionList";
+import EditQuestion from "../question/questionEdit";
 
 function Main() {
     return (
@@ -27,7 +28,7 @@ function Main() {
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
                         <Route element={<QuestionForm/>} path="/unauth/question" exact/>
                         <Route element={<QuestionList/>} path="/unauth/question/list" exact/>
-                        
+                        <Route element={<EditQuestion/>} path="/unauth/question/edit/:id" exact/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
                         <Route element={<Landing/>} path="/home"/>

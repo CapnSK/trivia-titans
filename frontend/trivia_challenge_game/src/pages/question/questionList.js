@@ -56,7 +56,7 @@ const QuestionList = () => {
                   <TableCell>{question.time_limit}</TableCell>
                   <TableCell>{question.tags.hints}</TableCell>
                   <TableCell align="center">
-                    <Link to={`/edit/${question.id}`}>
+                    <Link to={`edit/${question.id}`}>
                       Edit
                     </Link>
                   </TableCell>
