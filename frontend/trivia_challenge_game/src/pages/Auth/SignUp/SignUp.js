@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { axiosJSON } from "../../../lib/axios";
-const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY;
+const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
 
 function SignUp(){
   const [email, setEmail] = useState('')
@@ -19,14 +19,14 @@ function SignUp(){
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY + '/signup', JSON.stringify({"email": email,"username": username,"password": password }))
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/signup', JSON.stringify({"email": email,"username": username,"password": password }))
       const data = response.data
       if (data.authenticated) {
         // console.log('redirect')
         // User was successfully authenticated
         // You can redirect them to a protected route or update the UI
         alert('Sign up successful')
-        const redirectURL = "unauth/login"
+        const redirectURL = "/unauth/login"
         const postURL = "/confirmemail"
         navigate('/unauth/confirm-email', { state: { username, email, redirectURL, postURL }})
       } else {

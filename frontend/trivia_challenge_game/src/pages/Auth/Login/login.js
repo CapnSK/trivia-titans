@@ -4,8 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {axiosJSON} from "../../../lib/axios";
 import { AuthContext } from '../../../contexts/AuthContext/authcontext';
 
-const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY;
-const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL; 
+const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
+const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV; 
 const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=35iqreqj2np431biljuh0pro63&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://frontend-at3rcdcdla-ue.a.run.app/"
 const Login = () => {
   const { setAuthContext } = React.useContext(AuthContext);
@@ -40,7 +40,8 @@ const Login = () => {
           const username = user.username
           const email = user.email
           const access_token = user.accessId
-          setAuthContext({username, email, accessId: access_token, tokenId: tokenId});
+          // send them to second factor authentication page.
+          // setAuthContext({username, email, accessId: access_token, tokenId: tokenId});
           navigate('/home')
         }
       }

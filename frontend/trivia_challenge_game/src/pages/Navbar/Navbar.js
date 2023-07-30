@@ -15,7 +15,7 @@ function Navbar(){
   }, []);
   
   const logout = () => {
-    localStorageUtil.removeItem("user");
+    // localStorageUtil.removeItem("user");
   }
 
   return(

@@ -10,11 +10,11 @@ const CreateTeam = () => {
 		var teamId;
 		const json_data = {teamName: "enigma", adminUserName: "arpitkumar", adminEmail: "arpit@gmail.com"}
 
-		console.log(`${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`)
+		console.log(`${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/create_team/`)
 
 		axios({
 			// Endpoint to send files
-			url: `${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`,
+			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/create_team/`,
 			method: "POST",
 			data: json_data,
 		})

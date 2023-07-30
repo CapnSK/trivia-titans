@@ -38,10 +38,10 @@ const InviteTeam = () => {
 		 * @param {{object}} data_json - The data to send with the request in JSON format.
 		 */
 		console.log("Below");
-		console.log(`${process.env.REACT_APP_APIGATEWAY_URL}/invitation`);
+		console.log(`${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/invitation`);
 		axios({
 			// Endpoint to send files
-			url: `${process.env.REACT_APP_APIGATEWAY_URL}/invitation`,
+			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/invitation`,
 			method: "POST",
 			data: data_json,
 		})

@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { axiosJSON } from "../../../lib/axios";
 
-const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY
+const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV
 
 const ForgotPassword = () => {
   const [username, setCode] = useState('')
@@ -16,7 +16,7 @@ const ForgotPassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY + '/forgotpassword', JSON.stringify({ "username": username }))
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/forgotpassword', JSON.stringify({ "username": username }))
       const data = await response.data
       if (data.authenticated) {
         console.log('redirect')

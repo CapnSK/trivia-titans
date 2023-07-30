@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { axiosJSON } from "../../../lib/axios";
 import { AuthContext } from '../../../contexts/AuthContext/authcontext';
 
-const REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL;
+const REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV;
 
 const SecondFactorAuthentication = () => {
   const { setAuthContext } = React.useContext(AuthContext);
@@ -24,11 +24,11 @@ const SecondFactorAuthentication = () => {
   async function checkIf2ndFactorAuthenticationExists() {
     // Get questions as it is needed to display the questions when 2fa exists or not
     try{
-      const getQuestions = await axiosJSON.get(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL + '/setup2ndFactorAuthentication');
+      const getQuestions = await axiosJSON.get(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV + '/setup2ndFactorAuthentication');
       const getQuestionsResponse = await getQuestions.data;
       setQuestions(getQuestionsResponse);
       // console.log(questions)
-      const MfaExistsResponse = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL + '/checkIf2ndFactorAuthenticationExists', JSON.stringify({ username }));
+      const MfaExistsResponse = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV + '/checkIf2ndFactorAuthenticationExists', JSON.stringify({ username }));
       const MfaExistsData = await MfaExistsResponse.data;
       if (MfaExistsData.status === 200) {
         // perform additional actions here if needed when 2FA exists
@@ -73,7 +73,7 @@ const SecondFactorAuthentication = () => {
   async function validate2Fa(event) {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL + '/validate2ndFactorAuthentication', JSON.stringify({ username, questionId, answer }));
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV + '/validate2ndFactorAuthentication', JSON.stringify({ username, questionId, answer }));
       const data = await response.data;
       if (data.status === 200) {
         alert(data.message)
@@ -108,7 +108,7 @@ const SecondFactorAuthentication = () => {
   async function setup2Fa(event) {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL + '/setup2ndFactorAuthentication', JSON.stringify({ username, answer1, answer2, answer3}));
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV + '/setup2ndFactorAuthentication', JSON.stringify({ username, answer1, answer2, answer3}));
       const data = await response.data;
       if (data.status === 200) {
         alert(data.message)
