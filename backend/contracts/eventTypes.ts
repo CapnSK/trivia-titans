@@ -33,6 +33,11 @@ type start_game_context = join_game_context & {};
 
 type start_game_data = {
     //no  data needed as such rn since all data will be there in either context or ui & only tapping on the event would be required
+    username: string
+}
+
+type mark_answer_context = start_game_context & {
+    matchTimestamp: string //needed because match table has sort key for that
 }
 
 type mark_answer_data = {

@@ -1,33 +1,50 @@
-{
-    "action": "emitEvent",
-    "event": {
-        "type": "INTRODUCE",
-        "context": {
-            "matchSpec": {
-                "teamId": "triviaTitans1221",
-                "triviaId": "trivia1"
+[
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "INTRODUCE",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1"
+                }
+            },
+            "data": {
+                "username": "cooldude69"
             }
-        },
-        "data": {
-            "username": "cooldude69"
+        }
+    },
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "JOIN_GAME",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1",
+                    "matchInstanceId": "t011223"
+                }
+            },
+            "data": {
+                "username": "Jamura",
+                "startTime": "23123213123232"
+            }
+        }
+    },
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "START_GAME",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1",
+                    "matchInstanceId": "t011223"
+                }
+            },
+            "data": {
+                "username": "Jamura"
+            }
         }
     }
-}
-
-{
-    "action": "emitEvent",
-    "event": {
-        "type": "JOIN_GAME",
-        "context": {
-            "matchSpec": {
-                "teamId": "triviaTitans1221",
-                "triviaId": "trivia1",
-                "matchInstanceId": "t011223"
-            }
-        },
-        "data": {
-            "username": "Jamura",
-            "startTime":"23123213123232"
-        }
-    }
-}
+]
