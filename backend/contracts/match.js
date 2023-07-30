@@ -10,9 +10,9 @@
             trivia_id: "trivia 1",
             current_question: 1, // question number based on the index
             answers:{
-                question_id: "1", //question being referred
-                answer_option_id: "2" // answer given by the team
-            },
+                question_id: "answer_option_id", //question being referred
+                //"1": "2" 
+            }
         }, //does not store entire team instance, but just a team_id
         // leaderboard: Array<leaderboard_item>
     }
