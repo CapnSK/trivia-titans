@@ -3,14 +3,15 @@ import { DynamoDBDocumentClient,  PutCommand, ScanCommand, DeleteCommand, Update
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
-const TABLE_NAME = `csci5410-sdp12-ingame-connections`;
+const CONNECTIONS_TABLE_NAME = `csci5410-sdp12-ingame-connections`;
+const MATCH_TABLE_NAME = `csci5410-sdp12-match`;
 
 let CONNECTIONS_CACHE = {};
 
 const storeConnection = async ({username, connectionId, teamId}) => {
     try{
         const command = new PutCommand({
-            TableName: TABLE_NAME,
+            TableName: CONNECTIONS_TABLE_NAME,
             Item: {
                 connection_id: connectionId,
                 username: username,
@@ -34,7 +35,7 @@ const addMatchInstanceIdToDB = async({connectionId, teamId, matchInstanceId})=> 
     try{
         for(let conId of connectionIds){
             const command = new UpdateCommand({
-                TableName: TABLE_NAME,
+                TableName: CONNECTIONS_TABLE_NAME,
                 Key: {
                     connection_id: conId
                 },
@@ -57,7 +58,7 @@ const addMatchInstanceIdToDB = async({connectionId, teamId, matchInstanceId})=> 
 const removeConnection = async ({connectionId}) => {
     try{
         const command = new DeleteCommand({
-            TableName: TABLE_NAME,
+            TableName: CONNECTIONS_TABLE_NAME,
             Key: {
                 connection_id: connectionId,
             },
@@ -71,10 +72,38 @@ const removeConnection = async ({connectionId}) => {
     }
 }
 
+const updateAnswer= async ({matchInstanceId, timestampCreated, questionId, answerOptionId}) => {
+    try{
+        const command = new UpdateCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key:{
+                match_instance_id: matchInstanceId,
+                timestamp_created: timestampCreated
+            },
+            UpdateExpression: "SET match_config.answers.#qId = :aOId",
+            ExpressionAttributeValues: {
+                ":aOId": answerOptionId
+            },
+            ExpressionAttributeNames:{
+                "#qId": questionId
+            }
+        });
+        await docClient.send(command);
+    } catch(e){
+        console.log("error updating answer to the question", e);
+    }
+}
+
+const updatedScore = async ({matchInstanceId, timestampCreated}) => {
+
+}
+
+
+
 const fetchConnections = async ()=>{
     let result;
     try{
-        const command = new ScanCommand({TableName: TABLE_NAME});
+        const command = new ScanCommand({TableName: CONNECTIONS_TABLE_NAME});
         result = (await docClient.send(command)).Items;
     } catch(e){
         console.log("error fetching all connections data from db",e);
@@ -102,4 +131,4 @@ const _transformConnections = (connections)=>{
     return map;
 }
 
-export { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB };
+export { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer };

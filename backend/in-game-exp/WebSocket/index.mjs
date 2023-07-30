@@ -1,6 +1,6 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB } from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer } from "./DBOperations.mjs";
 
 const WS_API_POST_URL = `https://94l1ahmzuf.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
@@ -69,6 +69,7 @@ async function handleEvent(eventEmitted, connectionId) {
   let matchInstanceId;
   let questionId;
   let teamId;
+  let timestampCreated;
   if (eventType) {
     try {
       switch (eventType) {
@@ -93,6 +94,7 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "START_GAME":
+          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
           await postEvent({
             sender: username,
             type: "START_GAME",
@@ -102,19 +104,23 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "MARK_ANSWER":
+          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+          timestampCreated = context?.matchSpec?.timestampCreated || "";
           // const triviaId = context?.matchSpec?.triviaId || "";
           teamId = context?.matchSpec?.teamId || "";
           questionId = data.questionId;
-          const answerId = data.selectedOption;
+          const answerOptionId = data.selectedOption;
+          await updateAnswer({matchInstanceId, timestampCreated, questionId, answerOptionId});
           await postEvent({
             sender: username,
             type: "MARK_ANSWER",
             data: {
               matchInstanceId,
               questionId,
-              answerId
+              answerId: answerOptionId
             }
           });
+          break;
         case "UPDATE_SCORE":
           // const updatedScore = await update_score({
           //   matchInstanceId,
@@ -140,6 +146,8 @@ async function handleEvent(eventEmitted, connectionId) {
               questionId
             }
           });
+          break;
+        case "SUBMIT_QUIZ":
           break;
       }
     } catch (e) {
