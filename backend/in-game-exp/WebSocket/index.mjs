@@ -1,6 +1,6 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE } from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB } from "./DBOperations.mjs";
 
 const WS_API_POST_URL = `https://94l1ahmzuf.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
@@ -55,17 +55,23 @@ const handler = async (event) => {
     const eventType = eventEmitted.type;
     const data = eventEmitted.data;
     const context = eventEmitted.context;
+
+    //predefined variables because switch case does not allow multiple declarations
+    let username;
+    let matchInstanceId;
+    let questionId
     if (eventType) {
       try {
         switch (eventType) {
           case "INTRODUCE":
-            let username = data.username;
+            username = data.username;
             await storeConnection({ username, connectionId });
             break;
           case "JOIN_GAME":
             username = data.username;
             const startTime = data.startTime;
-            const matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+            matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+            await addMatchInstanceIdToDB({connectionId, matchInstanceId});
             await postEvent({
               sender: username,
               type: "JOIN_GAME",
@@ -87,7 +93,7 @@ const handler = async (event) => {
           case "MARK_ANSWER":
             // const triviaId = context?.matchSpec?.triviaId || "";
             // const teamId = context?.matchSpec?.teamId || "";
-            let questionId = data.questionId;
+            questionId = data.questionId;
             const answerId = data.selectedOption;
             await postEvent({
               sender: username,

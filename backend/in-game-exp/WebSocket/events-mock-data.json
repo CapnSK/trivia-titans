@@ -13,3 +13,21 @@
         }
     }
 }
+
+{
+    "action": "emitEvent",
+    "event": {
+        "type": "JOIN_GAME",
+        "context": {
+            "matchSpec": {
+                "teamId": "triviaTitans1221",
+                "triviaId": "trivia1",
+                "matchInstanceId": "t011223"
+            }
+        },
+        "data": {
+            "username": "Jamura",
+            "startTime":"23123213123232"
+        }
+    }
+}

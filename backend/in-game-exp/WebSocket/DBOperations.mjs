@@ -1,11 +1,11 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocumentClient, GetCommand, PutCommand, ScanCommand, DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { DynamoDBDocumentClient,  PutCommand, ScanCommand, DeleteCommand, UpdateCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
 const TABLE_NAME = `csci5410-sdp12-ingame-connections`;
 
-const CONNECTIONS_CACHE = {};
+let CONNECTIONS_CACHE = {};
 
 const storeConnection = async ({username, connectionId}) => {
     try{
@@ -18,7 +18,29 @@ const storeConnection = async ({username, connectionId}) => {
         });
         await docClient.send(command);
         const connections = await fetchConnections();
-        console.log("connections are ", connections);    
+        CONNECTIONS_CACHE = _transformConnections(connections);
+        console.log("connections are ", CONNECTIONS_CACHE);    
+    } catch(e){
+        console.log("error storing connection to db",e);
+    }
+}
+
+const addMatchInstanceIdToDB = async({connectionId, matchInstanceId})=> {
+    try{
+        const command = new UpdateCommand({
+            TableName: TABLE_NAME,
+            Key: {
+                connection_id: connectionId
+            },
+            UpdateExpression: "set match_instance_id = :mId",
+            ExpressionAttributeValues: {
+                ":mId": matchInstanceId
+            }
+        });
+        await docClient.send(command);
+        const connections = await fetchConnections();
+        CONNECTIONS_CACHE = _transformConnections(connections);
+        console.log("connections are ", CONNECTIONS_CACHE);   
     } catch(e){
         console.log("error storing connection to db",e);
     }
@@ -33,8 +55,9 @@ const removeConnection = async ({connectionId}) => {
             },
         });
         await docClient.send(command);
-        const connections = fetchConnections();
-        console.log("connections are ", connections);    
+        const connections = await fetchConnections();
+        CONNECTIONS_CACHE = _transformConnections(connections);
+        console.log("connections are ", CONNECTIONS_CACHE);    
     } catch(e){
         console.log("error deleting connection from db",e);
     }
@@ -51,4 +74,15 @@ const fetchConnections = async ()=>{
     return result;
 }
 
-export { storeConnection, removeConnection, CONNECTIONS_CACHE };
+const _transformConnections = (connections)=>{
+    const map={};
+    connections.forEach(connection=>{
+        map[connection.connection_id]={
+            username: connection.username,
+            matchInstanceId: connection.match_instance_id
+        }
+    });
+    return map;
+}
+
+export { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB };
