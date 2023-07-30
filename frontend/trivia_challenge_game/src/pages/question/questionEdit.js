@@ -175,6 +175,18 @@ const handleInputChange = (event, optionIndex) => {
     }));
   };
 
+  const handleDelete = () => {
+    const apiUrl = `https://f1gzy2sau1.execute-api.us-east-1.amazonaws.com/question/${id}`;
+    axios.delete(apiUrl)
+      .then(response => {
+        // Handle success or show a notification
+        setSubmissionStatus('deleteSuccess');
+      })
+      .catch(error => {
+        // Handle error or show a notification
+        setSubmissionStatus('deleteError');
+      });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -193,7 +205,7 @@ const handleInputChange = (event, optionIndex) => {
     return (
       <Grid container spacing={2} justifyContent="center">
         <Grid item xs={12} md={10} lg={8}>
-          <Typography variant="h4">Loading...</Typography>
+          <Typography variant="h4">No Questions!</Typography>
         </Grid>
       </Grid>
     );
@@ -207,12 +219,23 @@ const handleInputChange = (event, optionIndex) => {
 
         {submissionStatus === 'success' && (
         <Typography variant="h8" color="success">
-            The new question was created Successfully
+            The question was updated Successfully
         </Typography>
       )}
       {submissionStatus === 'error' && (
         <Typography variant="h8" color="error">
-          An error occurred while creating the question
+          An error occurred while updating the question
+        </Typography>
+      )}
+
+      {submissionStatus === 'deleteSuccess' && (
+        <Typography variant="h8" color="success">
+            The question was deleted Successfully
+        </Typography>
+      )}
+      {submissionStatus === 'deleteError' && (
+        <Typography variant="h8" color="error">
+          An error occurred while deleting the question
         </Typography>
       )}
 
@@ -354,9 +377,24 @@ const handleInputChange = (event, optionIndex) => {
               onChange={handleHintsChange} 
             />
             <br /><br />
-            <Button variant="contained" type="submit">
+            {/* <Button variant="contained" type="submit">
               Update Question
             </Button>
+            <br /><br />
+            <Button variant="contained" onClick={handleDelete} color="secondary">
+              Delete Question
+            </Button> */}
+            <Box display="flex" gap={2}>
+              <Button variant="contained" type="submit">
+                Update
+              </Button>
+              <Button variant="contained" onClick={handleDelete} color="secondary">
+                Delete
+              </Button>
+              <Button variant="contained" type="submit">
+                Cancel
+              </Button>
+            </Box>
           </form>
         </Grid>
       </Grid>
