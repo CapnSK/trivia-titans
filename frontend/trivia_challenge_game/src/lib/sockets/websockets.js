@@ -51,6 +51,6 @@ class WebSocketAPI {
     // }
 }
 
-const webSocketClient = new WebSocketAPI();
+const webSocketClient = new WebSocketAPI(process.env.REACT_APP_WS_INGAME_APIGATEWAY_URL);
 
 export  { webSocketClient };

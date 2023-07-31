@@ -35,6 +35,7 @@ function Main() {
                         <Route element={<ResetPassword/>} path="/unauth/reset-password" exact/>
                         <Route element={<ConfirmEmail/>} path="/unauth/confirm-email" exact/>
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
+                        {/* <Route path="/unauth/home/in-game" element={<InGame/>}/> */}
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
                         <Route element={<Landing/>} path="/home">

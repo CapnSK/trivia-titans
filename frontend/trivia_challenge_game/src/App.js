@@ -27,18 +27,19 @@ function App() {
 		// 	</BrowserRouter>
 		// </div>
 
-		
-		 <div className="App">
-			<AuthContextProvider>
-				<ChatContextProvider>
-					<Navbar></Navbar>
-					<div className="auth-wrapper">
-					<Main ></Main>
-					</div>
-					<Chat></Chat>
-				</ChatContextProvider>
-			</AuthContextProvider>
-		</div>
+		<Router>
+			<div className="App">
+				<AuthContextProvider>
+					<ChatContextProvider>
+						<Navbar></Navbar>
+						<div className="auth-wrapper">
+						<Main ></Main>
+						</div>
+						<Chat></Chat>
+					</ChatContextProvider>
+				</AuthContextProvider>
+			</div>
+		</Router>
 
 	);
 }
