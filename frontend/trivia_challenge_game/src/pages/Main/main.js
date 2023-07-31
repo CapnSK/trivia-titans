@@ -33,8 +33,8 @@ function Main() {
                         <Route element={<Landing/>} path="/home"/>
                         <Route path="/" element={<Navigate to="/leaderboard" replace/>}/>
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
-                        {/* <Route element={<CreateTeam />} path="/createTeam" />
-		    			<Route element={<InviteTeam />} path="/inviteTeam/:teamId" /> */}
+                        <Route element={<CreateTeam />} path="/createTeam" />
+		    			{/* <Route element={<InviteTeam />} path="/inviteTeam/:teamId" /> */}
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
 		     			<Route
 		     				path="/invitation-request/:teamId"

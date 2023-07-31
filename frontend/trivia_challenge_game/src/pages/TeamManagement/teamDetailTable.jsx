@@ -4,6 +4,7 @@ import MembersTable from './membersTable';
 
 const TeamDetailTable = ({ jsonData }) => {
   
+  console.log(`in the TeamDetailTable: ${jsonData['team_name']}`)
   const additionalData = {
     teamName: jsonData['team_name']
   };
@@ -52,14 +53,14 @@ const TeamDetailTable = ({ jsonData }) => {
   } = useTable({ columns, data });
 
   return (
-    <table {...getTableProps()} style={{ border: '1px solid black' }}>
+    <table {...getTableProps()} style={{  border: 'solid 1px gray' , align: 'center'}}>
       <thead>
         {headerGroups.map((headerGroup) => (
           <tr {...headerGroup.getHeaderGroupProps()}>
             {headerGroup.headers.map((column) => (
               <th
                 {...column.getHeaderProps()}
-                style={{ borderBottom: 'solid 3px red' }}
+                style={{  border: 'solid 1px gray'}}
               >
                 {column.render('Header')}
               </th>
@@ -79,7 +80,7 @@ const TeamDetailTable = ({ jsonData }) => {
                     style={{
                       padding: '10px',
                       border: 'solid 1px gray',
-                      background: 'papayawhip',
+                      // background: 'papayawhip',
                     }}
                   >
                     {cell.render('Cell')}

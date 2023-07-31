@@ -4,9 +4,11 @@ import { Button } from '@mui/material';
 
 const MembersTable = ({ members, teamName}) => {
 
-  const handleEntailmentRequest = (event, email) => {
+  const handleEntailmentRequest = (email) => {
     try {
-
+      console.log("in handleEntailmentRequest")
+      console.log(email)
+      console.log(teamName)
       axios({
         // Endpoint to send files
         url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/delete_member`,
@@ -25,8 +27,9 @@ const MembersTable = ({ members, teamName}) => {
           }
           if (res['data'] == true) {
             console.log("successfully updated")
+            alert(`${email} removed from the team ${teamName}`)
             // event.preventDefault();
-            // window.location.reload(false);
+            window.location.reload(false);
           }
         });
       
@@ -39,13 +42,13 @@ const MembersTable = ({ members, teamName}) => {
     <table style={{ border: '1px solid black', margin: '10px 0' }}>
       <thead>
         <tr>
-          <th style={{ borderBottom: 'solid 3px red', padding: '5px' }}>
+          <th style={{ border: 'solid 1px gray' , padding: '5px' }}>
             User Name
           </th>
-          <th style={{ borderBottom: 'solid 3px red', padding: '5px' }}>
+          <th style={{ border: 'solid 1px gray' , padding: '5px' }}>
             Email
           </th>
-          <th style={{ borderBottom: 'solid 3px red', padding: '5px' }}>
+          <th style={{ border: 'solid 1px gray' , padding: '5px' }}>
             Status
           </th>
         </tr>
@@ -64,7 +67,7 @@ const MembersTable = ({ members, teamName}) => {
               {member.status}
             </td>
             <td style={{ padding: '5px', border: 'solid 1px gray' }}>
-              <Button variant="outlined" color="secondary" onClick={(e) => handleEntailmentRequest(e, member.email)}>
+              <Button variant="outlined" color="secondary" onClick={(e) => handleEntailmentRequest(member.email)}>
                 Remove
               </Button>
             </td>

@@ -48,8 +48,10 @@ const CreateTeam = () => {
 				}
 				else {
 					teamId = res['data'];
+					alert(`New team Created: ${json_data['teamName']}`);
 					// navigate("/inviteTeam",  { state: { data: teamId } });
-					navigate(`/inviteTeam/${teamId}`)
+					// navigate(`/inviteTeam/${teamId}`)
+					navigate(`/manageTeam`)
 				}
 			});
 	};

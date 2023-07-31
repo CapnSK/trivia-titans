@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useParams } from 'react-router-dom';
 
@@ -11,13 +11,16 @@ function ManageTeam() {
 	const [teamNames, setTeamNames] = useState([]);
 	const [selectedTeamName, setSelectedTeamName] = useState('');
 
+	const navigate = useNavigate();
+
 	const user = localStorage.getItem("user");
 	const adminUserName = JSON.parse(user).username;
-	const adminEmail =  JSON.parse(user).email;
+	const adminEmail = JSON.parse(user).email;
 
 	const [invitedEmails, setInvitedEmails] = useState([]);
 	const [jsonTeamData, setJsonTeamData] = useState({});
 	const [loading, setLoading] = useState(true);
+	const [loadingTeamDetails, setLoadingTeamDetails] = useState(true);
 
 
 	// const { teamId } = useParams();
@@ -31,35 +34,38 @@ function ManageTeam() {
 
 	const getTeamDetail = (teamName) => {
 		console.log("in getTeamDetails")
-		console.log(teamName)
-		console.log(`${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_team_details`)
-		axios({
-			// Endpoint to send files
-			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_team_details`,
-			method: "POST",
-			data: { team_name: teamName },
-		})
-			// Handle the response from backend here
-			.then((res) => {
+		if (teamName != "Select a Team") {
+			console.log(teamName)
+			console.log(`${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_team_details`)
+			axios({
+				// Endpoint to send files
+				url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_team_details`,
+				method: "POST",
+				data: { team_name: teamName },
+			})
+				// Handle the response from backend here
+				.then((res) => {
 					const jsonResData = JSON.parse(res['data'])
-					console.log(jsonResData)
-					console.log(typeof (jsonResData))
 					setJsonTeamData(jsonResData)
-					setLoading(false);
+					setLoadingTeamDetails(false);
 				}
-			)
+				)
+		}
+		else {
+			setLoadingTeamDetails(true);
+			// setLoading(true);
+		}
 	}
 
 	const handleSubmitForm = (event) => {
 		event.preventDefault();
 		const data = new FormData(event.currentTarget);
-		console.log(data);
-		console.log(data.get("email"));
 		/**
 		 * Creates a JSON object with the email and password values from the given FormData object.
 		 * @param {{FormData}} data - The FormData object containing the email and password values.
 		 * @returns A JSON object with the email and password values.
 		 */
+
 		const data_json = {
 			// id: props['state']['data'],
 			team_name: selectedTeamName,
@@ -109,17 +115,19 @@ function ManageTeam() {
 	useEffect(() => {
 		// Fetch team names from the Lambda function
 
-			axios({
-				// Endpoint to send files
-				url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_created_team/`,
-				method: "POST",
-				data: {email: adminEmail},
+		axios({
+			// Endpoint to send files
+			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/get_created_team/`,
+			method: "POST",
+			data: { email: adminEmail },
+		})
+			// Handle the response from backend here
+			.then((res) => {
+				res['data'].unshift("Select a Team")
+				console.log(res)
+				setTeamNames(res['data']);
+				setLoading(false);
 			})
-				// Handle the response from backend here
-				.then((res) => {
-					console.log(res)
-					setTeamNames(res['data']);
-				})
 	}, []);
 
 
@@ -130,15 +138,29 @@ function ManageTeam() {
 	// }, [teamId]);
 
 	return (
-		<Grid item xs={12} sm={8} md={4} component={Paper} elevation={6} square>
-			Your Team: <select value={selectedTeamName} onChange={handleDropdownChange}>
-				{teamNames.map((name, index) => (
-					<option key={index} value={name}>{name}</option>
-				))}
-			</select>
-			{/* Render the selected name on the page */}
-			{selectedTeamName && <p>Selected Team Name: {selectedTeamName}</p>}
+		<Grid item alignItems="center" justifyContent="center" xs={12} sm={8} md={4} component={Paper} elevation={6} >
+			<button onClick={() => { navigate("/createTeam") }}>
+				Create new Team
+			</button>
+			<br></br>
+			<br></br>
 			{loading ? (
+				<p>Loading... {console.log("in loading")}</p>
+			) : (
+				<div>
+					Your Team: <select value={selectedTeamName} onChange={handleDropdownChange}>
+						{console.log(`before the map: ${teamNames}`)}
+						{teamNames.map((name, index) => (
+
+							<option key={index} value={name}>{name}</option>
+						))}
+					</select>
+					{/* Render the selected name on the page */}
+					{/* {selectedTeamName && <p>Selected Team Name: {selectedTeamName}</p>} */}
+				</div>
+			)
+			}
+			{loadingTeamDetails ? (
 				<p>Loading... {console.log("in loading")}</p>
 			) : (
 				<div>
@@ -151,7 +173,7 @@ function ManageTeam() {
 						<TextField
 							margin="normal"
 							required
-							fullWidth
+							// fullWidth
 							id="email"
 							label="Email Address"
 							name="email"
@@ -161,7 +183,7 @@ function ManageTeam() {
 
 						<Button
 							type="submit"
-							fullWidth
+							// fullWidth
 							variant="contained"
 							sx={{ mt: 3, mb: 2 }}>
 							Send Invitation
