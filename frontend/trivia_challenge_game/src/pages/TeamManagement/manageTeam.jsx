@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 
 import TeamDetailTable from './teamDetailTable';
 import { ChatContext } from "../../contexts";
+import { introduce } from "../../util";
 
 function ManageTeam() {
 	const [teamNames, setTeamNames] = useState([]);
@@ -57,6 +58,9 @@ function ManageTeam() {
 						teamId: jsonResData['id'],
 						teamName: jsonResData['team_name'] 
 					})
+
+					introduce({username: jsonResData['admin']['username'], teamId: jsonResData['id']})
+
 					setJsonTeamData(jsonResData)
 					setLoadingTeamDetails(false);
 
@@ -201,7 +205,7 @@ function ManageTeam() {
 			) : (
 				<div>
 					{console.log("in else")}
-					<Box style={{ "text-align": "center", "display":"flex", "flex-direction":"column"}} 
+					<Box style={{ "display":"flex", "flex-direction":"column"}} 
 						component="form"
 						// noValidate
 						onSubmit={handleSubmitForm}

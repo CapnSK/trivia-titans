@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
+import { introduce } from "../../util";
+
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -49,6 +51,9 @@ function JoinTeam() {
                         teamId: teamId,
                         teamName: teamDetails['team_name']
                     })
+
+                    introduce({username, teamId})
+                    
                     alert("You have Accepted the request!")
                     navigate("/home")
                 }
@@ -67,10 +72,6 @@ function JoinTeam() {
             // Handle the response from backend here
             .then((res) => {
                 console.log(res['data'])
-                // res['data'].unshift("Select a Team")
-                // console.log(res)
-                // setTeamNames(res['data']);
-                // setLoadingTeams(false);
                 setTeamDetails(JSON.parse(res['data']));
                 setLoadingDetails(false);
             })
