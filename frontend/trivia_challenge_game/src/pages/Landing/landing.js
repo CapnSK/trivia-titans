@@ -6,8 +6,8 @@ function Landing(){
         <div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/createTeam")}}>
-                        Create a team!
+                    <button onClick={() => {navigate("/manageTeam")}}>
+                        Manage your Teams!
                     </button>
                 </div>
             </div>

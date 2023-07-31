@@ -11,6 +11,10 @@ import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import Leaderboard from "../Leaderboard";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from "../Navbar";
+import CreateTeam from "../TeamManagement/createTeam";
+import InviteTeam from "../TeamManagement/inviteTeam";
+import HandleRequest from "../TeamManagement/handleRequest";
+import ManageTeam from "../TeamManagement/manageTeam";
 
 function Main() {
     return (
@@ -31,6 +35,13 @@ function Main() {
                         <Route element={<Landing/>} path="/home"/>
                         <Route path="/" element={<Navigate to="/leaderboard" replace/>}/>
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
+                        <Route element={<CreateTeam />} path="/createTeam" />
+		    			{/* <Route element={<InviteTeam />} path="/inviteTeam/:teamId" /> */}
+                        <Route element={<ManageTeam/>} path="/manageTeam"/>
+		     			<Route
+		     				path="/invitation-request/:teamId"
+		     				component={HandleRequest}
+		     			/>
                     </Route>
                 </Routes>
             {/* </Router> */}
