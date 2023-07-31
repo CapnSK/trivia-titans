@@ -14,6 +14,7 @@ import CreateTeam from "../TeamManagement/createTeam";
 import InviteTeam from "../TeamManagement/inviteTeam";
 import HandleRequest from "../TeamManagement/handleRequest";
 import ManageTeam from "../TeamManagement/manageTeam";
+import JoinTeam from "../TeamManagement/joinTeam";
 
 function Main() {
     return (
@@ -34,7 +35,7 @@ function Main() {
                         <Route path="/" element={<Navigate to="/leaderboard" replace/>}/>
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
                         <Route element={<CreateTeam />} path="/createTeam" />
-		    			{/* <Route element={<InviteTeam />} path="/inviteTeam/:teamId" /> */}
+		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
 		     			<Route
 		     				path="/invitation-request/:teamId"

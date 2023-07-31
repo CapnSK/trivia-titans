@@ -39,7 +39,7 @@ function Navbar(){
         </div>
       </nav>
     :
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light">
           <div className="container">
           <div className="navbar-center">
             <a className="nav-link" href={link}>
