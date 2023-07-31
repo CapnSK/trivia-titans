@@ -21,7 +21,7 @@ function Navbar(){
 
   return(
     loggedIn ?
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container">
           <div className="navbar-center">
             <button className="nav-link" onClick={() => {navigate('/home')}}>
@@ -40,7 +40,7 @@ function Navbar(){
         </div>
       </nav>
     :
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light">
           <div className="container">
           <div className="navbar-center">
             <button className="nav-link" onClick={() => {navigate('/unauth/signup')}}>
