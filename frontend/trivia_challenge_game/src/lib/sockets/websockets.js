@@ -16,7 +16,7 @@ class WebSocketAPI {
         }
     }
 
-    listen(topicName){
+    listen(topicName){ //topicName e.g. open, close, message etc.
         return new Observable((subscriber)=>{
             this._webSocket.addEventListener(topicName, (event)=>{
                 subscriber.next(event);
@@ -27,6 +27,12 @@ class WebSocketAPI {
             })
         );
     }
+
+    emit(event){
+        this._webSocket.send(JSON.stringify(event));
+    }
+
+
 
     addOnOpenListener(onOpen){
         this._webSocket.onopen = onOpen;
@@ -47,4 +53,4 @@ class WebSocketAPI {
 
 const webSocketClient = new WebSocketAPI();
 
-export default webSocketClient;
+export  { webSocketClient };
