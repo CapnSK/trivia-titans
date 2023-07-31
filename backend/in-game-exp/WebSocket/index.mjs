@@ -1,6 +1,6 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache} from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus} from "./DBOperations.mjs";
 import exp from "constants";
 
 const WS_API_POST_URL = `https://94l1ahmzuf.execute-api.us-east-1.amazonaws.com/dev`;
@@ -73,6 +73,8 @@ async function handleEvent(eventEmitted, connectionId) {
   let timestampCreated;
   if (eventType) {
     try {
+      matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+      timestampCreated = context?.matchSpec?.timestampCreated || "";
       switch (eventType) {
         case "INTRODUCE":
           teamId = context?.matchSpec?.teamId || ""
@@ -83,8 +85,8 @@ async function handleEvent(eventEmitted, connectionId) {
           username = data.username;
           teamId = context?.matchSpec?.teamId || ""
           const startTime = data.startTime;
-          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
           await addMatchInstanceIdToDB({ connectionId, teamId, matchInstanceId });
+          await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_LOBBY"});
           await postEvent({
             sender: username,
             type: "JOIN_GAME",
@@ -95,7 +97,7 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "START_GAME":
-          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+          await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_PROGRESS"});
           await postEvent({
             sender: username,
             type: "START_GAME",
@@ -105,8 +107,7 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "MARK_ANSWER":
-          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
-          timestampCreated = context?.matchSpec?.timestampCreated || "";
+          
           // const triviaId = context?.matchSpec?.triviaId || "";
           teamId = context?.matchSpec?.teamId || "";
           questionId = data.questionId;
@@ -123,8 +124,7 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "UPDATE_SCORE":
-          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
-          timestampCreated = context?.matchSpec?.timestampCreated || "";
+          
           const updatedScore = await calculateUpdatedScore({matchInstanceId, timestampCreated});
           await updateScore({
             matchInstanceId,
@@ -152,6 +152,15 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "SUBMIT_QUIZ":
+          //To Do: call appropriate lambdas to finalize the match data
+          await updateMatchStatus({matchInstanceId, timestampCreated, status:"COMPLETED"});
+          await postEvent({
+            sender: username,
+            type: "QUIZ_SUBMITTED",
+            data: {
+              matchInstanceId
+            }
+          });
           break;
       }
     } catch (e) {
@@ -163,7 +172,6 @@ async function handleEvent(eventEmitted, connectionId) {
 async function postEvent(event) {
   const matchInstanceId = event.data?.matchInstanceId || "";
   await syncCache();
-  console.log("connections cache is",CONNECTIONS_CACHE);
   console.log("current match instance id is ",matchInstanceId);
   const receivers = Object.entries(CONNECTIONS_CACHE)
   .filter(([conId, value])=>{

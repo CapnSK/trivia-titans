@@ -22,12 +22,14 @@
                 "matchSpec": {
                     "teamId": "triviaTitans1221",
                     "triviaId": "trivia1",
-                    "matchInstanceId": "t011223"
+                    "matchInstanceId": "t011223",
+                    "timestampCreated": "1689012982155"
                 }
             },
             "data": {
                 "username": "Jamura",
-                "startTime": "23123213123232"
+                "startTime": "23123213123232",
+                "timestampCreated": "1689012982155"
             }
         }
     },
@@ -70,6 +72,41 @@
         "action": "emitEvent",
         "event": {
             "type": "UPDATE_SCORE",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1",
+                    "matchInstanceId": "t011223",
+                    "timestampCreated": "1689012982155"
+                }
+            },
+            "data": {
+                "username": "Jamura"
+            }
+        }
+    },
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "NEXT_QUESTION",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1",
+                    "matchInstanceId": "t011223",
+                    "timestampCreated": "1689012982155"
+                }
+            },
+            "data": {
+                "username": "Jamura",
+                "questionId": "6"
+            }
+        }
+    },
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "SUBMIT_QUIZ",
             "context": {
                 "matchSpec": {
                     "teamId": "triviaTitans1221",

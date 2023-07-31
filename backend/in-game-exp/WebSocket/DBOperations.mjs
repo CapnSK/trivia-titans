@@ -108,6 +108,25 @@ const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) 
     }
 }
 
+const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) => {
+    try {
+        const command = new UpdateCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId,
+                timestamp_created: timestampCreated
+            },
+            UpdateExpression: "SET match_status = :status",
+            ExpressionAttributeValues: {
+                ":status": status
+            }
+        });
+        await docClient.send(command);
+    } catch (e) {
+        console.log("error updating match status", e);
+    }
+}
+
 const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
     let matchData = [];
     try {
@@ -204,5 +223,6 @@ export {
     updateScore,
     getTeamAnswers,
     getCorrectAnswers,
-    syncCache
+    syncCache,
+    updateMatchStatus
 };
