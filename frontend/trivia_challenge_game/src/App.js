@@ -27,8 +27,9 @@ function App() {
 		// 	</BrowserRouter>
 		// </div>
 
-		
+		<Router>
 		 <div className="App">
+		
 			<AuthContextProvider>
 				<ChatContextProvider>
 					<Navbar></Navbar>
@@ -39,6 +40,7 @@ function App() {
 				</ChatContextProvider>
 			</AuthContextProvider>
 		</div>
+		</Router>
 
 	);
 }

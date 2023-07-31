@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useParams } from 'react-router-dom';
 
 import TeamDetailTable from './teamDetailTable';
+import { ChatContext } from "../../contexts";
 
 function ManageTeam() {
 	const [teamNames, setTeamNames] = useState([]);
@@ -24,6 +25,8 @@ function ManageTeam() {
 	const [loadingTeams, setLoadingTeams] = useState(true);
 	const [loadingTeamDetails, setLoadingTeamDetails] = useState(true);
 	const [loadingTeamStatistic, setLoadingTeamStatistic] = useState(true);
+
+	let { setChatContext  } = useContext(ChatContext);
 
 	// const { teamId } = useParams();
 
@@ -48,6 +51,12 @@ function ManageTeam() {
 				// Handle the response from backend here
 				.then((res) => {
 					const jsonResData = JSON.parse(res['data'])
+					setChatContext({
+						email: jsonResData['admin']['email'],
+						username: jsonResData['admin']['username'],
+						teamId: jsonResData['id'],
+						teamName: jsonResData['team_name'] 
+					})
 					setJsonTeamData(jsonResData)
 					setLoadingTeamDetails(false);
 
