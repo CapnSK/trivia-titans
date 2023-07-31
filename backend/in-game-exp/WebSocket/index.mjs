@@ -222,7 +222,7 @@ async function calculateUpdatedScore({matchInstanceId, timestampCreated}){
 function exactMatch(actualAnsArray, expectedAnsArray){
   return expectedAnsArray.every(ansOpt=>{
     return actualAnsArray.includes(ansOpt);
-  });
+  }) && expectedAnsArray.length === actualAnsArray.length;
 }
 
 
