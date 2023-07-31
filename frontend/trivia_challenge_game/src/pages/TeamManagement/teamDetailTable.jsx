@@ -2,11 +2,10 @@ import React from 'react';
 import { useTable } from 'react-table';
 import MembersTable from './membersTable';
 
-const TeamDetailTable = ({ jsonData , teamId}) => {
+const TeamDetailTable = ({ jsonData }) => {
   
   const additionalData = {
-    teamName: jsonData['team_name'],
-    teamId: teamId
+    teamName: jsonData['team_name']
   };
 
   const columns = React.useMemo(
@@ -17,11 +16,11 @@ const TeamDetailTable = ({ jsonData , teamId}) => {
       },
       {
         Header: 'Admin Email',
-        accessor: 'admin.email.S',
+        accessor: 'admin.email',
       },
       {
         Header: 'Admin Username',
-        accessor: 'admin.username.S',
+        accessor: 'admin.username',
       },
       ,
       {

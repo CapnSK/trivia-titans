@@ -13,29 +13,29 @@ import HandleRequest from "./pages/TeamManagement/handleRequest";
 function App() {
 	return (
 
-		<div className="App">
-			<BrowserRouter>
-				<Routes>
-					<Route element={<CreateTeam />} path="/createTeam" />
-					<Route element={<InviteTeam />} path="/inviteTeam/:teamId" />
-					<Route
-						path="/invitation-request/:teamId"
-						component={HandleRequest}
-					/>
-				</Routes>
-			</BrowserRouter>
-		</div>
+		// <div className="App">
+		// 	<BrowserRouter>
+		// 		<Routes>
+		// 			<Route element={<CreateTeam />} path="/createTeam" />
+		// 			<Route element={<InviteTeam />} path="/inviteTeam/:teamId" />
+		// 			<Route
+		// 				path="/invitation-request/:teamId"
+		// 				component={HandleRequest}
+		// 			/>
+		// 		</Routes>
+		// 	</BrowserRouter>
+		// </div>
 
 		
-		//  <div className="App">
-		// <AuthContextProvider>
-		// 		<Navbar></Navbar>
-		// 		<div className="auth-wrapper">
-		// 		<Main ></Main>
-		// 		</div>
-		// 		<Chat></Chat>
-		// 	</AuthContextProvider>
-		// </div>
+		 <div className="App">
+			<AuthContextProvider>
+				<Navbar></Navbar>
+				<div className="auth-wrapper">
+				<Main ></Main>
+				</div>
+				<Chat></Chat>
+			</AuthContextProvider>
+		</div>
 		
 	);
 }

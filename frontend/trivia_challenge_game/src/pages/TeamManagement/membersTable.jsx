@@ -2,17 +2,16 @@ import React from 'react';
 import axios from "axios";
 import { Button } from '@mui/material';
 
-const MembersTable = ({ members, teamName, teamId}) => {
+const MembersTable = ({ members, teamName}) => {
 
-  const handleEntailmentRequest = (email) => {
+  const handleEntailmentRequest = (event, email) => {
     try {
 
       axios({
         // Endpoint to send files
-        url: `${process.env.REACT_APP_APIGATEWAY_URL}/delete_member`,
+        url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/delete_member`,
         method: "POST",
         data: {
-          id: teamId,
           email: email,
           team_name: teamName
         },
@@ -26,7 +25,8 @@ const MembersTable = ({ members, teamName, teamId}) => {
           }
           if (res['data'] == true) {
             console.log("successfully updated")
-            window.location.reload(false);
+            // event.preventDefault();
+            // window.location.reload(false);
           }
         });
       
@@ -51,19 +51,20 @@ const MembersTable = ({ members, teamName, teamId}) => {
         </tr>
       </thead>
       <tbody>
+        {console.log(members)}
         {members.map((member, index) => (
           <tr key={index}>
             <td style={{ padding: '5px', border: 'solid 1px gray' }}>
-              {member.M.userName.S}
+              {member.userName}
             </td>
             <td style={{ padding: '5px', border: 'solid 1px gray' }}>
-              {member.M.email.S}
+              {member.email}
             </td>
             <td style={{ padding: '5px', border: 'solid 1px gray' }}>
-              {member.M.status.S}
+              {member.status}
             </td>
             <td style={{ padding: '5px', border: 'solid 1px gray' }}>
-              <Button variant="outlined" color="secondary" onClick={(e) => handleEntailmentRequest(member.M.email.S)}>
+              <Button variant="outlined" color="secondary" onClick={(e) => handleEntailmentRequest(e, member.email)}>
                 Remove
               </Button>
             </td>
