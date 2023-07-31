@@ -9,7 +9,7 @@ import TeamDetailTable from './teamDetailTable';
 import { AuthContext, ChatContext } from "../../contexts";
 
 function JoinTeam() {
-
+    const [loadingDetails, setLoadingDetails] = useState(true);
     const { teamId } = useParams();
     const navigate = useNavigate();
 

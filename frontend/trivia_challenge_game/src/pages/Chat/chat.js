@@ -136,14 +136,14 @@ function Chat() {
                         <div className="chat-header">
                                     <Typography variant="body2" color="white" style={{marginTop: "0.8em"}}>
                                     {
-                                        !(email && teamMates && teamName && username) ? 
+                                        !(email && teamName && username) ? 
                                         "Please login & join team to start interacting with people"
                                         : `Hi ${username}, you can interact with your teammates here`
                                     }          
                                     </Typography>
                                 
                         </div>
-                        {(email && teamMates && teamName && username) ? 
+                        {(email && teamName && username) ? 
                         (
                             <>
                                 <div className="chat-thread-wrapper">
