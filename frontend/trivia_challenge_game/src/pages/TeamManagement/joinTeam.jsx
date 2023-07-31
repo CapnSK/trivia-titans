@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 import TeamDetailTable from './teamDetailTable';
 
 function JoinTeam() {
-
+    const [loadingDetails, setLoadingDetails] = useState(true);
     const { teamId } = useParams();
     const navigate = useNavigate();
 
@@ -53,8 +53,8 @@ function JoinTeam() {
 			.then((res) => {
 				res['data'].unshift("Select a Team")
 				console.log(res)
-				setTeamNames(res['data']);
-				setLoadingTeams(false);
+				// setTeamNames(res['data']);
+				// setLoadingTeams(false);
 			})
 		
 	}, []);
