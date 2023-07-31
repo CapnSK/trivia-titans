@@ -2,7 +2,8 @@ import React, { useState } from 'react'
 import { useLocation,useNavigate } from 'react-router-dom'
 import { axiosJSON } from "../../../lib/axios";
 
-const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY
+const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV
+const REACT_APP_APIGATEWAY_URL_ARPIT =  process.env.REACT_APP_APIGATEWAY_URL_ARPIT
 
 const ConfirmEmail = () => {
   const [code, setCode] = useState('')
@@ -18,13 +19,21 @@ const ConfirmEmail = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY + postURL, JSON.stringify({ "username": username, "code":code }))
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + postURL, JSON.stringify({ "username": username, "code":code }))
       const data = await response.data
       if (data.authenticated) {
         console.log('redirect')
         // User was successfully authenticated
         // You can redirect them to a protected route or update the UI
         alert('Successfully Verified!')
+        try{
+          const sendSNSResponse = await axiosJSON.post(REACT_APP_APIGATEWAY_URL_ARPIT + '/create_sns', { email: email})
+          setTimeout(() => alert("SNS Subscription Mail Sent. You will receive a mail shortly. You must confirm the subscription to receive emails from us."), 3000)
+        }
+        catch(error){
+          alert(error.response.data.message)
+          console.log(error)
+        }
         navigate(redirectURL)
       } else {
         alert(data.message)
@@ -40,24 +49,26 @@ const ConfirmEmail = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Verify your email</h3>
-      <div className="mb-3">
-        <label>Enter the code sent to your email at {email}</label>
-        <input
-          type="text"
-          className="form-control"
-          name="code"
-          placeholder="Enter the code sent to your email..."
-          onChange={handleInputChange}
-        />
-      </div>
-      <div className="d-grid">
-        <button type="submit" className="btn btn-primary">
-          Verify
-        </button>
-      </div>
-    </form>
+    <div className="auth-inner"> 
+      <form onSubmit={handleSubmit}>
+        <h3>Verify your email</h3>
+        <div className="mb-3">
+          <label>Enter the code sent to your email at {email}</label>
+          <input
+            type="text"
+            className="form-control"
+            name="code"
+            placeholder="Enter the code sent to your email..."
+            onChange={handleInputChange}
+          />
+        </div>
+        <div className="d-grid">
+          <button type="submit" className="btn btn-primary">
+            Verify
+          </button>
+        </div>
+      </form>
+    </div>
   )
 }
 
