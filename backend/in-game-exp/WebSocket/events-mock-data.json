@@ -10,7 +10,7 @@
                 }
             },
             "data": {
-                "username": "cooldude69"
+                "username": "Jamura"
             }
         }
     },
@@ -62,7 +62,24 @@
             "data": {
                 "username": "Jamura",
                 "questionId": "1",
-                "selectedOption": "3"
+                "selectedOption": ["3"]
+            }
+        }
+    },
+    {
+        "action": "emitEvent",
+        "event": {
+            "type": "UPDATE_SCORE",
+            "context": {
+                "matchSpec": {
+                    "teamId": "triviaTitans1221",
+                    "triviaId": "trivia1",
+                    "matchInstanceId": "t011223",
+                    "timestampCreated": "1689012982155"
+                }
+            },
+            "data": {
+                "username": "Jamura"
             }
         }
     }

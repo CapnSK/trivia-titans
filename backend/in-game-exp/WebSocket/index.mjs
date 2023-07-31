@@ -1,6 +1,7 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer } from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache} from "./DBOperations.mjs";
+import exp from "constants";
 
 const WS_API_POST_URL = `https://94l1ahmzuf.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
@@ -122,17 +123,20 @@ async function handleEvent(eventEmitted, connectionId) {
           });
           break;
         case "UPDATE_SCORE":
-          // const updatedScore = await update_score({
-          //   matchInstanceId,
-          //   questionId,
-          //   answerId
-          // });
+          matchInstanceId = context?.matchSpec?.matchInstanceId || "";
+          timestampCreated = context?.matchSpec?.timestampCreated || "";
+          const updatedScore = await calculateUpdatedScore({matchInstanceId, timestampCreated});
+          await updateScore({
+            matchInstanceId,
+            timestampCreated,
+            updatedScore
+          });
           await postEvent({
-            sender: "system",
+            sender: username,
             type: "UPDATED_SCORE",
             data: {
               matchInstanceId,
-              score: 0
+              updatedScore
             }
           });
           break;
@@ -158,6 +162,9 @@ async function handleEvent(eventEmitted, connectionId) {
 
 async function postEvent(event) {
   const matchInstanceId = event.data?.matchInstanceId || "";
+  await syncCache();
+  console.log("connections cache is",CONNECTIONS_CACHE);
+  console.log("current match instance id is ",matchInstanceId);
   const receivers = Object.entries(CONNECTIONS_CACHE)
   .filter(([conId, value])=>{
     return value.matchInstanceId === matchInstanceId;
@@ -174,10 +181,40 @@ async function postEvent(event) {
       });
     }));
   } catch(e){
-    console.log("error posting event to all the ids")
+    console.log("error posting event to all the ids");
   }
 
   return Promise.resolve();
+}
+
+async function calculateUpdatedScore({matchInstanceId, timestampCreated}){
+  const teamAnswers = await getTeamAnswers({matchInstanceId, timestampCreated}); //{questionId: qId, answerptionId: oId}
+  const questionIds = teamAnswers.map(({questionId})=>{
+    return questionId;
+  });
+  console.log("questionIds are ", questionIds);
+  const correctAnswers = await getCorrectAnswers(questionIds);
+  console.log("correct answers are ", correctAnswers);
+  let score = 0;
+  for(let { questionId, answerOptionId} of teamAnswers){
+    score += (correctAnswers.filter((cA)=>{
+      return questionId === cA.questionId;
+    }).map((cA)=>{
+      const actual = Array.isArray(answerOptionId) ? answerOptionId : [answerOptionId];
+      const expected = Array.isArray(cA.answerOptionId) ? cA.answerOptionId : [cA.answerOptionId];
+      console.log("for question "+cA.questionId+" answers actual and expected array are", actual, expected);
+      return exactMatch(actual, expected) ? Number(cA.points) : 0;
+    })[0] || 0);
+    console.log(`score till now is ${score} for question ${questionId} given answer ${answerOptionId}`, correctAnswers);
+  }
+  console.log("final calculated score is", score);
+  return score;
+}
+
+function exactMatch(actualAnsArray, expectedAnsArray){
+  return expectedAnsArray.every(ansOpt=>{
+    return actualAnsArray.includes(ansOpt);
+  });
 }
 
 
