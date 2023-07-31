@@ -1,34 +1,34 @@
 import {useNavigate} from 'react-router-dom';
 
-function Landing(){
+function ViewUserProfile(){
     const navigate = useNavigate();
     return (
         <div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/manageTeam")}}>
-                        Manage your Teams!
+                    <button onClick={() => {navigate("/compareStat")}}>
+                        Compare Teams
                     </button>
                 </div>
             </div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/leaderboard")}}>
-                        View Leaderboards!
+                    <button onClick={() => {navigate("/userStat")}}>
+                        Status User
                     </button>
                 </div>
             </div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/userProfile")}}>
-                        User Profile Management
+                    <button onClick={() => {navigate("/editPersonalProfile")}}>
+                        Edit Personal Profile
                     </button>
                 </div>
             </div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/joinGame")}}>
-                       Join Game
+                    <button onClick={() => {navigate("/affiliations")}}>
+                       Manage User affiliations with team
                     </button>
                 </div>
             </div>
@@ -37,4 +37,4 @@ function Landing(){
     );
 }
 
-export default Landing;
+export default ViewUserProfile;

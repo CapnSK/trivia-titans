@@ -8,12 +8,13 @@
         win: false,
         match_config: {
             trivia_id: "trivia 1",
-            currentQuestion: 1, // question number based on the index
+            current_question: 1, // question number based on the index
             answers:{
-                questionId: "1", //question being referred
-                answerOptionId: "2" // answer given by the team
-            },  
-        }, 
+                question_id: "answer_option_id", //question being referred
+                //"1": "2" 
+            }
+        }, //does not store entire team instance, but just a team_id
+        // leaderboard: Array<leaderboard_item>
     }
 ]
 

@@ -1,38 +1,39 @@
 import React, { useState, useEffect } from "react";
-import { localStorageUtil } from "../../util";
+import {useNavigate} from 'react-router-dom';
+import { localStorageUtil } from '../../util';
 
 function Navbar(){
-  const [link, setLink] = useState(null);
+  // const [link, setLink] = useState(null);
   const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
   
   useEffect(() => {
     if (localStorage.getItem("user") !== null) {
-      setLink("/home");
+      // setLink("/home");
       setLoggedIn(true);
-    } else {
-      setLink("/unauth/signup");
     }
   }, []);
   
   const logout = () => {
-    // localStorageUtil.removeItem("user");
+    localStorageUtil.removeItem("user");
+    navigate("/unauth/login")
   }
 
   return(
     loggedIn ?
-      <nav className="navbar navbar-expand-lg navbar-light fixed-top">
+      <nav className="navbar navbar-expand-lg navbar-light">
         <div className="container">
           <div className="navbar-center">
-            <a className="nav-link" href={link}>
+            <button className="nav-link" onClick={() => {navigate('/home')}}>
               Trivia Challenge Game
-            </a>
+            </button>
           </div>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
-                <a className="nav-link" href="/unauth/login" onClick={logout()}>
+                <button className="nav-link" onClick={logout}>
                   Logout
-                </a>
+                </button>
               </li>
             </ul>
           </div>
@@ -42,21 +43,21 @@ function Navbar(){
       <nav className="navbar navbar-expand-lg navbar-light">
           <div className="container">
           <div className="navbar-center">
-            <a className="nav-link" href={link}>
+            <button className="nav-link" onClick={() => {navigate('/unauth/signup')}}>
               Trivia Challenge Game
-            </a>
+            </button>
           </div>
           <div className="collapse navbar-collapse" id="navbarTogglerDemo02">
           <ul className="navbar-nav ml-auto">
             <li className="nav-item">
-              <a className="nav-link" href="/unauth/login">
+              <button className="nav-link" onClick={() => {navigate('/unauth/login')}}>
                 Login
-              </a>
+              </button>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="/unauth/signup">
+              <button className="nav-link" onClick={() => {navigate('/unauth/signup')}}>
                 Sign up
-              </a>
+              </button>
             </li>
           </ul>
         </div>
