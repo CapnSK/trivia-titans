@@ -10,12 +10,14 @@ import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
 import Leaderboard from "../Leaderboard";
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Navbar from "../Navbar";
 
 function Main() {
     return (
         <>
-            <Router>
+            {/* <Router> */}
                 <Routes>
+                    {/* <Navbar></Navbar> */}
                     <Route exact path="/unauth" element={<Auth />}>
                         <Route exact element={<Login/>} path="/unauth/login"/>
                         <Route path="/unauth" element={<Navigate to="/unauth/login" replace />}/>
@@ -31,7 +33,7 @@ function Main() {
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
                     </Route>
                 </Routes>
-            </Router>
+            {/* </Router> */}
         </>
     );
 }
