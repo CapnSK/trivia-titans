@@ -20,6 +20,7 @@ import CompareUsers from "../UserProfile/CompareUsers";
 import ViewUserProfile from "../UserProfile/ViewUserProfile";
 import StatusUsers from "../UserProfile/StatusUsers";
 import Displaygames from "../JoinGame/Displaygames";
+import JoinTeam from "../TeamManagement/joinTeam";
 
 function Main() {
     return (
@@ -49,7 +50,7 @@ function Main() {
                         <Route element={<StatusUsers />} path="/userStat" />
                         <Route element={<Displaygames />} path="/joinGame" />
                         <Route element={<CreateTeam />} path="/createTeam" />
-		    			{/* <Route element={<InviteTeam />} path="/inviteTeam/:teamId" /> */}
+		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
 		     			<Route
 		     				path="/invitation-request/:teamId"

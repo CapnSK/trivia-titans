@@ -11,6 +11,8 @@ function ManageTeam() {
 	const [teamNames, setTeamNames] = useState([]);
 	const [selectedTeamName, setSelectedTeamName] = useState('');
 
+	const [teamStatistics, setTeamStatistics] = useState([]);
+
 	const navigate = useNavigate();
 
 	const user = localStorage.getItem("user");
@@ -19,9 +21,9 @@ function ManageTeam() {
 
 	const [invitedEmails, setInvitedEmails] = useState([]);
 	const [jsonTeamData, setJsonTeamData] = useState({});
-	const [loading, setLoading] = useState(true);
+	const [loadingTeams, setLoadingTeams] = useState(true);
 	const [loadingTeamDetails, setLoadingTeamDetails] = useState(true);
-
+	const [loadingTeamStatistic, setLoadingTeamStatistic] = useState(true);
 
 	// const { teamId } = useParams();
 
@@ -48,12 +50,15 @@ function ManageTeam() {
 					const jsonResData = JSON.parse(res['data'])
 					setJsonTeamData(jsonResData)
 					setLoadingTeamDetails(false);
+
+					getTeamStatistic(jsonResData)
 				}
 				)
 		}
 		else {
 			setLoadingTeamDetails(true);
-			// setLoading(true);
+			// setLoadingTeams(true);
+			setLoadingTeamStatistic(true);
 		}
 	}
 
@@ -94,6 +99,9 @@ function ManageTeam() {
 				else if (res['data'] == "number exceed") {
 					alert("Maximum send invitation limit exceed (4 invitations only)")
 				}
+				else if (res['data'] == "You are admin") {
+					alert(`${data_json['email']} is the admin of the team`)
+				}
 				getTeamDetail(selectedTeamName);
 			});
 	};
@@ -103,6 +111,23 @@ function ManageTeam() {
 
 	};
 
+	const getTeamStatistic = (jsonResData) => {
+
+		console.log(jsonResData)
+		axios({
+			// Endpoint to send files
+			url: `https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
+			method: "POST",
+			// data: { teamId: jsonResData['id'] },
+			data: { team_id: "1" },
+		})
+			// Handle the response from backend here
+			.then((res) => {
+				console.log(res['data'])
+				setTeamStatistics(res['data']);
+				setLoadingTeamStatistic(false);
+			})
+	}
 
 	const handleDropdownChange = (event) => {
 		console.log(event.target.value);
@@ -126,8 +151,9 @@ function ManageTeam() {
 				res['data'].unshift("Select a Team")
 				console.log(res)
 				setTeamNames(res['data']);
-				setLoading(false);
+				setLoadingTeams(false);
 			})
+		
 	}, []);
 
 
@@ -138,14 +164,13 @@ function ManageTeam() {
 	// }, [teamId]);
 
 	return (
-		<Grid item alignItems="center" justifyContent="center" xs={12} sm={8} md={4} component={Paper} elevation={6} >
-			<button onClick={() => { navigate("/createTeam") }}>
+		<Grid item style={{ "align-items":"center", "display":"flex", "flex-direction":"column"}} xs={12} sm={8} md={4} component={Paper} elevation={6} >
+			<Button variant="contained" onClick={() => { navigate("/createTeam") }}>
 				Create new Team
-			</button>
+			</Button>
 			<br></br>
-			<br></br>
-			{loading ? (
-				<p>Loading... {console.log("in loading")}</p>
+			{loadingTeams ? (
+				<p>Loading Teams ... {console.log("in loading")}</p>
 			) : (
 				<div>
 					Your Team: <select value={selectedTeamName} onChange={handleDropdownChange}>
@@ -160,12 +185,14 @@ function ManageTeam() {
 				</div>
 			)
 			}
+			<br></br>
+			<h3>Team Details</h3>
 			{loadingTeamDetails ? (
-				<p>Loading... {console.log("in loading")}</p>
+				<p>Loading Team Details ... {console.log("in loading")}</p>
 			) : (
 				<div>
 					{console.log("in else")}
-					<Box
+					<Box style={{ "text-align": "center", "display":"flex", "flex-direction":"column"}} 
 						component="form"
 						// noValidate
 						onSubmit={handleSubmitForm}
@@ -180,7 +207,7 @@ function ManageTeam() {
 							autoComplete="email"
 							autoFocus
 						/>
-
+				
 						<Button
 							type="submit"
 							// fullWidth
@@ -190,10 +217,44 @@ function ManageTeam() {
 						</Button>
 					</Box>
 
-					<h2>Team Details</h2>
+					
 					{console.log(jsonTeamData)}
 					{console.log(typeof (jsonTeamData))}
 					<TeamDetailTable jsonData={jsonTeamData} />
+				</div>
+			)}
+			<br></br>
+
+			<h3>Team Statistics</h3>
+			{loadingTeamStatistic ? (
+				<p>Loading Team Statisctic ... </p>
+			) : (
+				<div>
+					<table  style={{ border: '1px solid black', margin: '10px 0' }}>
+						<thead>
+							<tr>
+								<th style={{ border: 'solid 1px gray' , padding: '5px' }}>Team Name</th>
+								<th style={{ border: 'solid 1px gray' , padding: '5px' }}>Match Status</th>
+								<th style={{ border: 'solid 1px gray' , padding: '5px' }}>Result</th>
+								<th style={{ border: 'solid 1px gray' , padding: '5px' }}>Score</th>
+								<th style={{ border: 'solid 1px gray' , padding: '5px' }}>Game Detail</th>
+							</tr>
+						</thead>
+						<tbody>
+							{teamStatistics.map((team) => (
+								<tr key={team.match_instance_id}>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.team_name}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.match_status}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.win == true ? "Win": "Loss"}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.score}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>
+										Trivia Name: {team.match_config.trivia_name}<br />
+										Category: {team.match_config.category}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
 				</div>
 			)}
 		</Grid>
