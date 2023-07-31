@@ -4,6 +4,10 @@ import { AuthContextProvider, ChatContextProvider } from "./contexts";
 import Chat from './pages/Chat';
 import Main from './pages/Main';
 import Navbar from './pages/Navbar';
+import CreateTeam from './pages/TeamManagement/createTeam';
+import InviteTeam from './pages/TeamManagement/inviteTeam';
+import HandleRequest from "./pages/TeamManagement/handleRequest";
+import { BrowserRouter as Router} from 'react-router-dom'
 
 
 function App() {
