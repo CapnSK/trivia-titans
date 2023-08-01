@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useLayoutEffect, useState } from "react";
 import axios from "axios";
+import {axiosJSON} from "../../lib/axios";
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -26,6 +27,7 @@ function ManageTeam() {
 	const [loadingTeams, setLoadingTeams] = useState(true);
 	const [loadingTeamDetails, setLoadingTeamDetails] = useState(true);
 	const [loadingTeamStatistic, setLoadingTeamStatistic] = useState(true);
+	const [loadingTeamStatisticMessgae, setLoadingTeamStatisticMessgae] = useState("Loading Team Statisctic ... ");
 
 	let { setChatContext  } = useContext(ChatContext);
 
@@ -75,20 +77,12 @@ function ManageTeam() {
 		}
 	}
 
-	const handleSubmitForm = (event) => {
-		event.preventDefault();
-		const data = new FormData(event.currentTarget);
-		/**
-		 * Creates a JSON object with the email and password values from the given FormData object.
-		 * @param {{FormData}} data - The FormData object containing the email and password values.
-		 * @returns A JSON object with the email and password values.
-		 */
-
+	const sendInvitation = (username, email) => {
 		const data_json = {
 			// id: props['state']['data'],
 			team_name: selectedTeamName,
-			userName: "xyz",
-			email: data.get("email"),
+			userName: username,
+			email: email,
 		};
 
 		/**
@@ -113,10 +107,63 @@ function ManageTeam() {
 					alert("Maximum send invitation limit exceed (4 invitations only)")
 				}
 				else if (res['data'] == "You are admin") {
-					alert(`${data_json['email']} is the admin of the team`)
+					alert(`${username} is the admin of the team.`)
 				}
 				getTeamDetail(selectedTeamName);
 			});
+	}
+
+	const handleSubmitForm = async (event) => {
+		event.preventDefault();
+		const formData = new FormData(event.currentTarget);
+		
+		const username = formData.get("username");
+
+		// const data_json = {username: data.get("username")};
+		// // const data_json = {username: data.get("username")};
+		// console.log(data_json)
+		// console.log(`${process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV}/checkIfUserExists`)
+		// axios({
+		// 	// Endpoint to send files
+		// 	url: `${process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV}/checkIfUserExists`,
+		// 	method: "POST",
+		// 	data: data_json,
+		// })
+		// 	// Handle the response from backend here
+		// 	.then((res) => {
+		// 		console.log(res)
+		// 		if(res['data']['status'] === true) {
+		// 			sendInvitation(data.get("username"), res['data']['body'])
+		// 		}
+		// 		else {
+		// 			alert("User not exist in the system")
+		// 		}
+		// 	})
+
+		// console.log(process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/checkIfUserExists');
+
+		// const response = await axiosJSON.post(process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/checkIfUserExists', 
+		// 										JSON.stringify({ "username":username }))
+
+		// const data = await response.data
+
+		// console.log(data)
+
+
+		try {
+			let response = await axios.post( process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/checkIfUserExists', 
+											JSON.stringify({username:username }));
+			console.log(response);
+			if (response.data.status == true) {
+				sendInvitation(username, response['data']['body'])
+			}
+			else {
+				alert (`${username} not exist in the system`)
+			}
+		  } catch (error) {
+			alert (`${username} not exist in the system`)     // NOTE - use "error.response.data` (not "error")
+		  }
+		
 	};
 
 	// Function to handle adding a new email address to the invitedEmails state
@@ -137,8 +184,17 @@ function ManageTeam() {
 			// Handle the response from backend here
 			.then((res) => {
 				console.log(res['data'])
-				setTeamStatistics(res['data']);
-				setLoadingTeamStatistic(false);
+				console.log(res['data'].length)
+				console.log(typeof(res['data'].length))
+				if (res['data'].length == 0) {
+					setLoadingTeamStatisticMessgae("No matchs played");
+					setLoadingTeamStatistic(true);
+				}
+				else {		
+					setTeamStatistics(res['data']);
+					setLoadingTeamStatistic(false);
+				}
+				
 			})
 	}
 
@@ -152,6 +208,10 @@ function ManageTeam() {
 
 	useEffect(() => {
 		// Fetch team names from the Lambda function
+
+		setLoadingTeamDetails(true);
+		setLoadingTeamStatistic(true);
+		setLoadingTeamStatisticMessgae("Loading Team Statisctic ... ");
 
 		axios({
 			// Endpoint to send files
@@ -177,7 +237,7 @@ function ManageTeam() {
 	// }, [teamId]);
 
 	return (
-		<Grid item style={{ "align-items":"center", "display":"flex", "flex-direction":"column"}} xs={12} sm={8} md={4} component={Paper} elevation={6} >
+		<Grid item style={{ "alignItems":"center", "display":"flex", "flexDirection":"column"}} xs={12} sm={8} md={4} component={Paper} elevation={6} >
 			<Button variant="contained" onClick={() => { navigate("/createTeam") }}>
 				Create new Team
 			</Button>
@@ -214,10 +274,10 @@ function ManageTeam() {
 							margin="normal"
 							required
 							// fullWidth
-							id="email"
-							label="Email Address"
-							name="email"
-							autoComplete="email"
+							id="username"
+							label="User Name"
+							name="username"
+							autoComplete="username"
 							autoFocus
 						/>
 				
@@ -240,7 +300,7 @@ function ManageTeam() {
 
 			<h3>Team Statistics</h3>
 			{loadingTeamStatistic ? (
-				<p>Loading Team Statisctic ... </p>
+				<p>{loadingTeamStatisticMessgae}</p>
 			) : (
 				<div>
 					<table  style={{ border: '1px solid black', margin: '10px 0' }}>
