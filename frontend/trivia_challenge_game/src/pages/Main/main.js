@@ -21,6 +21,8 @@ import ViewUserProfile from "../UserProfile/ViewUserProfile";
 import StatusUsers from "../UserProfile/StatusUsers";
 import Displaygames from "../JoinGame/Displaygames";
 import JoinTeam from "../TeamManagement/joinTeam";
+import UserProfile from "../UserProfile/UserProfile";
+import TeamAffiliations from "../UserProfile/TeamAffiliations";
 
 function Main() {
     return (
@@ -46,9 +48,11 @@ function Main() {
                         {/* <Route path="/" element={<Navigate to="/leaderboard" replace/>}/> */}
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
                         <Route element={<ViewUserProfile />} path="/userProfile" />
+                        <Route element={<UserProfile />} path="/edituserProfile" />
                         <Route element={<CompareUsers />} path="/compareStat" />
                         <Route element={<StatusUsers />} path="/userStat" />
                         <Route element={<Displaygames />} path="/joinGame" />
+                        <Route element={<TeamAffiliations />} path="/teamAffiliations" />
                         <Route element={<CreateTeam />} path="/createTeam" />
 		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
