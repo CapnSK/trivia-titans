@@ -42,6 +42,7 @@ const ResetPassword = () => {
   }
 
   return (
+    <div className="auth-inner">
     <form onSubmit={handleSubmit}>
       <h3>Verify your email</h3>
       <div className="mb-3">
@@ -70,6 +71,7 @@ const ResetPassword = () => {
         </button>
       </div>
     </form>
+    </div>
   )
 }
 

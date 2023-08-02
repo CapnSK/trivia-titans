@@ -1,16 +1,17 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { axiosJSON } from "../../../lib/axios";
 
 const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV
 
 const ForgotPassword = () => {
-  const [username, setCode] = useState('')
+  const [username, setUsername] = useState('')
+  const [maskedEmail, setMaskedEmail] = useState('')
   const navigate = useNavigate()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
-    if (name === 'username') setCode(value)
+    if (name === 'username') setUsername(value)
   }
 
   const handleSubmit = async (event) => {
@@ -23,10 +24,7 @@ const ForgotPassword = () => {
         // User was successfully authenticated
         // You can redirect them to a protected route or update the UI
         alert('Confirmation code sent to your registered email!')
-        const maskedEmail = data.maskedEmail
-        const redirectURL = "/unauth/login"
-        const postURL = "/resetpassword"
-        navigate('/unauth/reset-password', { state: {username, redirectURL, postURL, maskedEmail}})
+        setMaskedEmail(data.maskedEmail)
       } else {
         alert(data.message)
         // There was an error authenticating the user
@@ -39,6 +37,17 @@ const ForgotPassword = () => {
       // You can display an error message or handle the error in another way
     }
   }
+
+  // Use effect to check if usename and email are set, 
+  // if yes, then redirect to the next page
+  useEffect(() => {
+    if (username && maskedEmail) {
+      const redirectURL = "/unauth/login"
+      const postURL = "/resetpassword"
+      navigate('/unauth/reset-password', { state: {username, redirectURL, postURL, maskedEmail}})
+    }
+  }, [username, maskedEmail]);
+
 
   return (
     <div className="auth-inner"> 
