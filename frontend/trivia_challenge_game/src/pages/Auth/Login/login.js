@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { axiosJSON } from '../../../lib/axios';
 import { AuthContext } from '../../../contexts/AuthContext/authcontext';
+import { HttpStatusCode } from 'axios';
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
 const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV; 
 const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=35iqreqj2np431biljuh0pro63&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://frontend-at3rcdcdla-ue.a.run.app/"
 const Login = () => {
-  const { setAuthContext } = React.useContext(AuthContext);
+  const [loggedinUsername, setLoggedinUsername] = useState('')
+  const [loggedinEmail, setLoggedinEmail] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
@@ -26,6 +28,13 @@ const Login = () => {
     // If they are, redirect them to the home page
     setLoading(true)
     try{
+      if (localStorage.getItem('user') === null) {
+        // User is not logged in
+        // Do nothing
+        console.log('User is not logged in')
+        setLoading(false)
+        return
+      }
       const user = JSON.parse(localStorage.getItem('user'))
       // Check if user obj has 4 keys and they are not null or empty
       if ((user.username !== '' && user.email !== '' && user.accessId !== '' && user.tokenId !== '')) {
@@ -87,20 +96,28 @@ const Login = () => {
         // You can redirect them to a protected route or update the UI
         // localStorage.setItem("access_token",data.access_token)
         // localStorage.setItem("id_token",data.id_token)
-        const username = data.username
-        const email = data.email
+        setLoggedinUsername(data.username)
+        setLoggedinEmail(data.email)
         const access_token = data.access_token
         const id_token = data.id_token
         alert('Login successful')
-        navigate('/unauth/validate-2FA', { state: {username, email, access_token, id_token} })
+        navigate('/unauth/validate-2FA', { state: {loggedinUsername, loggedinEmail, access_token, id_token} })
       } else {
         alert(data.message)
         // There was an error authenticating the user
         // You can display an error message or handle the error in another way
       }
     } catch (error) {
-      alert(error.response.data.message)
-      console.error(error)
+      if (error.response.status === 401) {
+        alert('User is not authorized to login. Please verify your email first.')
+        const redirectURL = "/unauth/login"
+        const postURL = "/confirmemail"
+        navigate('/unauth/confirm-email', { state: { "username": email, "email": email, redirectURL, postURL }})
+      }
+      else{
+        alert(error.response.data.message)
+        console.error(error)
+      }
       // There was an error making the API call
       // You can display an error message or handle the error in another way
     }

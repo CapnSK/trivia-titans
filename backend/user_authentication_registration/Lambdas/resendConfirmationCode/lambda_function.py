@@ -11,25 +11,16 @@ def lambda_handler(event, context):
         # Set the user pool ID and client ID
         client_id = os.environ.get('client_id')
         data = json.loads(event['body'])
-        email = data['email']
-        password = data['password']
         username = data['username']
 
 
         # Authenticate the user
-        response = client.sign_up(
+        response = client.resend_confirmation_code(
             ClientId=client_id,
-            Username=username,
-            Password=password,
-            UserAttributes=[
-                {
-                    'Name': 'email',
-                    'Value': email
-                }
-            ]
+            Username=username
         )
-        if response.get('CodeDeliveryDetails', {}).get('DeliveryMedium') == 'EMAIL':
-            # The confirm email code sent successfully
+        if response.get('CodeDeliveryDetails', {}).get('DeliveryMedium', '') == 'EMAIL':
+            # The confirm email code resent successfully
             return {
                         "statusCode": HTTPStatus.OK,
                         "headers": {
@@ -48,7 +39,7 @@ def lambda_handler(event, context):
                         },
                         "body": json.dumps({"authenticated": False})
                     }
-    except client.exceptions.UsernameExistsException as e:
+    except client.exceptions.TooManyRequestsException as e:
                     # Username Already exists Error
             return {
                         "statusCode": HTTPStatus.BAD_REQUEST,
@@ -56,9 +47,9 @@ def lambda_handler(event, context):
                             "Content-Type": "application/json",
                             'Access-Control-Allow-Origin': '*'
                         },
-                        "body": json.dumps({"authenticated": False,"message":str(e).split(":")[1]})
+                        "body": json.dumps({"authenticated": False,"message":"Too many requests. Please try again later."})
                     }
-    except client.exceptions.InvalidPasswordException as e:
+    except client.exceptions.LimitExceededException as e:
                     # Password Format Error
             return {
                         "statusCode": HTTPStatus.BAD_REQUEST,
@@ -66,7 +57,7 @@ def lambda_handler(event, context):
                             "Content-Type": "application/json",
                             'Access-Control-Allow-Origin': '*'
                         },
-                        "body": json.dumps({"authenticated": False,"message":"Password must have uppercase, lowercase, number and special character"})
+                        "body": json.dumps({"authenticated": False,"message":"You have exceeded the limit for sending the confirmation code. Please contact the help desk."})
                     }
     except Exception as e:
                     # Any other Error

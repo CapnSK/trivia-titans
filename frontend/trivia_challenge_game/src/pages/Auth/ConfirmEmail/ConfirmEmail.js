@@ -16,6 +16,21 @@ const ConfirmEmail = () => {
     if (name === 'code') setCode(value)
   }
 
+  const resendConfirmationCode = async (event) => {
+    event.preventDefault();
+    try {
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/resendconfirmationcode', JSON.stringify({ "username": username }))
+      const data = await response.data
+      if (data.authenticated) {
+        alert("Confirmation code sent to your email again. Please check your email.")
+      }
+    }
+    catch (error) {
+      alert(error.response.data.message)
+      console.log(error)
+    }
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
@@ -68,6 +83,14 @@ const ConfirmEmail = () => {
           </button>
         </div>
       </form>
+      <br></br>
+      {/* A button to resend the confirmation code with a timeout */}
+      {/* Add timeout */}
+      <div className="d-grid">
+        <button type="button" className="btn btn-primary" onClick={resendConfirmationCode}>
+          Resend Confirmation Code
+        </button>
+      </div>
     </div>
   )
 }

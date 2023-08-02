@@ -80,6 +80,16 @@ def lambda_handler(event, context):
                 },
                 "body": json.dumps({"authenticated": False, "message": str(e).split(":")[1]})
             }
+
+    except client.exceptions.UserNotConfirmedException as e:
+        return {
+                "statusCode": HTTPStatus.UNAUTHORIZED,
+                "headers": {
+                    "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin': '*'
+                },
+                "body": json.dumps({"authenticated": False, "message": "User is not confirmed."})
+            }
     except Exception as e:
         return {
                         "statusCode": HTTPStatus.INTERNAL_SERVER_ERROR,
