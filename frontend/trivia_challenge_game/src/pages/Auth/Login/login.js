@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {axiosJSON} from "../../../lib/axios";
+import { axiosJSON } from '../../../lib/axios';
 import { AuthContext } from '../../../contexts/AuthContext/authcontext';
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;

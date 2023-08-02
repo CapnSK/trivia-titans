@@ -81,9 +81,11 @@ function SignUp(){
             Sign Up
           </button>
         </div>
+        <a href='/unauth/login'>
         <p className="forgot-password text-right">
-          Already registered?<a>Login here!</a>
+          Already registered? Login here!
         </p>
+        </a>
       </form>
     </div>
   )
