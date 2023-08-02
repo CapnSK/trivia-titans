@@ -15,8 +15,8 @@ const UserProfile = () => {
 
   async function fetchData() {
   const data = {
-      "email": "aakash738@gmail.com",
-      "userName": "Akash738",
+      "email": "abhinava465@gmail.com",
+      "userName": "Abhi1331",
     };
 
     const apiUrl = 'https://us-east1-elated-channel-394023.cloudfunctions.net/UserProfileDetails';
@@ -32,7 +32,7 @@ const UserProfile = () => {
       });
   }
 
-  const handleEditClick = () => {
+  async function handleEditClick()  {
     setIsEditable(true);
   }
 
@@ -52,16 +52,33 @@ const UserProfile = () => {
     }
   const handleSubmit = (e) => {
     alert('Your details are updated successfully.');
-    setIsEditable(false); // Disable edit mode after saving
+    setIsEditable(false); 
     e.preventDefault();
   }
 
-    const saveUserDetails = (e) => {
-      
+    async function saveUserDetails()  {
+            const data = {
+        "userName":"Abhi1331",
+        "email":"abhinava465@gmail.com",
+        "contact":contactNo,
+        "address":address,
+        "name":name
+        };
+
+    const apiUrl = 'https://us-east1-elated-channel-394023.cloudfunctions.net/editUserProfile';
+
+    await axios.post(apiUrl, data)
+      .then(response => {
+        alert("The user profile is updated successfully")
+      })
+      .catch(error => {
+        console.error('Error:', error);
+      });
   }
 
 
   return (
+     <div style={{marginTop:'15%'}}><h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '38%'}}>Edit User Profile</h>
      <div className="form-container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
@@ -71,7 +88,7 @@ const UserProfile = () => {
             name="name"
             value={name}
             onChange={handlenameChange}
-            disabled={!isEditable} // Disable the input if not in edit mode
+            disabled={!isEditable} 
           />
         </div>
 
@@ -82,7 +99,7 @@ const UserProfile = () => {
             name="contact"
             value={contactNo}
             onChange={handlenContactChange}
-            disabled={!isEditable} // Disable the input if not in edit mode
+            disabled={!isEditable} 
           />
         </div>
 
@@ -120,6 +137,7 @@ const UserProfile = () => {
           </Button>
         )}
       </form>
+    </div>
     </div>
   )
 }

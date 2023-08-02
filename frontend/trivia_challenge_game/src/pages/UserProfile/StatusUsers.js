@@ -9,8 +9,8 @@ const [totalScore, settotalScore] = useState("");
 const [winCount, setwinCount] = useState("");
 const [lossCount, setlossCount] = useState("");
 
+
     useEffect(()=>{
-      alert("hello")
       getUserStat();
     },[])
 
@@ -33,7 +33,7 @@ const [lossCount, setlossCount] = useState("");
     }
 
   return (
-    <div style={{marginTop:'5%'}}>
+    <div style={{marginTop:'15%'}}>
         <h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '40%'}}>User Statistics</h>
         <table style={{ borderCollapse: 'collapse', width: '85%',marginLeft:'10%', marginTop:'2%' }}>
         <tbody>
