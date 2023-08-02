@@ -1,5 +1,6 @@
-import { Observable } from "rxjs";
+import { filter } from "rxjs/operators";
 import { webSocketClient } from "../lib/sockets/";
+import { cloneDeep } from "lodash";
 
 const eventStructure = {
     action: "emitEvent",
@@ -21,11 +22,12 @@ function introduce({
     username,
     teamId
 }){
-    eventStructure.event.type = "INTRODUCE";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.data.username = username;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "INTRODUCE";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.data.username = username;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function join_game({
@@ -34,13 +36,14 @@ function join_game({
     matchInstanceId,
     timestampCreated
 }){
-    eventStructure.event.type = "JOIN_GAME";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "JOIN_GAME";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function start_game({
@@ -49,13 +52,14 @@ function start_game({
     matchInstanceId,
     timestampCreated
 }){
-    eventStructure.event.type = "START_GAME";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "START_GAME";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function mark_answer({
@@ -66,15 +70,16 @@ function mark_answer({
     questionId,
     selectedOptionId
 }){
-    eventStructure.event.type = "MARK_ANSWER";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    eventStructure.event.data.questionId = questionId;
-    eventStructure.event.data.selectedOptionId = selectedOptionId;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "MARK_ANSWER";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    eventData.event.data.questionId = questionId;
+    eventData.event.data.selectedOptionId = selectedOptionId;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function update_score(
@@ -84,13 +89,14 @@ function update_score(
     matchInstanceId,
     timestampCreated
 }){
-    eventStructure.event.type = "UPDATE_SCORE";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "UPDATE_SCORE";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function next_question({
@@ -100,14 +106,15 @@ function next_question({
     timestampCreated,
     questionId
 }){
-    eventStructure.event.type = "NEXT_QUESTION";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    eventStructure.event.data.questionId = questionId;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "NEXT_QUESTION";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    eventData.event.data.questionId = questionId;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function submit_quiz({
@@ -116,23 +123,27 @@ function submit_quiz({
     matchInstanceId,
     timestampCreated
 }){
-    eventStructure.event.type = "SUBMIT_QUIZ";
-    eventStructure.event.context.matchSpec.teamId = teamId;
-    eventStructure.event.context.matchSpec.matchInstanceId = matchInstanceId;
-    eventStructure.event.context.matchSpec.timestampCreated = timestampCreated;
-    eventStructure.event.data.username = username;
-    console.log("event to be emitted is", eventStructure);
-    webSocketClient.emit(eventStructure);
+    const eventData = cloneDeep(eventStructure);
+    eventData.event.type = "SUBMIT_QUIZ";
+    eventData.event.context.matchSpec.teamId = teamId;
+    eventData.event.context.matchSpec.matchInstanceId = matchInstanceId;
+    eventData.event.context.matchSpec.timestampCreated = timestampCreated;
+    eventData.event.data.username = username;
+    console.log("event to be emitted is", eventData);
+    webSocketClient.emit(eventData);
 }
 
 function listen(eventType){
-    return new Observable((subscriber)=>{
-        webSocketClient.listen("message",(messageData)=>{
-            if(messageData.type === eventType){
-                subscriber.next(messageData);
-            }
-        });
-    });
+    return webSocketClient.listen("message").pipe(
+        filter(event=>event.type === eventType)
+    );
+    // return new Observable((subscriber)=>{
+    //     webSocketClient.listen("message",(messageData)=>{
+    //         if(messageData.type === eventType){
+    //             subscriber.next(messageData);
+    //         }
+    //     });
+    // });
 
 } //return type would be { stream: obs, onClose: obs, onOpen: obs}
 

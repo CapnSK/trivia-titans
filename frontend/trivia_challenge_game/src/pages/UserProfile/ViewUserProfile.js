@@ -20,14 +20,14 @@ function ViewUserProfile(){
             </div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/editPersonalProfile")}}>
+                    <button onClick={() => {navigate("/edituserProfile")}}>
                         Edit Personal Profile
                     </button>
                 </div>
             </div>
             <div className="auth-inner" >
                 <div>
-                    <button onClick={() => {navigate("/affiliations")}}>
+                    <button onClick={() => {navigate("/teamAffiliations")}}>
                        Manage User affiliations with team
                     </button>
                 </div>
