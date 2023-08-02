@@ -15,6 +15,9 @@ const CreateTeam = () => {
 
 	const json_data = {adminUserName: adminUserName, adminEmail: adminEmail}
 
+	console.log("in create_team: ", json_data)
+	console.log(json_data)
+	
 	const generateTeamName = async () => {
 		// var teamName = "enigma";
 		
