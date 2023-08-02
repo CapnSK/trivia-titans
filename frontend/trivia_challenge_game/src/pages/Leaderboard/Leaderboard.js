@@ -23,9 +23,8 @@ function Leaderboard(){
                 width="100%"
                 height="500"
                 src={src}
-                frameborder="0"
                 style={{border:0}}
-                allowfullscreen
+                allowFullScreen     
             ></iframe>
             </div>
         </div>
