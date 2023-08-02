@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { axiosJSON } from '../../../lib/axios';
-import { AuthContext } from '../../../contexts/AuthContext/authcontext';
-import { HttpStatusCode } from 'axios';
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
 const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV; 
@@ -11,6 +9,8 @@ const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazonc
 const Login = () => {
   const [loggedinUsername, setLoggedinUsername] = useState('')
   const [loggedinEmail, setLoggedinEmail] = useState('')
+  const [access_token, setLoggedInAccessToken] = useState('')
+  const [id_token, setLoggedInIdToken] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
@@ -98,10 +98,10 @@ const Login = () => {
         // localStorage.setItem("id_token",data.id_token)
         setLoggedinUsername(data.username)
         setLoggedinEmail(data.email)
-        const access_token = data.access_token
-        const id_token = data.id_token
+        setLoggedInAccessToken(data.access_token)
+        setLoggedInIdToken(data.id_token)
         alert('Login successful')
-        navigate('/unauth/validate-2FA', { state: {loggedinUsername, loggedinEmail, access_token, id_token} })
+        // navigate('/unauth/validate-2FA', { state: {"username":loggedinUsername, "email":loggedinEmail, access_token, id_token} })
       } else {
         alert(data.message)
         // There was an error authenticating the user
@@ -123,6 +123,13 @@ const Login = () => {
     }
   }
 
+  useEffect(() => {
+    if (loggedinUsername && loggedinEmail) {
+      // Both state variables have been set
+      // You can navigate to the next page here
+      navigate('/unauth/validate-2FA', { state: {"username":loggedinUsername, "email":loggedinEmail, access_token, id_token} });
+    }
+  }, [loggedinUsername, loggedinEmail]);
 
   return (
     loading ?
