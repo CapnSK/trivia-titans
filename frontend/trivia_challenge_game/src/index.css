@@ -80,6 +80,10 @@ body, html, .App, #root, .auth-wrapper {
 .custom-control,
 .custom-control-label {
   font-weight: 400;
+  /* width: 100%; */
+  /* align-items: baseline;
+  display: flex;
+  flex-direction: row; */
 }
 .forgot-password,
 .forgot-password a {
