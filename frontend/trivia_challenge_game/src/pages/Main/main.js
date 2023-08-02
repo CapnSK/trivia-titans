@@ -42,9 +42,10 @@ function Main() {
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
                         <Route element={<Landing/>} path="/home">
-                            <Route path="/home/in-game" element={<InGame/>}/>
+                            {/* <Route path="/in-game" element={<InGame/>}/> */}
                         </Route>
                         <Route path="/" element={<Navigate to="/home" replace/>}/>
+                        <Route path="/in-game" element={<InGame/>}/>
                         {/* <Route path="/" element={<Navigate to="/leaderboard" replace/>}/> */}
                         <Route element={<Leaderboard/>} path="/leaderboard"/>
                         <Route element={<ViewUserProfile />} path="/userProfile" />

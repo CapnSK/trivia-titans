@@ -4,7 +4,7 @@ import { introduce, join_game, listen as listenToEvent, start_game  } from "../.
 import { take } from "rxjs/operators";
 
 const InGame = () =>{
-
+    console.log("inside in-game component");
     const emitEvent = () => {
         introduce({
             username: "Jamura",
@@ -47,7 +47,7 @@ const InGame = () =>{
     return (
         <>
             In Game Page
-            <button onClick={emitEvent}>Join Game</button>
+            {/* <button onClick={emitEvent}>Join Game</button> */}
         </>
     );
 }

@@ -6,7 +6,7 @@ import { useNavigate  } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import './Displaygames.css';
 import {listen} from '../../util/InGameEventUtils'
-import {join_game} from '../../util/InGameEventUtils'
+import {join_game, introduce} from '../../util/InGameEventUtils'
 import { take } from 'rxjs/operators';
 import { AuthContext  } from "../../contexts"
 
@@ -23,7 +23,7 @@ const Displaygames = () => {
       getGameDetails();
       listen("JOIN_GAME").pipe(take(1)).subscribe((event)=>{
             console.log(event.data);
-            navigate('/home/in-game',{ state: { data: event.data } });
+            navigate('/in-game',{ state: { data: event.data } });
       })  
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -75,11 +75,11 @@ const Displaygames = () => {
         setGameDetails(filteredTimeLimit)
     }
     const joinGame = async (data) => {
-    const uuid = uuidv4();
+    const uuid ="t011223";
     try {
       const response = await axios.post('https://yk2nxplq22.execute-api.us-east-1.amazonaws.com/deployed/creatematchinstance', {
         match_instance_id: uuid,
-        timestamp_created: new Date(),
+        timestamp_created: "1689012982155",
         match_status: "IN_LOBBY", 
         team_id: teamID, 
         team_name:teamName,
@@ -97,8 +97,10 @@ const Displaygames = () => {
     catch (error) {
       console.error(error);
     }
-
-    join_game({username,matchInstanceId: uuid, timestampCreated: Date.now(), teamId:"1"})
+    introduce({username:"Jamura",teamId:"triviaTitans1221"})
+    setTimeout(()=>{
+    join_game({username:"Jamura",matchInstanceId: "t011223", timestampCreated: "1689012982155", teamId:"triviaTitans1221"})
+    }, 2000)
 
     }
 
