@@ -5,7 +5,7 @@ import { axiosJSON } from '../../../lib/axios';
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
 const cloudFunctionURL = process.env.REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV; 
-const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=35iqreqj2np431biljuh0pro63&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://frontend-at3rcdcdla-ue.a.run.app/"
+const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=35iqreqj2np431biljuh0pro63&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://frontend-at3rcdcdla-ue.a.run.app/unauth/login"
 const Login = () => {
   const [loggedinUsername, setLoggedinUsername] = useState('')
   const [loggedinEmail, setLoggedinEmail] = useState('')
@@ -33,25 +33,26 @@ const Login = () => {
         // Do nothing
         console.log('User is not logged in')
         setLoading(false)
-        return
       }
-      const user = JSON.parse(localStorage.getItem('user'))
-      // Check if user obj has 4 keys and they are not null or empty
-      if ((user.username !== '' && user.email !== '' && user.accessId !== '' && user.tokenId !== '')) {
-        // console.log(user)
-        const tokenId = user.tokenId
-        // console.log(tokenId)
-        const response = await axiosJSON.post(cloudFunctionURL + '/checkIfUserAlreadyAuthenticated', JSON.stringify({ "tokenId":tokenId }))
-        const data = await response.data
-        if (data.status === 200) {
-          // User is already logged in
-          // Redirect them to the home page
-          const username = user.username
-          const email = user.email
-          const access_token = user.accessId
-          // send them to second factor authentication page.
-          // setAuthContext({username, email, accessId: access_token, tokenId: tokenId});
-          navigate('/home')
+      else{
+        const user = JSON.parse(localStorage.getItem('user'))
+        // Check if user obj has 4 keys and they are not null or empty
+        if ((user.username !== '' && user.email !== '' && user.accessId !== '' && user.tokenId !== '')) {
+          // console.log(user)
+          const tokenId = user.tokenId
+          // console.log(tokenId)
+          const response = await axiosJSON.post(cloudFunctionURL + '/checkIfUserAlreadyAuthenticated', JSON.stringify({ "tokenId":tokenId }))
+          const data = await response.data
+          if (data.status === 200) {
+            // User is already logged in
+            // Redirect them to the home page
+            const username = user.username
+            const email = user.email
+            const access_token = user.accessId
+            // send them to second factor authentication page.
+            // setAuthContext({username, email, accessId: access_token, tokenId: tokenId});
+            navigate('/home')
+          }
         }
       }
     }
@@ -59,11 +60,12 @@ const Login = () => {
       // alert(error.response.data.message)
       console.error(error)
     }
-    setLoading(false)
-    // Check if the 'code' parameter is present in the URL
-    const urlParams = new URLSearchParams(window.location.search);
+    // Check if the 'access_token' parameter is present in the URL
+    // const urlParams = new URLSearchParams(window.location.search);
+    const urlHash = window.location.hash;
+    const urlParams = new URLSearchParams(urlHash.substring(1));  
     if (urlParams.has('access_token')) {
-      // Get the value of the 'code' parameter
+      // Get the value of the 'access_token' parameter
       const access_token = urlParams.get('access_token');
       const id_token= urlParams.get('id_token');
       // Get username and email too
