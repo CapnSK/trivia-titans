@@ -41,7 +41,7 @@ def updateRawData(request):
     team_ids = [team['team_id'] for team in valid_teams]
     
     # Send request to API
-    api_url = 'https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile'
+    api_url = 'https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile'
     api_response = requests.post(api_url, json={'team_id': team_ids})
     
     print('API response: {}'.format(api_response))
@@ -125,3 +125,6 @@ def updateRawData(request):
                 doc_ref.update({'matches': firestore.ArrayUnion(new_matches)})
 
     return (json.dumps({'status': HTTPStatus.OK, 'message': 'Raw data updated successfully!'}), HTTPStatus.OK, headers)
+
+
+
