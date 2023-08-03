@@ -7,6 +7,7 @@ function SignUp(){
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState('')
   const navigate = useNavigate()
 
   const handleInputChange = (event) => {
@@ -14,12 +15,13 @@ function SignUp(){
     if (name === 'email') setEmail(value)
     if (name === 'username') setUsername(value)
     if (name === 'password') setPassword(value)
+    if (name === 'role') setRole(value)
   }
 
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/signup', JSON.stringify({"email": email,"username": username,"password": password }))
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/signup', JSON.stringify({"email": email,"username": username,"password": password, "role": role }))
       const data = response.data
       if (data.authenticated) {
         // console.log('redirect')
@@ -65,6 +67,20 @@ function SignUp(){
             placeholder="Username"
             onChange={handleInputChange}
           />
+        </div>
+        {/* Display a dropdown called Role -- Player and Admin*/}
+        <div className='mb-3'>
+          <label>Role</label>
+          <select
+            className="form-control"
+            name="role"
+            placeholder="Select Role"
+            onChange={handleInputChange} required
+          >
+          <option value="">Select a Role</option>
+          <option value="admin">Admin</option>
+          <option value="player">Player</option>
+          </select>
         </div>
         <div className="mb-3">
           <label>Password</label>

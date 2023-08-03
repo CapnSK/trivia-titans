@@ -12,10 +12,11 @@ function Navbar(){
       // setLink("/home");
       setLoggedIn(true);
     }
-  }, []);
+  }, [loggedIn]);
   
   const logout = () => {
     localStorageUtil.removeItem("user");
+    setLoggedIn(false);
     navigate("/unauth/login")
   }
 

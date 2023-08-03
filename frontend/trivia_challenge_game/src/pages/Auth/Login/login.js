@@ -9,6 +9,7 @@ const SOCIAL_SIGN_IN_URL = "https://trivia-challenge-game.auth.us-east-1.amazonc
 const Login = () => {
   const [loggedinUsername, setLoggedinUsername] = useState('')
   const [loggedinEmail, setLoggedinEmail] = useState('')
+  const [loggedinRole, setLoggedinRole] = useState('')
   const [access_token, setLoggedInAccessToken] = useState('')
   const [id_token, setLoggedInIdToken] = useState('')
   const [email, setEmail] = useState('')
@@ -31,7 +32,7 @@ const Login = () => {
       if (localStorage.getItem('user') === null) {
         // User is not logged in
         // Do nothing
-        console.log('User is not logged in')
+        // console.log('User is not logged in')
         setLoading(false)
       }
       else{
@@ -46,9 +47,9 @@ const Login = () => {
           if (data.status === 200) {
             // User is already logged in
             // Redirect them to the home page
-            const username = user.username
-            const email = user.email
-            const access_token = user.accessId
+            // const username = user.username
+            // const email = user.email
+            // const access_token = user.accessId
             // send them to second factor authentication page.
             // setAuthContext({username, email, accessId: access_token, tokenId: tokenId});
             navigate('/home')
@@ -66,17 +67,17 @@ const Login = () => {
     const urlParams = new URLSearchParams(urlHash.substring(1));  
     if (urlParams.has('access_token')) {
       // Get the value of the 'access_token' parameter
-      const access_token = urlParams.get('access_token');
-      const id_token= urlParams.get('id_token');
+      setLoggedInAccessToken(urlParams.get('access_token'));
+      setLoggedInIdToken(urlParams.get('id_token'));
       // Get username and email too
       try{
         const response = await axiosJSON.post(cloudFunctionURL + '/getUserDetails', JSON.stringify({ "accessToken":access_token }))
         const data = await response.data
         alert('Login successful')
         if (data.status === 200) {
-          const username = data.username
-          const email = data.email
-          navigate('/unauth/validate-2FA', { state: {username, email,access_token, id_token} })
+          setLoggedinUsername(data.username)
+          setLoggedinEmail(data.email)
+          setLoggedinRole(data.role)
         }
       }
       catch (error) {
@@ -102,6 +103,7 @@ const Login = () => {
         setLoggedinEmail(data.email)
         setLoggedInAccessToken(data.access_token)
         setLoggedInIdToken(data.id_token)
+        setLoggedinRole(data.role)
         alert('Login successful')
         // navigate('/unauth/validate-2FA', { state: {"username":loggedinUsername, "email":loggedinEmail, access_token, id_token} })
       } else {
@@ -126,12 +128,14 @@ const Login = () => {
   }
 
   useEffect(() => {
-    if (loggedinUsername && loggedinEmail) {
+    if (loggedinUsername && loggedinEmail && loggedinRole && access_token && id_token) {
       // Both state variables have been set
       // You can navigate to the next page here
-      navigate('/unauth/validate-2FA', { state: {"username":loggedinUsername, "email":loggedinEmail, access_token, id_token} });
+      navigate('/unauth/validate-2FA', { state: {"username":loggedinUsername, "email":loggedinEmail, access_token, id_token, "role": loggedinRole} });
     }
-  }, [loggedinUsername, loggedinEmail]);
+  },
+  // eslint-disable-next-line 
+  [loggedinUsername, loggedinEmail, loggedinRole, access_token, id_token]);
 
   return (
     loading ?

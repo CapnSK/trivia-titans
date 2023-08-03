@@ -59,9 +59,9 @@ def getUserDetails(request):
             # get username and email from response
             username = response['Username']
             for userAttribute in response['UserAttributes']:
-                if userAttribute['Name'] == 'email':
-                    email = userAttribute['Value']
-            return (json.dumps({"status": HTTPStatus.OK, "username":username, "email": email}), 200, headers)
+                email = userAttribute['Value'] if userAttribute['Name'] == 'email' else None
+                role = userAttribute['Value'] if userAttribute['Name'] == 'custom:Role' else "player"
+            return (json.dumps({"status": HTTPStatus.OK, "username":username, "email": email, "role": role}), 200, headers)
         except Exception as e:
             logger.error(e)
             return (json.dumps({'status': HTTPStatus.UNAUTHORIZED, 'message': 'Authentication expired, need to authenticate again!'}), 401, headers)

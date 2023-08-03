@@ -6,15 +6,29 @@ from http import HTTPStatus
 def lambda_handler(event, context):
     try:
         # Create a Cognito Identity Provider client
-        client = boto3.client('cognito-idp', region_name="US-EAST-1")
+        client = boto3.client('cognito-idp', region_name="us-east-1")
 
         # Set the user pool ID and client ID
         client_id = os.environ.get('client_id')
         data = json.loads(event['body'])
+        
+        # Validate the input
+        if not data.get('email') or not data.get('password') or not data.get('username'):
+            return {
+                        "statusCode": HTTPStatus.BAD_REQUEST,
+                        "headers": {
+                            "Content-Type": "application/json",
+                            'Access-Control-Allow-Origin': '*'
+                        },
+                        "body": json.dumps({"authenticated": False,"message":"Invalid Arguments"})
+                    }
+        
+        # Get input data
         email = data['email']
         password = data['password']
         username = data['username']
-
+        # Role is optional. If not provided, default to 'Player'
+        role = data.get('role', 'Player')
 
         # Authenticate the user
         response = client.sign_up(
@@ -25,6 +39,10 @@ def lambda_handler(event, context):
                 {
                     'Name': 'email',
                     'Value': email
+                },
+                {
+                    'Name': 'custom:Role',
+                    'Value': role
                 }
             ]
         )

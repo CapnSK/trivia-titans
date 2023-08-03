@@ -7,7 +7,8 @@ export const AuthContextProvider = ({children}) => {
         username: undefined,
         email: undefined,
         accessId: undefined,
-        tokenId: undefined
+        tokenId: undefined,
+        role: undefined
     });
 
     const value = useMemo(() => ({
@@ -15,6 +16,7 @@ export const AuthContextProvider = ({children}) => {
         email: authContext.email,
         accessId: authContext.accessId,
         tokenId: authContext.tokenId,
+        role: authContext.role,
         setAuthContext: (newAuthContext) => {
             authContextSetter((prevAuthContext) => {
                 //To Do: storing to localstorage part goes here
@@ -22,7 +24,7 @@ export const AuthContextProvider = ({children}) => {
                 return newAuthContext;
             });
         }
-    }), [authContext.accessId, authContext.email, authContext.tokenId, authContext.username]);
+    }), [authContext.accessId, authContext.email, authContext.tokenId, authContext.username, authContext.role]);
 
     return (
         <AuthContext.Provider value={value}>{children}</AuthContext.Provider>

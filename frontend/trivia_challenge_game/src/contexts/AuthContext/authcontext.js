@@ -5,6 +5,7 @@ export const AuthContext = createContext({
     email: undefined,
     accessId: undefined,
     tokenId: undefined,
+    role: undefined,
     setAuthContext: () => {
         throw new Error("setAuthContext function must have a consumer implementation")
     }

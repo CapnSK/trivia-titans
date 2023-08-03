@@ -3,6 +3,7 @@ import axios from 'axios';
 import Button from '@mui/material/Button';
 import { useContext } from "react";
 import { useNavigate  } from 'react-router-dom';
+// eslint-disable-next-line
 import { v4 as uuidv4 } from 'uuid';
 import './Displaygames.css';
 import {listen} from '../../util/InGameEventUtils'
@@ -17,6 +18,7 @@ const Displaygames = () => {
     const [teamName, setTeamName] = useState("")
     const [constgameDetails, constsetGameDetails] = useState([""])
     const navigate  = useNavigate ();
+    // eslint-disable-next-line
     const { username } = useContext(AuthContext);
     useEffect(()=>{
       getTeamID();
@@ -77,6 +79,7 @@ const Displaygames = () => {
     const joinGame = async (data) => {
     const uuid ="t011223";
     try {
+      // eslint-disable-next-line
       const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/creatematchinstance', {
         match_instance_id: uuid,
         timestamp_created: "1689012982155",

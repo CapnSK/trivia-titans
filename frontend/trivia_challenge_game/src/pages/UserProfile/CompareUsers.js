@@ -41,7 +41,9 @@ const CompareUsers = () => {
     if (selectedUsername) {
       fetchUserDetails();
     }
-    }, [selectedUsername]);
+    },
+    // eslint-disable-next-line 
+    [selectedUsername]);
 
     const fetchUserDetails = async () => {
     const user = userDetails.find((user) => user.username === selectedUsername);
