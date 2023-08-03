@@ -31,6 +31,7 @@ const TeamAffiliations = () => {
 
     const remove = async (data) => {
     try {
+      // eslint-disable-next-line
       const response = await axios.post('https://ffxvdp8iy4.execute-api.us-east-1.amazonaws.com/first/removeuserfromteam', {
         "username":"Abhi1331",
         "team_id":data.teamID

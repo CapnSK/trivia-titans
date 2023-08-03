@@ -8,7 +8,7 @@ const REACT_APP_USER_AUTH_REG_CLOUD_FUNCTION_URL_ABHINAV = process.env.REACT_APP
 const SecondFactorAuthentication = () => {
   const { setAuthContext } = React.useContext(AuthContext);
   const location = useLocation();
-  const { username, email, access_token, id_token } = location.state;
+  const { username, email, access_token, id_token, role } = location.state;
   const [MfaExists, setMFAExists] = useState(false);
   const [loading, setLoading] = useState(true);
   const [questions, setQuestions] = useState(null);
@@ -79,7 +79,7 @@ const SecondFactorAuthentication = () => {
         alert(data.message)
         // console.log(username, email, access_token, id_token)
         
-        setAuthContext({username, email, accessId: access_token, tokenId: id_token});
+        setAuthContext({username, email, accessId: access_token, tokenId: id_token, role});
         navigate('/home')
       }
       else{

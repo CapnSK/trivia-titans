@@ -46,7 +46,9 @@ const ForgotPassword = () => {
       const postURL = "/resetpassword"
       navigate('/unauth/reset-password', { state: {username, redirectURL, postURL, maskedEmail}})
     }
-  }, [username, maskedEmail]);
+  },
+  // eslint-disable-next-line 
+  [username, maskedEmail]);
 
 
   return (

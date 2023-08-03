@@ -42,11 +42,12 @@ const ConfirmEmail = () => {
         // You can redirect them to a protected route or update the UI
         alert('Successfully Verified!')
         try{
+          // eslint-disable-next-line
           const sendSNSResponse = await axiosJSON.post(REACT_APP_APIGATEWAY_URL_ARPIT + '/create_sns', { email: email})
-          setTimeout(() => alert("SNS Subscription Mail Sent. You will receive a mail shortly. You must confirm the subscription to receive emails from us."), 3000)
+          alert("SNS Subscription Mail Sent. You will receive a mail shortly. You must confirm the subscription to receive emails from us.")
         }
         catch(error){
-          alert(error.response.data.message)
+          // alert(error.response.data.message)
           console.log(error)
         }
         navigate(redirectURL)
