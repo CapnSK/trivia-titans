@@ -12,7 +12,7 @@ const TeamAffiliations = () => {
 
     const getTeamDetails = async () => {
     try {
-      const response = await axios.post('https://3te1skk580.execute-api.us-east-1.amazonaws.com/First/team_id', {
+      const response = await axios.post('https://eytk5os3vl.execute-api.us-east-1.amazonaws.com/first/team_id', {
         "username":"Abhi1331",
         "status":"ACCEPTED"
       });
@@ -31,11 +31,12 @@ const TeamAffiliations = () => {
 
     const remove = async (data) => {
     try {
-      const response = await axios.post('https://5j12he8uf0.execute-api.us-east-1.amazonaws.com/first/removeuserfromteam', {
+      const response = await axios.post('https://ffxvdp8iy4.execute-api.us-east-1.amazonaws.com/first/removeuserfromteam', {
         "username":"Abhi1331",
         "team_id":data.teamID
       }
       );
+      alert("The user is removed from the team");
       getTeamDetails();
     }
     catch (error) {
@@ -46,7 +47,7 @@ const TeamAffiliations = () => {
 
 
   return (
-        <div style={{marginTop:'2%'}}>
+        <div style={{marginTop:'1%'}}>
                 <h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '35%'}}>Team Affiliations</h>
             <table style={{ borderCollapse: 'collapse', width: '65%',marginLeft:'15%' }}>
         <tbody>

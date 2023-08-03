@@ -30,7 +30,7 @@ const Displaygames = () => {
 
     const getGameDetails = async () => {
     try {
-      const response = await axios.post('https://yk2nxplq22.execute-api.us-east-1.amazonaws.com/deployed/gamedetails', {
+      const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/gamedetails', {
       });
       constsetGameDetails(response.data)
       setGameDetails(response.data)
@@ -41,7 +41,7 @@ const Displaygames = () => {
 
     const getTeamID = async () => {
     try {
-      const response = await axios.post('https://3te1skk580.execute-api.us-east-1.amazonaws.com/First/team_id', {
+      const response = await axios.post('https://eytk5os3vl.execute-api.us-east-1.amazonaws.com/first/team_id', {
         "username":"Abhi1331"
       });
       if(response.data==null)
@@ -77,7 +77,7 @@ const Displaygames = () => {
     const joinGame = async (data) => {
     const uuid ="t011223";
     try {
-      const response = await axios.post('https://yk2nxplq22.execute-api.us-east-1.amazonaws.com/deployed/creatematchinstance', {
+      const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/creatematchinstance', {
         match_instance_id: uuid,
         timestamp_created: "1689012982155",
         match_status: "IN_LOBBY", 
@@ -92,7 +92,7 @@ const Displaygames = () => {
         }
       }
       );
-      alert(response.data)
+      alert("The user has joined the game")
     }
     catch (error) {
       console.error(error);
@@ -106,7 +106,8 @@ const Displaygames = () => {
 
 
   return (
-        <div style={{marginTop:'8%'}}>
+        <div style={{marginTop:'3%'}}>
+          <h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '35%'}}>Trivia Game Lobby</h>
           <div style={{marginLeft:'20%',marginBottom:'2%', border: '1px solid black', padding: '8px', width:'60%'}}>
             <input type='text' placeholder='Filter Category' style={{marginLeft: '5%', width:'23%', padding: '8px',borderRadius: '4px',border: '1px solid #ccc',outline: 'none',}}
             onChange={(e)=> filterBasedOnCategory(e.target.value)}
@@ -118,11 +119,12 @@ const Displaygames = () => {
             onChange={(e)=> filterBasedOnTimeLimit(e.target.value)}
             />
           </div>
-            <table style={{ borderCollapse: 'collapse', width: '85%',marginLeft:'10%' }}>
+            <table style={{ borderCollapse: 'collapse', width: '85%',marginLeft:'7%' }}>
         <tbody>
           <tr>
             <th style={{ border: '1px solid black', padding: '8px' }}>Game Name</th>
             <th style={{ border: '1px solid black', padding: '8px' }}>Category</th>
+            <th style={{ border: '1px solid black', padding: '8px' }}>Number of Player Joined</th>
             <th style={{ border: '1px solid black', padding: '8px' }}>Difficulty</th>
             <th style={{ border: '1px solid black', padding: '8px' }}>Time Limit</th>
             <th style={{ border: '1px solid black', padding: '8px' }}>Game Description</th>
@@ -132,6 +134,7 @@ const Displaygames = () => {
             <tr key={data.id}>
               <td style={{ border: '1px solid black', padding: '8px', width:'10%' }}>{data.name}</td>
               <td style={{ border: '1px solid black', padding: '8px' }}>{data.tags.category}</td>
+              <td style={{ border: '1px solid black', padding: '8px' }}>5</td>
               <td style={{ border: '1px solid black', padding: '8px' }}>{data.tags.difficulty}</td>
               <td style={{ border: '1px solid black', padding: '8px' }}>{data.time_limit}</td>
               <td style={{ border: '1px solid black', padding: '8px' }}>{data.description}</td>
