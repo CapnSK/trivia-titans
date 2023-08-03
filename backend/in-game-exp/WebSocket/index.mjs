@@ -1,9 +1,8 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
 import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus} from "./DBOperations.mjs";
-import exp from "constants";
 
-const WS_API_POST_URL = `https://94l1ahmzuf.execute-api.us-east-1.amazonaws.com/dev`;
+const WS_API_POST_URL = `https://cll7zfy8rl.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
 
 

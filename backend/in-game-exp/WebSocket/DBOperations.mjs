@@ -3,9 +3,9 @@ import { DynamoDBDocumentClient, PutCommand, ScanCommand, DeleteCommand, UpdateC
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
-const CONNECTIONS_TABLE_NAME = `csci5410-sdp12-ingame-connections`;
-const MATCH_TABLE_NAME = `csci5410-sdp12-match`;
-const TRIVIA_QUESTION_TABLE_NAME = `csci-sdp12-questions`; 
+const CONNECTIONS_TABLE_NAME = `ingame-connections`;
+const MATCH_TABLE_NAME = `match`;
+const TRIVIA_QUESTION_TABLE_NAME = `questions`; 
 
 let CONNECTIONS_CACHE = {};
 
@@ -72,8 +72,7 @@ const updateAnswer = async ({ matchInstanceId, timestampCreated, questionId, ans
         const command = new UpdateCommand({
             TableName: MATCH_TABLE_NAME,
             Key: {
-                match_instance_id: matchInstanceId,
-                timestamp_created: timestampCreated
+                match_instance_id: matchInstanceId
             },
             UpdateExpression: "SET match_config.answers.#qId = :aOId",
             ExpressionAttributeValues: {
@@ -94,8 +93,7 @@ const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) 
         const command = new UpdateCommand({
             TableName: MATCH_TABLE_NAME,
             Key: {
-                match_instance_id: matchInstanceId,
-                timestamp_created: timestampCreated
+                match_instance_id: matchInstanceId
             },
             UpdateExpression: "SET score = :score",
             ExpressionAttributeValues: {
@@ -113,8 +111,7 @@ const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) 
         const command = new UpdateCommand({
             TableName: MATCH_TABLE_NAME,
             Key: {
-                match_instance_id: matchInstanceId,
-                timestamp_created: timestampCreated
+                match_instance_id: matchInstanceId
             },
             UpdateExpression: "SET match_status = :status",
             ExpressionAttributeValues: {
@@ -133,8 +130,7 @@ const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
         let command = new GetCommand({
             TableName: MATCH_TABLE_NAME,
             Key: {
-                match_instance_id: matchInstanceId,
-                timestamp_created: timestampCreated
+                match_instance_id: matchInstanceId
             }
         });
         matchData = [(await docClient.send(command)).Item].map((item) => {

@@ -1,10 +1,14 @@
 import "./ingame.css";
 import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { introduce, join_game, listen as listenToEvent, start_game  } from "../../util"
 import { take } from "rxjs/operators";
 
 const InGame = () =>{
     console.log("inside in-game component");
+
+    const { state } = useLocation();
+
     const emitEvent = () => {
         introduce({
             username: "Jamura",
@@ -47,7 +51,7 @@ const InGame = () =>{
     return (
         <>
             In Game Page
-            {/* <button onClick={emitEvent}>Join Game</button> */}
+            <button onClick={emitEvent}>Join Game</button>
         </>
     );
 }
