@@ -23,7 +23,7 @@ const [lossCount, setlossCount] = useState("");
 
     const getUserStat = async () => {
     try {
-      const response = await axios.post('https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
+      const response = await axios.post('https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
         "team_id":["1","2"]
       });
       setUserStatRecords(response.data);

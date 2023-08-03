@@ -46,7 +46,7 @@ const CompareUsers = () => {
     const fetchUserDetails = async () => {
     const user = userDetails.find((user) => user.username === selectedUsername);
     try {
-      const response = await axios.post('https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
+      const response = await axios.post('https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
         "team_id":user.team_id
       });
       setSelectedUserDetails(response.data);
@@ -57,7 +57,7 @@ const CompareUsers = () => {
 
     const getGameDetails = async () => {
     try {
-      const response = await axios.get('https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getusers', {
+      const response = await axios.get('https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getusers', {
       });
       setUserDetails(response.data)
     } catch (error) {
@@ -67,7 +67,7 @@ const CompareUsers = () => {
 
     const getLoginUserDetails = async () => {
     try {
-      const response = await axios.post('https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
+      const response = await axios.post('https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile', {
         "team_id":["1","2"]
       });
       setLoggedInUserDetails(response.data);

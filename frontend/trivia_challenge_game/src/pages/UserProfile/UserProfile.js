@@ -78,7 +78,7 @@ const UserProfile = () => {
 
 
   return (
-     <div style={{marginTop:'15%'}}><h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '38%'}}>Edit User Profile</h>
+     <div style={{marginTop:'5%'}}><h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '38%'}}>Edit User Profile</h>
      <div className="form-container">
       <form onSubmit={handleSubmit}>
         <div className="form-group">
