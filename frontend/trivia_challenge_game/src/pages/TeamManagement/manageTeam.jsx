@@ -151,7 +151,7 @@ function ManageTeam() {
 
 
 		try {
-			let response = await axios.post( process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/checkffuserexists', 
+			let response = await axios.post( process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + '/checkifuserexists', 
 											JSON.stringify({username:username }));
 			console.log(response);
 			if (response.data.status == true) {
@@ -179,7 +179,7 @@ function ManageTeam() {
 			url: `https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
 			method: "POST",
 			// data: { teamId: jsonResData['id'] },
-			data: { team_id:  jsonTeamData['id']},
+			data: { team_id: ["1"] },
 		})
 			// Handle the response from backend here
 			.then((res) => {
