@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { axiosJSON } from "../../../lib/axios";
 
-const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY
+const REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV
 
 const ResetPassword = () => {
   const [code, setCode] = useState('')
@@ -20,7 +20,7 @@ const ResetPassword = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY + postURL, JSON.stringify({ "username": username,"password": password,"code": code }))
+      const response = await axiosJSON.post(REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV + postURL, JSON.stringify({ "username": username,"password": password,"code": code }))
       const data = await response.data
       if (data.authenticated) {
         console.log('redirect')
@@ -34,6 +34,7 @@ const ResetPassword = () => {
         // You can display an error message or handle the error in another way
       }
     } catch (error) {
+      alert(error.response.data.message)
       console.log(error)
       // There was an error making the API call
       // You can display an error message or handle the error in another way
@@ -41,6 +42,7 @@ const ResetPassword = () => {
   }
 
   return (
+    <div className="auth-inner">
     <form onSubmit={handleSubmit}>
       <h3>Verify your email</h3>
       <div className="mb-3">
@@ -69,6 +71,7 @@ const ResetPassword = () => {
         </button>
       </div>
     </form>
+    </div>
   )
 }
 

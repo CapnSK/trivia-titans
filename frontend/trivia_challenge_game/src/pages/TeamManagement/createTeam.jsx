@@ -1,20 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import { Box, TextField, Grid, Paper, Button } from "@mui/material";
+import { AuthContext } from "../../contexts";
+import { useContext } from "react";
 
 const CreateTeam = () => {
 	const navigate = useNavigate();
-	const handleCreateTeam = () => {
-		var teamName = "enigma";
-		var teamId;
-		const json_data = {teamName: "enigma", adminUserName: "arpitkumar", adminEmail: "arpit@gmail.com"}
+	var teamId;
+	
+	const user = localStorage.getItem("user");
+	const adminUserName = JSON.parse(user).username;
+	const adminEmail =  JSON.parse(user).email;
 
-		console.log(`${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`)
+	const json_data = {adminUserName: adminUserName, adminEmail: adminEmail}
+
+	console.log("in create_team: ", json_data)
+	console.log(json_data)
+	
+	const generateTeamName = async () => {
+		// var teamName = "enigma";
+		
+	
+		axios({
+			// Endpoint to send files
+			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/generate_name/`,
+			method: "GET",
+		})
+			// Handle the response from backend here
+			.then((res) => {
+				console.log(res['data'])
+				json_data['teamName'] = res['data']
+				handleCreateTeam()
+			})
+	}
+	const handleCreateTeam = async () => {
 
 		axios({
 			// Endpoint to send files
-			url: `${process.env.REACT_APP_APIGATEWAY_URL}/create_team/`,
+			url: `${process.env.REACT_APP_APIGATEWAY_URL_ARPIT}/create_team/`,
 			method: "POST",
 			data: json_data,
 		})
@@ -27,13 +51,21 @@ const CreateTeam = () => {
 				}
 				else {
 					teamId = res['data'];
-					navigate("/inviteTeam",  { state: { data: teamId } });
+					alert(`New team Created: ${json_data['teamName']}`);
+					// navigate("/inviteTeam",  { state: { data: teamId } });
+					// navigate(`/inviteTeam/${teamId}`)
+					navigate(`/manageTeam`)
 				}
 			});
 	};
+
+	useEffect(() => {
+			generateTeamName();
+	}, []);
+
 	return (
 		<div>
-			<Button onClick={handleCreateTeam}>Create Team</Button>
+			
 		</div>
 	);
 };

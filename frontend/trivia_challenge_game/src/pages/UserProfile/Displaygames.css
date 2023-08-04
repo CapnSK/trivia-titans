@@ -1,0 +1,35 @@
+/* Displaygames.css */
+
+/* Style for the container div */
+/* .container {
+    margin-left: 25%;
+    margin-top: 15%;
+} */
+
+/* Style for the input elements */
+.container input[type='text'] {
+    margin-left: 2%;
+}
+
+/* Style for the table */
+.container table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Style for table header (th) */
+.container th {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+/* Style for table cells (td) */
+.container td {
+    border: 1px solid black;
+    padding: 8px;
+}
+
+/* Style for the "Join Game" button */
+.container button {
+    width: 100%;
+}

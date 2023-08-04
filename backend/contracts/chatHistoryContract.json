@@ -1,0 +1,38 @@
+[
+    {
+        "sender": "system",
+        "receiver": "ALL",
+        "timestamp": 1690613003333,
+        "value": "client1 has joined the chat"
+    },
+    {
+        "sender": "system",
+        "receiver": "ALL",
+        "timestamp": 1690613011192,
+        "value": "client2 has joined the chat"
+    },
+    {
+        "sender": "system",
+        "receiver": "ALL",
+        "timestamp": 1690613016732,
+        "value": "client3 has joined the chat"
+    },
+    {
+        "sender": "client1",
+        "receiver": "ALL",
+        "timestamp": 1690613021717,
+        "value": "Hi I am client1"
+    },
+    {
+        "sender": "client2",
+        "receiver": "client1",
+        "timestamp": 1690613027853,
+        "value": "Hi client1, I am client2"
+    },
+    {
+        "sender": "client3",
+        "receiver": "ALL",
+        "timestamp": 1690613034489,
+        "value": "Hi I am client3"
+    }
+]

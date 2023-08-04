@@ -35,7 +35,7 @@ class API {
             (response) => response,
             (error) => {
                 if (error?.code === 'ERR_NETWORK') {
-                    localStorageUtil.clear();
+                    // localStorageUtil.clear();
                     window.location.href = '/';
                 }
 

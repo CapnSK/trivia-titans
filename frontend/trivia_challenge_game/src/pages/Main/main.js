@@ -12,12 +12,28 @@ import QuestionForm from "../question";
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
 import QuestionList from "../question/questionList";
 import EditQuestion from "../question/questionEdit";
+import InGame from "../InGame/ingame";
+import Leaderboard from "../Leaderboard";
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
+import Navbar from "../Navbar";
+import CreateTeam from "../TeamManagement/createTeam";
+import InviteTeam from "../TeamManagement/inviteTeam";
+import HandleRequest from "../TeamManagement/handleRequest";
+import ManageTeam from "../TeamManagement/manageTeam";
+import CompareUsers from "../UserProfile/CompareUsers";
+import ViewUserProfile from "../UserProfile/ViewUserProfile";
+import StatusUsers from "../UserProfile/StatusUsers";
+import Displaygames from "../JoinGame/Displaygames";
+import JoinTeam from "../TeamManagement/joinTeam";
+import UserProfile from "../UserProfile/UserProfile";
+import TeamAffiliations from "../UserProfile/TeamAffiliations";
 
 function Main() {
     return (
         <>
-            <Router>
+            {/* <Router> */}
                 <Routes>
+                    {/* <Navbar></Navbar> */}
                     <Route exact path="/unauth" element={<Auth />}>
                         <Route exact element={<Login/>} path="/unauth/login"/>
                         <Route path="/unauth" element={<Navigate to="/unauth/login" replace />}/>
@@ -29,13 +45,32 @@ function Main() {
                         <Route element={<QuestionForm/>} path="/unauth/question" exact/>
                         <Route element={<QuestionList/>} path="/unauth/question/list" exact/>
                         <Route element={<EditQuestion/>} path="/unauth/question/edit/:id" exact/>
+                        <Route path="/unauth/home/in-game" element={<InGame/>}/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
-                        <Route element={<Landing/>} path="/home"/>
+                        <Route element={<Landing/>} path="/home">
+                            {/* <Route path="/in-game" element={<InGame/>}/> */}
+                        </Route>
                         <Route path="/" element={<Navigate to="/home" replace/>}/>
+                        <Route path="/in-game" element={<InGame/>}/>
+                        {/* <Route path="/" element={<Navigate to="/leaderboard" replace/>}/> */}
+                        <Route element={<Leaderboard/>} path="/leaderboard"/>
+                        <Route element={<ViewUserProfile />} path="/userProfile" />
+                        <Route element={<UserProfile />} path="/edituserProfile" />
+                        <Route element={<CompareUsers />} path="/compareStat" />
+                        <Route element={<StatusUsers />} path="/userStat" />
+                        <Route element={<Displaygames />} path="/joinGame" />
+                        <Route element={<TeamAffiliations />} path="/teamAffiliations" />
+                        <Route element={<CreateTeam />} path="/createTeam" />
+		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
+                        <Route element={<ManageTeam/>} path="/manageTeam"/>
+		     			<Route
+		     				path="/invitation-request/:teamId"
+		     				component={HandleRequest}
+		     			/>
                     </Route>
                 </Routes>
-            </Router>
+            {/* </Router> */}
         </>
     );
 }

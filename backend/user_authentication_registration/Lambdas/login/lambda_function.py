@@ -46,6 +46,11 @@ def lambda_handler(event, context):
             
             username = user_info['Username']
             email = [attr['Value'] for attr in user_info['UserAttributes'] if attr['Name'] == 'email'][0]
+            roleArray = [attr['Value'] for attr in user_info['UserAttributes'] if attr['Name'] == 'custom:Role']
+            if len(roleArray) > 0:
+                role = roleArray[0]
+            else:
+                role = "player"
             
             return {
                         "statusCode": HTTPStatus.OK,
@@ -58,7 +63,8 @@ def lambda_handler(event, context):
                                     'access_token': access_token,
                                     'id_token': id_token,
                                     'username': username,
-                                    'email': email
+                                    'email': email,
+                                    'role': role
                         })
                     }
         else:
@@ -79,6 +85,16 @@ def lambda_handler(event, context):
                     'Access-Control-Allow-Origin': '*'
                 },
                 "body": json.dumps({"authenticated": False, "message": str(e).split(":")[1]})
+            }
+
+    except client.exceptions.UserNotConfirmedException as e:
+        return {
+                "statusCode": HTTPStatus.UNAUTHORIZED,
+                "headers": {
+                    "Content-Type": "application/json",
+                    'Access-Control-Allow-Origin': '*'
+                },
+                "body": json.dumps({"authenticated": False, "message": "User is not confirmed."})
             }
     except Exception as e:
         return {

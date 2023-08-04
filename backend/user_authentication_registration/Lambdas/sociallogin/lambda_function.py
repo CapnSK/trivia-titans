@@ -28,7 +28,7 @@ def lambda_handler(event, context):
             'grant_type': 'authorization_code',
             'client_id': CLIENT_ID,
             'code': code,
-            'redirect_uri': 'https://frontend-at3rcdcdla-ue.a.run.app/'
+            'redirect_uri': 'https://frontend-at3rcdcdla-ue.a.run.app/unauth/login'
         }
     
         # Create a dictionary of request headers
