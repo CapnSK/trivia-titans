@@ -14,7 +14,6 @@ import QuestionList from "../question/questionList";
 import EditQuestion from "../question/questionEdit";
 import InGame from "../InGame/ingame";
 import Leaderboard from "../Leaderboard";
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from "../Navbar";
 import CreateTeam from "../TeamManagement/createTeam";
 import InviteTeam from "../TeamManagement/inviteTeam";

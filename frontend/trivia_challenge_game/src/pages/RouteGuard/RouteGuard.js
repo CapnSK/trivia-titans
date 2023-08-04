@@ -6,6 +6,12 @@ import { useEffect } from "react";
 
 function RouteGuard(){
     const { setAuthContext } = React.useContext(AuthContext);
+
+    useEffect(() => {
+        setAuthContext({username: username, email: email, accessId: accessId, tokenId: tokenId, role:role});
+        // console.log("Routeguard has recieved auth context as ", email, username, accessId, tokenId);
+    }, [username, email, accessId, tokenId, role]);
+    // console.log("Routeguard has recieved auth context as ", email, username, accessId, tokenId);
     // const { email, username, accessId, tokenId} = useContext(AuthContext);
     if (localStorageUtil.getItem('user') === null) {
         return <Navigate to={{pathname: "unauth/login"}} relative={false}/>
@@ -21,12 +27,6 @@ function RouteGuard(){
     const accessId = localStorageUtil.getItem('user')['accessId'];
     const tokenId = localStorageUtil.getItem('user')['tokenId'];
     const role = localStorageUtil.getItem('user')['role'];
-
-    useEffect(() => {
-        setAuthContext({username: username, email: email, accessId: accessId, tokenId: tokenId, role:role});
-        // console.log("Routeguard has recieved auth context as ", email, username, accessId, tokenId);
-    }, [username, email, accessId, tokenId, role]);
-    // console.log("Routeguard has recieved auth context as ", email, username, accessId, tokenId);
     
     return (
         <>

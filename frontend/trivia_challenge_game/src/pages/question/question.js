@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar } from '@mui/material';
 import { Box } from '@mui/system';
 import Chip from '@mui/material/Chip'; // Add the Chip import
@@ -24,6 +25,7 @@ const QuestionForm = () => {
     },
     points: 0,
     time_limit: 0,
+    id: ''
   };
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const [formData, setFormData] = useState(initialFormData);
@@ -31,25 +33,43 @@ const QuestionForm = () => {
   const [subcategories, setSubcategories] = useState([]);
   const [difficulty, setDifficulty] = useState([]);
   const [categoryResponse, setCategoryResponse] = useState([]);
+  const [pageHeading, setPageHeading] = useState("Create a New Question...");
+  const [pageButtonName, setPageButton] = useState("Create Question");
+
+  const location = useLocation();
 
 
   useEffect(() => {
-    // Fetch categories from the API here
     fetchCategories();
-    fetchDifficulty()
+    console.log(categories);
+    fetchDifficulty();
+    
+    console.log(location.state);
+    console.log(categories);
+    console.log(categoryResponse);
+
+    if (location.state) {
+      setPageHeading("Update the Question...");
+      setPageButton("Update Question");
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        ...location.state,
+        tags: {
+          ...prevFormData.tags,
+          ...location.state.tags,
+        },
+      }));
+      fetchCategories();
+      console.log(categories);
+      fetchDifficulty();
+    }
   }, []);
 
   const fetchDifficulty = () => {
-    // Simulating API call with a delay
     setTimeout(() => {
       const response = { "difficulty": ["easy", "intermediate", "hard"] };
       setDifficulty(response.difficulty);
-    }, 1000); // Adjust the delay as needed
-  };
-
-  const handleCloseSnackbar = () => {
-    // Close the snackbar
-    setSubmissionStatus(null);
+    }, 500); // Adjust the delay as needed
   };
 
   const getSubcategoriesByCategory = (categoryName) => {
@@ -82,7 +102,7 @@ const QuestionForm = () => {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
     };
-  
+
     fetch(apiUrl, {
       headers: headers
     })
@@ -133,6 +153,7 @@ const QuestionForm = () => {
   };
 
   const handleCategoryChange = (event) => {
+    console.log(event);
     const { value } = event.target;
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -182,7 +203,8 @@ const QuestionForm = () => {
     event.preventDefault();
     console.log(formData);
 
-    const url = 'https://kb3tz7tz83.execute-api.us-east-1.amazonaws.com/dev/question';
+    const url = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question';
+    
     const requestBody = {
       label: formData.label,
       options: formData.options,
@@ -190,6 +212,7 @@ const QuestionForm = () => {
       tags: formData.tags,
       points: formData.points,
       time_limit: formData.time_limit,
+      id: formData.id
     };
     console.log(requestBody)
     const config = {
@@ -213,9 +236,6 @@ const QuestionForm = () => {
 return (
     
     <Box component="div" p={2}>
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
-        <br />
       
       {submissionStatus === 'success' && (
         <Typography variant="h8" color="success">
@@ -228,7 +248,7 @@ return (
         </Typography>
       )}
       <br />
-      <h2>Create a New Question</h2>
+      <h2>{pageHeading}</h2>
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth sx={{ my: 1 }}>
           <TextField
@@ -382,7 +402,7 @@ return (
         </FormControl>
         <br />
         <Button variant="contained" type="submit">
-          Create Question
+          {pageButtonName}
         </Button>
       </form>
     </Box>

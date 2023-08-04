@@ -46,7 +46,7 @@ const EditQuestion = () => {
   };
 
     const fetchQuestion = () => {
-        const apiUrl = `https://f1gzy2sau1.execute-api.us-east-1.amazonaws.com/question/${id}`;
+        const apiUrl = `https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question/${id}`;
         axios.get(apiUrl)
         .then(response => {
             setQuestion(response.data.data);
