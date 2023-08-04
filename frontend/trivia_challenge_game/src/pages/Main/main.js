@@ -25,6 +25,7 @@ import Displaygames from "../JoinGame/Displaygames";
 import JoinTeam from "../TeamManagement/joinTeam";
 import UserProfile from "../UserProfile/UserProfile";
 import TeamAffiliations from "../UserProfile/TeamAffiliations";
+import TriviaGame from "../Game/triviagame";
 
 function Main() {
     return (
@@ -42,6 +43,7 @@ function Main() {
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
                         <Route element={<QuestionForm/>} path="/unauth/question" exact/>
                         <Route element={<QuestionList/>} path="/unauth/question/list" exact/>
+                        <Route element={<TriviaGame/>} path="/unauth/triviagame" exact/>
                         <Route path="/unauth/home/in-game" element={<InGame/>}/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
