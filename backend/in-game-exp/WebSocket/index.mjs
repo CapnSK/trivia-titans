@@ -86,7 +86,7 @@ async function handleEvent(eventEmitted, connectionId) {
           const startTime = data.startTime;
           await addMatchInstanceIdToDB({ connectionId, teamId, matchInstanceId });
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_LOBBY"});
-          const matchInstanceData = await fetchMatchInstanceDetails(matchInstanceId);
+          const matchInstanceData = await fetchMatchInstanceDetails({matchInstanceId, teamId});
           console.log("match instance data is", matchInstanceData);
           // const triviaData = await fetchTriviaData(matchInstanceData.match_config.trivia_id);
           // const questionsData = await fetchQuestionsData(triviaData?.questions);

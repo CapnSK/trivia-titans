@@ -7,6 +7,7 @@ const CONNECTIONS_TABLE_NAME = `ingame-connections`;
 const MATCH_TABLE_NAME = `match`;
 const TRIVIA_QUESTION_TABLE_NAME = `questions`; 
 const TRIVIA_TABLE_NAME = `trivia`; 
+const TEAM_TABLE_NAME = `teams`; 
 
 let CONNECTIONS_CACHE = {};
 
@@ -125,11 +126,12 @@ const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) 
     }
 }
 
-const fetchMatchInstanceDetails = async (matchInstanceId) => {
+const fetchMatchInstanceDetails = async ({matchInstanceId, teamId}) => {
     let data = {
         matchInstaceData: undefined,
         triviaData: undefined,
-        questionsData: undefined
+        questionsData: undefined,
+        teamData: undefined
     };
     if(matchInstanceId){
         try{
@@ -152,8 +154,30 @@ const fetchMatchInstanceDetails = async (matchInstanceId) => {
                     data.questionsData = await Promise.all(questionFetchPromises);
                 }
             }
+
+            if(teamId){
+                data.teamData = await fetchTeamData(teamId);                
+            }
         } catch(e){
             console.log("error fetching data from match instance id", matchInstanceId, e);
+        }
+    }
+    return data;
+}
+
+const fetchTeamData = async (teamId) => {
+    let data;
+    if(teamId){
+        try{
+            const command = new GetCommand({
+                TableName: TEAM_TABLE_NAME,
+                Key:{
+                    id: teamId
+                }
+            });
+            data = (await docClient.send(command)).Item;
+        } catch(e){
+            console.log("error fetching data from tean id", teamId, e);
         }
     }
     return data;
