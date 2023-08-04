@@ -97,7 +97,7 @@ const QuestionForm = () => {
   };
 
   const fetchCategories = () => {
-    const apiUrl = 'https://afr8i80cnj.execute-api.us-east-1.amazonaws.com/questions/category';
+    const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question/category';
     const headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json'
