@@ -19,8 +19,14 @@ export const AuthContextProvider = ({children}) => {
         role: authContext.role,
         setAuthContext: (newAuthContext) => {
             authContextSetter((prevAuthContext) => {
-                //To Do: storing to localstorage part goes here
-                localStorageUtil.setItem('user', newAuthContext);
+                if(newAuthContext && newAuthContext.username){
+                    //To Do: storing to localstorage part goes here
+                    localStorageUtil.setItem('user', newAuthContext);
+                }
+                else{
+                    //Authcontext is undefined and needs to be removed from localstorage
+                    localStorageUtil.removeItem("user");
+                }
                 return newAuthContext;
             });
         }
