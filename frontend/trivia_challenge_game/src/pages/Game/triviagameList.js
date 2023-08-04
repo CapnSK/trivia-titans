@@ -72,39 +72,41 @@ const GameTable = () => {
           <Table sx={{ minWidth: 650 }} aria-label="games table">
             <TableHead>
               <TableRow style={{ fontWeight: 'bold' }}>
-                <TableCell>Game Name</TableCell>
-                <TableCell align="center">Category</TableCell>
-                <TableCell align="center">Difficulty</TableCell>
-                <TableCell align="center">Time Limit (seconds)</TableCell>
-                <TableCell align="center">Start Time</TableCell>
-                <TableCell align="center">Max Points</TableCell>
-                <TableCell align="center">Leaderboard</TableCell>
-                <TableCell align="center">Action</TableCell>
-                <TableCell align="center">Action</TableCell>
+                <TableCell>Serial Number</TableCell>
+                <TableCell style={{ border: '1px solid #ccc' }}>Game Name</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Category</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Difficulty</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Time Limit (seconds)</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Start Time</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Max Points</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Leaderboard</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Action</TableCell>
+                <TableCell align="center" style={{ border: '1px solid #ccc' }}>Action</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {gamesData.map((game) => (
-                <TableRow key={game.id}>
-                  <TableCell component="th" scope="row">
+              {gamesData.map((game, index) => (
+                <TableRow key={game.id} style={{ border: '1px solid #ccc' }}>
+                    <TableCell>{index + 1}</TableCell>``
+                  <TableCell style={{ border: '1px solid #ccc' }}>
                     {game.name}
                   </TableCell>
-                  <TableCell align="center">{game.tags.category}</TableCell>
-                  <TableCell align="center">{game.tags.difficulty}</TableCell>
-                  <TableCell align="center">{game.time_limit}</TableCell>
-                  <TableCell align="center">{formatTimestamp(game.start_time)}</TableCell>
-                  <TableCell align="center">{game.maxPoints}</TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.tags.category}</TableCell>
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.tags.difficulty}</TableCell>
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.time_limit}</TableCell>
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>{formatTimestamp(game.start_time)}</TableCell>
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.maxPoints}</TableCell>
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>
                     {game.leaderboard.map((entry, index) => (
                       <div key={index}>{entry}</div>
                     ))}
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>
                     <span style={{ cursor: 'pointer', color: 'blue' }} onClick={() => handleEditClick(game)}>
                       Edit
                     </span>
                   </TableCell>
-                  <TableCell align="center">
+                  <TableCell align="center" style={{ border: '1px solid #ccc' }}>
                     <span style={{ cursor: 'pointer', color: 'red' }} onClick={() => handleDeleteClick(game.id)}>
                       Delete
                     </span>
