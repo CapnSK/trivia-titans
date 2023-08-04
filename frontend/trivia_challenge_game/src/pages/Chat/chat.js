@@ -71,6 +71,12 @@ function Chat() {
 
     const sendMessage = () => {
         console.log(userInput);
+        setUserInput((oldUserInput)=>{
+            return {
+                ...oldUserInput,
+                message: ""
+            };
+        });
         socket.current?.send(JSON.stringify({
             action: userInput.recipient === "ALL" ? "sendPublic": "sendPrivate",
             message: userInput.message,
