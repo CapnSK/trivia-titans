@@ -17,11 +17,15 @@ function RouteGuard(){
     // else if (localStorageUtil.getItem('role') === 'player') {
     //     return <Navigate to={{pathname: "/home"}} relative={false}/>
     // }
-    const username = localStorageUtil.getItem('user')['username'];
-    const email = localStorageUtil.getItem('user')['email'];
-    const accessId = localStorageUtil.getItem('user')['accessId'];
-    const tokenId = localStorageUtil.getItem('user')['tokenId'];
-    const role = localStorageUtil.getItem('user')['role'];
+    let username, email, accessId, tokenId, role;
+
+    if(localStorageUtil.getItem('user') && localStorageUtil.getItem('user')['username']){
+        username = localStorageUtil.getItem('user')['username'];
+        email = localStorageUtil.getItem('user')['email'];
+        accessId = localStorageUtil.getItem('user')['accessId'];
+        tokenId = localStorageUtil.getItem('user')['tokenId'];
+        role = localStorageUtil.getItem('user')['role'];
+    }
 
     useEffect(() => {
         setAuthContext({username: username, email: email, accessId: accessId, tokenId: tokenId, role:role});
