@@ -1,4 +1,4 @@
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate, Outlet, useNavigate } from "react-router-dom";
 import { localStorageUtil } from "../../util";
 import { AuthContext } from '../../contexts/AuthContext/authcontext';
 import React from "react";
@@ -6,9 +6,10 @@ import { useEffect } from "react";
 
 function RouteGuard(){
     const { setAuthContext } = React.useContext(AuthContext);
+    const navigate = useNavigate();
     // const { email, username, accessId, tokenId} = useContext(AuthContext);
     if (localStorageUtil.getItem('user') === null) {
-        return <Navigate to={{pathname: "unauth/login"}} relative={false}/>
+        navigate("unauth/login",{relative: false});
     }
     // if (localStorageUtil.getItem('role') === 'admin') {
     //     return <Navigate to={{pathname: "admin/home"}} relative={false}/>
