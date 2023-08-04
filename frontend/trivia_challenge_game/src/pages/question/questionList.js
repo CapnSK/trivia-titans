@@ -80,13 +80,11 @@ const QuestionList = () => {
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.subcategory}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.difficulty}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>
-                    {/* Map through the options and display their labels separated by comma */}
                     {question.options.map((option) => (
                       <span key={option.id}>{option.label}, </span>
                     ))}
                   </TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>
-                    {/* Map through the answers and display their labels separated by comma */}
                     {question.answers.map((answer, index) => (
                       <span key={answer}>
                         {answer}
@@ -94,7 +92,6 @@ const QuestionList = () => {
                       </span>
                     ))}
                   </TableCell>
-                  {/* <TableCell>{question.answers.join(', ')}</TableCell> */}
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.points}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.time_limit}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.hints}</TableCell>
@@ -107,10 +104,10 @@ const QuestionList = () => {
                       fontSize: '1.0rem',
                       padding: '2px 2px',
                       marginRight: '15px',
-                      backgroundColor: 'transparent', // Set background to transparent
-                      color: 'blue', // Change the color to blue for the "Edit" text
-                      textDecoration: 'underline', // Add an underline to make it look like a link
-                      cursor: 'pointer', // Show a hand cursor on hover to indicate it's clickable
+                      backgroundColor: 'transparent',
+                      color: 'blue',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
                     }}
                   >
                     Edit
@@ -124,10 +121,10 @@ const QuestionList = () => {
                       fontSize: '1.0rem',
                       padding: '2px 2px',
                       marginRight: '15px',
-                      backgroundColor: 'transparent', // Set background to transparent
-                      color: 'red', // Change the color to red for the "Delete" text
-                      textDecoration: 'underline', // Add an underline to make it look like a link
-                      cursor: 'pointer', // Show a hand cursor on hover to indicate it's clickable
+                      backgroundColor: 'transparent',
+                      color: 'red',
+                      textDecoration: 'underline',
+                      cursor: 'pointer',
                     }}
                   >
                     Delete

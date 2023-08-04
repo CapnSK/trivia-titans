@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar } from '@mui/material';
 import { Box } from '@mui/system';
-import Chip from '@mui/material/Chip'; // Add the Chip import
+import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 
@@ -69,7 +69,7 @@ const QuestionForm = () => {
     setTimeout(() => {
       const response = { "difficulty": ["easy", "intermediate", "hard"] };
       setDifficulty(response.difficulty);
-    }, 500); // Adjust the delay as needed
+    }, 500);
   };
 
   const getSubcategoriesByCategory = (categoryName) => {
@@ -108,7 +108,6 @@ const QuestionForm = () => {
     })
       .then(response => response.json())
       .then(data => {
-        // Assuming the response has the same structure as in the provided JSON data
         console.log(data)
         setCategories(data);
         setCategoryResponse(data);
@@ -204,7 +203,7 @@ const QuestionForm = () => {
     console.log(formData);
 
     const url = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question';
-    
+  
     const requestBody = {
       label: formData.label,
       options: formData.options,
