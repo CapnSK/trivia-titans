@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
-import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar } from '@mui/material';
+import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import Chip from '@mui/material/Chip';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -43,7 +43,7 @@ const QuestionForm = () => {
     fetchCategories();
     console.log(categories);
     fetchDifficulty();
-    
+  
     console.log(location.state);
     console.log(categories);
     console.log(categoryResponse);
@@ -233,7 +233,8 @@ const QuestionForm = () => {
   };
 
 return (
-    
+  <Grid container spacing={2} justifyContent="center">
+  <Grid item xs={12} md={10} lg={8}>
     <Box component="div" p={2}>
       
       {submissionStatus === 'success' && (
@@ -405,6 +406,8 @@ return (
         </Button>
       </form>
     </Box>
+    </Grid>
+    </Grid>
   );
 };
 

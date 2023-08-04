@@ -26,6 +26,7 @@ import JoinTeam from "../TeamManagement/joinTeam";
 import UserProfile from "../UserProfile/UserProfile";
 import TeamAffiliations from "../UserProfile/TeamAffiliations";
 import TriviaGame from "../Game/triviagame";
+import GameTable from "../Game/triviagameList";
 
 function Main() {
     return (
@@ -44,6 +45,7 @@ function Main() {
                         <Route element={<QuestionForm/>} path="/unauth/question" exact/>
                         <Route element={<QuestionList/>} path="/unauth/question/list" exact/>
                         <Route element={<TriviaGame/>} path="/unauth/triviagame" exact/>
+                        <Route element={<GameTable/>} path="/unauth/triviagame/list" exact/>
                         <Route path="/unauth/home/in-game" element={<InGame/>}/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>

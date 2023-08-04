@@ -59,6 +59,7 @@ const QuestionList = () => {
           <Table>
             <TableHead>
               <TableRow>
+              <TableCell sx={{ border: '1px solid #ccc' }}>Serial Number</TableCell>
                 <TableCell sx={{ border: '1px solid #ccc' }}>Question Label</TableCell>
                 <TableCell sx={{ border: '1px solid #ccc' }}>Category</TableCell>
                 <TableCell sx={{ border: '1px solid #ccc' }}>Subcategory</TableCell>
@@ -73,8 +74,9 @@ const QuestionList = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {questions.map((question) => (
+              {questions.map((question, index) => (
                 <TableRow key={question.id}> 
+                  <TableCell sx={{ border: '1px solid #ccc' }}>{index + 1}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.label}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.category}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.subcategory}</TableCell>

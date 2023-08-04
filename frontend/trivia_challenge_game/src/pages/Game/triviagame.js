@@ -1,30 +1,48 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Grid, Paper, Typography, FormControl, FormControlLabel, FormGroup, Checkbox, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
 
 const TriviaGame = () => {
+    const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    gameName: '', 
-    id: 'trivia 1',
+    name: '', 
+    id: '',
     questions: [],
     tags: {
       category: '',
       subcategory: '',
-      difficulty: 'easy',
+      difficulty: '',
     },
-    time_limit: 30,
+    time_limit: 0,
     leaderboard: [],
-    start_time: '2023-08-04T23:00:00',
-    maxPoints: 15,
+    start_time: '',
+    maxPoints: 0,
   });
 
   const [categories, setCategories] = useState([]);
   const [questions, setQuestions] = useState([]);
+  const [pageheading, setPageHeading] = useState("Create Trivia Game");
+  const [pageButton, setPageButton] = useState("Create Game");
+
+  const location = useLocation();
 
   useEffect(() => {
     fetchCategories();
     fetchQuestions();
-  }, []);
+    console.log(location.state);
+    if (location.state) {
+        setPageHeading("Update the Trivia Game...");
+        setPageButton("Update Game");
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            ...location.state,
+            ...prevFormData.questions,
+            questions: location.state.questions || [], // Use the selected questions from location.state or an empty array
+          }));
+    }
+    }, []);
 
   const fetchCategories = () => {
     const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question/category';
@@ -100,7 +118,7 @@ const handleFormSubmit = async (e) => {
 
   const postData = {
     id: formData.id,
-    name: formData.gameName,
+    name: formData.name,
     questions: filteredQuestions.map((question) => ({
       label: question.label,
       options: question.options,
@@ -132,9 +150,9 @@ const handleFormSubmit = async (e) => {
     if (!response.ok) {
       throw new Error('Failed to create The Game. Please try again.');
     }
-
     const responseData = await response.json();
     console.log('API call successful:', responseData);
+    navigate('/unauth/triviagame/list');
   } catch (error) {
     console.error('Error making the API call:', error);
   }
@@ -150,7 +168,7 @@ const handleFormSubmit = async (e) => {
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} md={8}>
-        <Typography variant="h4">Trivia Create Game</Typography>
+        <Typography variant="h4">{pageheading}</Typography>
         <Paper style={{ padding: '20px' }}>
           <form onSubmit={handleFormSubmit}>
             <FormControl fullWidth sx={{ my: 1 }}>
@@ -158,8 +176,8 @@ const handleFormSubmit = async (e) => {
                 label="Game Name"
                 variant="outlined"
                 type="text"
-                name="gameName"
-                value={formData.gameName}
+                name="name"
+                value={formData.name}
                 onChange={handleStartTimeChange}
                 required
               />
@@ -244,7 +262,7 @@ const handleFormSubmit = async (e) => {
               />
             </FormControl>
             <Button variant="contained" type="submit">
-              Submit
+              {pageButton}
             </Button>
           </form>
         </Paper>
