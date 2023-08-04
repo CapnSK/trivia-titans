@@ -6,6 +6,7 @@ const docClient = DynamoDBDocumentClient.from(client);
 const CONNECTIONS_TABLE_NAME = `ingame-connections`;
 const MATCH_TABLE_NAME = `match`;
 const TRIVIA_QUESTION_TABLE_NAME = `questions`; 
+const TRIVIA_TABLE_NAME = `trivia`; 
 
 let CONNECTIONS_CACHE = {};
 
@@ -124,6 +125,76 @@ const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) 
     }
 }
 
+const fetchMatchInstanceDetails = async (matchInstanceId) => {
+    let data = {
+        matchInstaceData: undefined,
+        triviaData: undefined,
+        questionsData: undefined
+    };
+    if(matchInstanceId){
+        try{
+            const command = new GetCommand({
+                TableName: MATCH_TABLE_NAME,
+                Key:{
+                    match_instance_id: matchInstanceId
+                }
+            });
+    
+            data.matchInstaceData = (await docClient.send(command)).Item;
+
+            if(data.matchInstaceData?.match_config.trivia_id){
+                data.triviaData = await fetchTriviaData(data.matchInstaceData.match_config.trivia_id);
+
+                if(data.triviaData?.questions){
+                    const questionFetchPromises = data.triviaData.questions.map((questionId)=>{
+                        return fetchQuestionData(questionId);
+                    });
+                    data.questionsData = await Promise.all(questionFetchPromises);
+                }
+            }
+        } catch(e){
+            console.log("error fetching data from match instance id", matchInstanceId, e);
+        }
+    }
+    return data;
+}
+
+const fetchTriviaData = async (triviaId) => {
+    let data;
+    if(triviaId){
+        try{
+            const command = new GetCommand({
+                TableName: TRIVIA_TABLE_NAME,
+                Key:{
+                    id: triviaId
+                }
+            });
+            data = (await docClient.send(command)).Item;
+        } catch(e){
+            console.log("error fetching data from trivia id", triviaId, e);
+        }
+    }
+    return data;
+}
+
+const fetchQuestionData = async (questionId) => {
+    let data;
+    if(questionId){
+        try{
+            const command = new GetCommand({
+                TableName: TRIVIA_QUESTION_TABLE_NAME,
+                Key:{
+                    id: questionId
+                }
+            });
+            data = (await docClient.send(command)).Item;
+        } catch(e){
+            console.log("error fetching data from question id", questionId, e);
+        }
+    }
+    return data;
+}
+
 const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
     let matchData = [];
     try {
@@ -220,5 +291,6 @@ export {
     getTeamAnswers,
     getCorrectAnswers,
     syncCache,
-    updateMatchStatus
+    updateMatchStatus,
+    fetchMatchInstanceDetails
 };
