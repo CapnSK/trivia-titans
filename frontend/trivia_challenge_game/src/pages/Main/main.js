@@ -8,9 +8,11 @@ import ConfirmEmail from "../Auth/ConfirmEmail";
 import ForgotPassword from "../Auth/ForgotPassword";
 import ResetPassword from "../Auth/ResetPassword";
 import SecondFactorAuthentication from "../Auth/SecondFactorAuthentication";
+import QuestionForm from "../question";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom'
+import QuestionList from "../question/questionList";
 import InGame from "../InGame/ingame";
 import Leaderboard from "../Leaderboard";
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import Navbar from "../Navbar";
 import CreateTeam from "../TeamManagement/createTeam";
 import InviteTeam from "../TeamManagement/inviteTeam";
@@ -23,6 +25,8 @@ import Displaygames from "../JoinGame/Displaygames";
 import JoinTeam from "../TeamManagement/joinTeam";
 import UserProfile from "../UserProfile/UserProfile";
 import TeamAffiliations from "../UserProfile/TeamAffiliations";
+import TriviaGame from "../Game/triviagame";
+import GameTable from "../Game/triviagameList";
 
 function Main() {
     return (
@@ -38,6 +42,8 @@ function Main() {
                         <Route element={<ResetPassword/>} path="/unauth/reset-password" exact/>
                         <Route element={<ConfirmEmail/>} path="/unauth/confirm-email" exact/>
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
+                        
+                        
                         <Route path="/unauth/home/in-game" element={<InGame/>}/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
@@ -57,6 +63,11 @@ function Main() {
                         <Route element={<CreateTeam />} path="/createTeam" />
 		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
+                        <Route element={<QuestionForm/>} path="/admin/question"/>
+                        <Route element={<QuestionList/>} path="/admin/question/list"/>
+                        <Route element={<TriviaGame/>} path="/admin/triviagame"/>
+                        <Route element={<GameTable/>} path="/admin/triviagame/list"/>
+                        
 		     			<Route
 		     				path="/invitation-request/:teamId"
 		     				component={HandleRequest}
