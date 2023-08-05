@@ -104,7 +104,7 @@ const Displaygames = () => {
     catch (error) {
       console.error(error);
     }
-    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:data.id});
+    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:teamID});
     // introduce({username:"capsk",teamId:"1"})
     // setTimeout(()=>{
     // }, 2000)
