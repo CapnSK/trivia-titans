@@ -176,10 +176,10 @@ function ManageTeam() {
 		console.log(jsonResData)
 		axios({
 			// Endpoint to send files
-			url: `https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
+			url: `https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
 			method: "POST",
-			// data: { teamId: jsonResData['id'] },
-			data: { team_id: ["1"] },
+			data: { team_id: [jsonResData['id']] },
+			// data: { team_id: ["1"] },
 		})
 			// Handle the response from backend here
 			.then((res) => {
@@ -318,7 +318,7 @@ function ManageTeam() {
 								<tr key={team.match_instance_id}>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.team_name}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.match_status}</td>
-									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.win == true ? "Win": "Loss"}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.win === "true" ? "Win": "Loss"}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.score}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>
 										Trivia Name: {team.match_config.trivia_name}<br />

@@ -1,6 +1,6 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus} from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus, fetchMatchInstanceDetails} from "./DBOperations.mjs";
 
 const WS_API_POST_URL = `https://cll7zfy8rl.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
@@ -86,12 +86,17 @@ async function handleEvent(eventEmitted, connectionId) {
           const startTime = data.startTime;
           await addMatchInstanceIdToDB({ connectionId, teamId, matchInstanceId });
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_LOBBY"});
+          const matchInstanceData = await fetchMatchInstanceDetails(matchInstanceId);
+          console.log("match instance data is", matchInstanceData);
+          // const triviaData = await fetchTriviaData(matchInstanceData.match_config.trivia_id);
+          // const questionsData = await fetchQuestionsData(triviaData?.questions);
           await postEvent({
             sender: username,
             type: "JOIN_GAME",
             data: {
               gameStartTime: startTime,
-              matchInstanceId
+              matchInstanceId,
+              matchInstance: matchInstanceData
             }
           });
           break;
