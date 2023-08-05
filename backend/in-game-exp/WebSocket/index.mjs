@@ -116,6 +116,7 @@ async function handleEvent(eventEmitted, connectionId) {
           teamId = context?.matchSpec?.teamId || "";
           questionId = data.questionId;
           const answerOptionId = data.selectedOption;
+          console.log("got options from input as", answerOptionId);
           await updateAnswer({matchInstanceId, timestampCreated, questionId, answerOptionId});
           await postEvent({
             sender: username,
@@ -177,6 +178,7 @@ async function postEvent(event) {
   const matchInstanceId = event.data?.matchInstanceId || "";
   await syncCache();
   console.log("current match instance id is ",matchInstanceId);
+  console.log("current event to post is ",event);
   const receivers = Object.entries(CONNECTIONS_CACHE)
   .filter(([conId, value])=>{
     return value.matchInstanceId === matchInstanceId;

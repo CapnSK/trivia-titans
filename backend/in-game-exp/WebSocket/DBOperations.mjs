@@ -1,4 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, ScanCommand, DeleteCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
@@ -71,20 +72,29 @@ const removeConnection = async ({ connectionId }) => {
 
 const updateAnswer = async ({ matchInstanceId, timestampCreated, questionId, answerOptionId }) => {
     try {
-        const command = new UpdateCommand({
-            TableName: MATCH_TABLE_NAME,
-            Key: {
-                match_instance_id: matchInstanceId
-            },
-            UpdateExpression: "SET match_config.answers.#qId = :aOId",
-            ExpressionAttributeValues: {
-                ":aOId": answerOptionId
-            },
-            ExpressionAttributeNames: {
-                "#qId": questionId
-            }
-        });
-        await docClient.send(command);
+        if(answerOptionId){
+            const getCommand = new GetCommand({
+                TableName: MATCH_TABLE_NAME,
+                Key: {
+                    match_instance_id: matchInstanceId
+                }
+            });
+
+            const matchInstance = (await docClient.send(getCommand)).Item;
+            const existingMatchAnswers = matchInstance.answers || {};
+            existingMatchAnswers[questionId] = answerOptionId;
+            const command = new UpdateCommand({
+                TableName: MATCH_TABLE_NAME,
+                Key: {
+                    match_instance_id: matchInstanceId
+                },
+                UpdateExpression: "SET match_config.answers = :answers",
+                ExpressionAttributeValues: {
+                    ":answers": marshall(existingMatchAnswers)
+                }
+            });
+            await docClient.send(command);
+        }
     } catch (e) {
         console.log("error updating answer to the question", e);
     }
@@ -99,7 +109,7 @@ const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) 
             },
             UpdateExpression: "SET score = :score",
             ExpressionAttributeValues: {
-                ":score": updatedScore
+                ":score": updatedScore+""
             }
         });
         await docClient.send(command);
@@ -128,7 +138,7 @@ const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) 
 
 const fetchMatchInstanceDetails = async ({matchInstanceId, teamId}) => {
     let data = {
-        matchInstaceData: undefined,
+        matchInstanceData: undefined,
         triviaData: undefined,
         questionsData: undefined,
         teamData: undefined
@@ -142,10 +152,10 @@ const fetchMatchInstanceDetails = async ({matchInstanceId, teamId}) => {
                 }
             });
     
-            data.matchInstaceData = (await docClient.send(command)).Item;
+            data.matchInstanceData = (await docClient.send(command)).Item;
 
-            if(data.matchInstaceData?.match_config.trivia_id){
-                data.triviaData = await fetchTriviaData(data.matchInstaceData.match_config.trivia_id);
+            if(data.matchInstanceData?.match_config.trivia_id){
+                data.triviaData = await fetchTriviaData(data.matchInstanceData.match_config.trivia_id);
 
                 if(data.triviaData?.questions){
                     const questionFetchPromises = data.triviaData.questions.map((questionId)=>{
@@ -230,13 +240,13 @@ const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
         });
         matchData = [(await docClient.send(command)).Item].map((item) => {
             const answersRecorded = item.match_config.answers;
-            return Object.entries(answersRecorded).map(([key, value]) => {
+            return answersRecorded ? Object.entries(answersRecorded).map(([key, value]) => {
                 return {
                     questionId: key,
-                    answerOptionId: value
+                    answerOptionId: value.L.map(v=>v.S)
                 };
-            })
-        })[0];
+            }) : [];
+        })[0] || [];
         console.log("match data for questions and answers is ", matchData);
     } catch (e) {
         console.log("error getting team answer to the question", e);
