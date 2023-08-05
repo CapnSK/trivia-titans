@@ -1,4 +1,5 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
+import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, ScanCommand, DeleteCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
@@ -7,6 +8,7 @@ const CONNECTIONS_TABLE_NAME = `ingame-connections`;
 const MATCH_TABLE_NAME = `match`;
 const TRIVIA_QUESTION_TABLE_NAME = `questions`; 
 const TRIVIA_TABLE_NAME = `trivia`; 
+const TEAM_TABLE_NAME = `teams`; 
 
 let CONNECTIONS_CACHE = {};
 
@@ -70,26 +72,35 @@ const removeConnection = async ({ connectionId }) => {
 
 const updateAnswer = async ({ matchInstanceId, timestampCreated, questionId, answerOptionId }) => {
     try {
-        const command = new UpdateCommand({
-            TableName: MATCH_TABLE_NAME,
-            Key: {
-                match_instance_id: matchInstanceId
-            },
-            UpdateExpression: "SET match_config.answers.#qId = :aOId",
-            ExpressionAttributeValues: {
-                ":aOId": answerOptionId
-            },
-            ExpressionAttributeNames: {
-                "#qId": questionId
-            }
-        });
-        await docClient.send(command);
+        if(answerOptionId){
+            const getCommand = new GetCommand({
+                TableName: MATCH_TABLE_NAME,
+                Key: {
+                    match_instance_id: matchInstanceId
+                }
+            });
+
+            const matchInstance = (await docClient.send(getCommand)).Item;
+            const existingMatchAnswers = matchInstance.answers || {};
+            existingMatchAnswers[questionId] = answerOptionId;
+            const command = new UpdateCommand({
+                TableName: MATCH_TABLE_NAME,
+                Key: {
+                    match_instance_id: matchInstanceId
+                },
+                UpdateExpression: "SET match_config.answers = :answers",
+                ExpressionAttributeValues: {
+                    ":answers": existingMatchAnswers
+                }
+            });
+            await docClient.send(command);
+        }
     } catch (e) {
         console.log("error updating answer to the question", e);
     }
 }
 
-const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) => {
+const resetScore = async ({ matchInstanceId, timestampCreated}) => {
     try {
         const command = new UpdateCommand({
             TableName: MATCH_TABLE_NAME,
@@ -98,13 +109,61 @@ const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) 
             },
             UpdateExpression: "SET score = :score",
             ExpressionAttributeValues: {
-                ":score": updatedScore
+                ":score": "0"
+            }
+        });
+        await docClient.send(command);
+    } catch (e) {
+        console.log("error resetting score", e);
+    }
+}
+
+const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) => {
+    let totalScore = updatedScore;
+    try {
+        const getCommand = new GetCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            }
+        });
+        const item = (await docClient.send(getCommand)).Item;
+        console.log("item fetched is", item);
+        totalScore = ((Number(item.score) || 0)+Number(updatedScore));
+        console.log("total score prev score & current score", totalScore, item.score, updatedScore);
+        const command = new UpdateCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            },
+            UpdateExpression: "SET score = :score",
+            ExpressionAttributeValues: {
+                ":score": totalScore+""
             }
         });
         await docClient.send(command);
     } catch (e) {
         console.log("error updating answer to the question", e);
     }
+    return totalScore;
+}
+
+const fetchScore = async ({matchInstanceId}) => {
+    let score;
+    try {
+        const getCommand = new GetCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            }
+        });
+        const item = (await docClient.send(getCommand)).Item;
+        score = item.score;
+        console.log("fetched score is", score);
+    } catch (e) {
+        console.log("error fetching score", e);
+    }
+    return score;
 }
 
 const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) => {
@@ -125,11 +184,12 @@ const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) 
     }
 }
 
-const fetchMatchInstanceDetails = async (matchInstanceId) => {
+const fetchMatchInstanceDetails = async ({matchInstanceId, teamId}) => {
     let data = {
-        matchInstaceData: undefined,
+        matchInstanceData: undefined,
         triviaData: undefined,
-        questionsData: undefined
+        questionsData: undefined,
+        teamData: undefined
     };
     if(matchInstanceId){
         try{
@@ -140,10 +200,10 @@ const fetchMatchInstanceDetails = async (matchInstanceId) => {
                 }
             });
     
-            data.matchInstaceData = (await docClient.send(command)).Item;
+            data.matchInstanceData = (await docClient.send(command)).Item;
 
-            if(data.matchInstaceData?.match_config.trivia_id){
-                data.triviaData = await fetchTriviaData(data.matchInstaceData.match_config.trivia_id);
+            if(data.matchInstanceData?.match_config.trivia_id){
+                data.triviaData = await fetchTriviaData(data.matchInstanceData.match_config.trivia_id);
 
                 if(data.triviaData?.questions){
                     const questionFetchPromises = data.triviaData.questions.map((questionId)=>{
@@ -152,8 +212,30 @@ const fetchMatchInstanceDetails = async (matchInstanceId) => {
                     data.questionsData = await Promise.all(questionFetchPromises);
                 }
             }
+
+            if(teamId){
+                data.teamData = await fetchTeamData(teamId);                
+            }
         } catch(e){
             console.log("error fetching data from match instance id", matchInstanceId, e);
+        }
+    }
+    return data;
+}
+
+const fetchTeamData = async (teamId) => {
+    let data;
+    if(teamId){
+        try{
+            const command = new GetCommand({
+                TableName: TEAM_TABLE_NAME,
+                Key:{
+                    id: teamId
+                }
+            });
+            data = (await docClient.send(command)).Item;
+        } catch(e){
+            console.log("error fetching data from tean id", teamId, e);
         }
     }
     return data;
@@ -206,13 +288,13 @@ const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
         });
         matchData = [(await docClient.send(command)).Item].map((item) => {
             const answersRecorded = item.match_config.answers;
-            return Object.entries(answersRecorded).map(([key, value]) => {
+            return answersRecorded && Object.entries(answersRecorded) ? Object.entries(answersRecorded).map(([key, value]) => {
                 return {
                     questionId: key,
                     answerOptionId: value
                 };
-            })
-        })[0];
+            }) : [];
+        })[0] || [];
         console.log("match data for questions and answers is ", matchData);
     } catch (e) {
         console.log("error getting team answer to the question", e);
@@ -292,5 +374,7 @@ export {
     getCorrectAnswers,
     syncCache,
     updateMatchStatus,
-    fetchMatchInstanceDetails
+    fetchMatchInstanceDetails,
+    resetScore,
+    fetchScore
 };

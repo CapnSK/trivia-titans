@@ -1,6 +1,6 @@
 import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
-import { AuthContextProvider, ChatContextProvider } from "./contexts";
+import { AuthContextProvider, ChatContextProvider, InGameContextProvider } from "./contexts";
 import Chat from './pages/Chat';
 import Main from './pages/Main';
 import Navbar from './pages/Navbar';
@@ -32,11 +32,13 @@ function App() {
 		
 			<AuthContextProvider>
 				<ChatContextProvider>
-					<Navbar></Navbar>
-					<div className="auth-wrapper">
-					<Main ></Main>
-					</div>
-					<Chat></Chat>
+					<InGameContextProvider>
+						<Navbar></Navbar>
+						<div className="auth-wrapper">
+						<Main ></Main>
+						</div>
+						<Chat></Chat>
+					</InGameContextProvider>
 				</ChatContextProvider>
 			</AuthContextProvider>
 		</div>

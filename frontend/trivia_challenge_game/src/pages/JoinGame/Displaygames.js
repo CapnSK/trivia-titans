@@ -6,10 +6,10 @@ import { useNavigate  } from 'react-router-dom';
 // eslint-disable-next-line
 import { v4 as uuidv4 } from 'uuid';
 import './Displaygames.css';
-import {listen} from '../../util/InGameEventUtils'
+import {listen, getInGameData} from '../../util/InGameEventUtils'
 import {join_game, introduce} from '../../util/InGameEventUtils'
 import { take } from 'rxjs/operators';
-import { AuthContext  } from "../../contexts"
+import { AuthContext, InGameContext  } from "../../contexts"
 
 
 const Displaygames = () => {
@@ -17,6 +17,7 @@ const Displaygames = () => {
     const [teamID, setTeamID] = useState("")
     const [teamName, setTeamName] = useState("")
     const [constgameDetails, constsetGameDetails] = useState([""])
+    const { setInGameContext } = useContext(InGameContext);
     const navigate  = useNavigate ();
     // eslint-disable-next-line
     const { username } = useContext(AuthContext);
@@ -25,7 +26,9 @@ const Displaygames = () => {
       getGameDetails();
       listen("JOIN_GAME").pipe(take(1)).subscribe((event)=>{
             console.log(event.data);
-            navigate('/in-game',{ state: { data: event.data } });
+            const data=getInGameData(event.data);
+            setInGameContext(data);
+            navigate('/in-game');
       })  
       // eslint-disable-next-line react-hooks/exhaustive-deps
     },[])
@@ -77,16 +80,17 @@ const Displaygames = () => {
         setGameDetails(filteredTimeLimit)
     }
     const joinGame = async (data) => {
-    const uuid ="t011223";
+    const uuid =uuidv4();
+    const timestamp = Date.now();
     try {
       // eslint-disable-next-line
       const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/creatematchinstance', {
         match_instance_id: uuid,
-        timestamp_created: "1689012982155",
+        timestamp_created: timestamp,
         match_status: "IN_LOBBY", 
         team_id: teamID, 
         team_name:teamName,
-        score: "20", 
+        score: "0", 
         win: "default",
         match_config: {
             trivia_id: data.id,
@@ -100,10 +104,10 @@ const Displaygames = () => {
     catch (error) {
       console.error(error);
     }
-    introduce({username:"Jamura",teamId:"triviaTitans1221"})
-    setTimeout(()=>{
-    join_game({username:"Jamura",matchInstanceId: "t011223", timestampCreated: "1689012982155", teamId:"triviaTitans1221"})
-    }, 2000)
+    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:data.id});
+    // introduce({username:"capsk",teamId:"1"})
+    // setTimeout(()=>{
+    // }, 2000)
 
     }
 

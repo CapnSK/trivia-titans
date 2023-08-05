@@ -1,6 +1,7 @@
 import { filter } from "rxjs/operators";
 import { webSocketClient } from "../lib/sockets/";
 import { cloneDeep } from "lodash";
+// import { setInGameContext } from "../../"
 
 const eventStructure = {
     action: "emitEvent",
@@ -68,7 +69,7 @@ function mark_answer({
     matchInstanceId,
     timestampCreated,
     questionId,
-    selectedOptionId
+    selectedOption
 }){
     const eventData = cloneDeep(eventStructure);
     eventData.event.type = "MARK_ANSWER";
@@ -77,7 +78,7 @@ function mark_answer({
     eventData.event.context.matchSpec.timestampCreated = timestampCreated;
     eventData.event.data.username = username;
     eventData.event.data.questionId = questionId;
-    eventData.event.data.selectedOptionId = selectedOptionId;
+    eventData.event.data.selectedOption = selectedOption;
     console.log("event to be emitted is", eventData);
     webSocketClient.emit(eventData);
 }
@@ -147,7 +148,14 @@ function listen(eventType){
 
 } //return type would be { stream: obs, onClose: obs, onOpen: obs}
 
-
+function getInGameData(data){
+    return {
+        matchInstanceData: cloneDeep(data.matchInstance.matchInstanceData),
+        teamData: cloneDeep(data.matchInstance.teamData),
+        triviaData: cloneDeep(data.matchInstance.triviaData),
+        questionsData: cloneDeep(data.matchInstance.questionsData),
+    };
+}
 
 export {
     introduce,
@@ -157,5 +165,6 @@ export {
     update_score,
     next_question,
     submit_quiz,
-    listen
+    listen,
+    getInGameData
 };

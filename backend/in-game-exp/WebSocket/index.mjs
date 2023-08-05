@@ -1,6 +1,6 @@
 
 import { ApiGatewayManagementApi } from "@aws-sdk/client-apigatewaymanagementapi";
-import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus, fetchMatchInstanceDetails} from "./DBOperations.mjs";
+import { storeConnection, removeConnection, CONNECTIONS_CACHE, addMatchInstanceIdToDB, updateAnswer, updateScore, getTeamAnswers,  getCorrectAnswers, syncCache, updateMatchStatus, fetchMatchInstanceDetails, resetScore, fetchScore} from "./DBOperations.mjs";
 
 const WS_API_POST_URL = `https://cll7zfy8rl.execute-api.us-east-1.amazonaws.com/dev`;
 const client = new ApiGatewayManagementApi({ endpoint: WS_API_POST_URL });
@@ -86,7 +86,7 @@ async function handleEvent(eventEmitted, connectionId) {
           const startTime = data.startTime;
           await addMatchInstanceIdToDB({ connectionId, teamId, matchInstanceId });
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_LOBBY"});
-          const matchInstanceData = await fetchMatchInstanceDetails(matchInstanceId);
+          const matchInstanceData = await fetchMatchInstanceDetails({matchInstanceId, teamId});
           console.log("match instance data is", matchInstanceData);
           // const triviaData = await fetchTriviaData(matchInstanceData.match_config.trivia_id);
           // const questionsData = await fetchQuestionsData(triviaData?.questions);
@@ -102,6 +102,7 @@ async function handleEvent(eventEmitted, connectionId) {
           break;
         case "START_GAME":
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"IN_PROGRESS"});
+          await resetScore({matchInstanceId, timestampCreated});
           await postEvent({
             sender: username,
             type: "START_GAME",
@@ -116,6 +117,7 @@ async function handleEvent(eventEmitted, connectionId) {
           teamId = context?.matchSpec?.teamId || "";
           questionId = data.questionId;
           const answerOptionId = data.selectedOption;
+          console.log("got options from input as", answerOptionId);
           await updateAnswer({matchInstanceId, timestampCreated, questionId, answerOptionId});
           await postEvent({
             sender: username,
@@ -130,7 +132,7 @@ async function handleEvent(eventEmitted, connectionId) {
         case "UPDATE_SCORE":
           
           const updatedScore = await calculateUpdatedScore({matchInstanceId, timestampCreated});
-          await updateScore({
+          const totalScore = await updateScore({
             matchInstanceId,
             timestampCreated,
             updatedScore
@@ -140,7 +142,7 @@ async function handleEvent(eventEmitted, connectionId) {
             type: "UPDATED_SCORE",
             data: {
               matchInstanceId,
-              updatedScore
+              updatedScore: totalScore
             }
           });
           break;
@@ -158,11 +160,13 @@ async function handleEvent(eventEmitted, connectionId) {
         case "SUBMIT_QUIZ":
           //To Do: call appropriate lambdas to finalize the match data
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"COMPLETED"});
+          const finalScore = await fetchScore({matchInstanceId});
           await postEvent({
             sender: username,
             type: "QUIZ_SUBMITTED",
             data: {
-              matchInstanceId
+              matchInstanceId,
+              score: finalScore
             }
           });
           break;
@@ -177,6 +181,7 @@ async function postEvent(event) {
   const matchInstanceId = event.data?.matchInstanceId || "";
   await syncCache();
   console.log("current match instance id is ",matchInstanceId);
+  console.log("current event to post is ",event);
   const receivers = Object.entries(CONNECTIONS_CACHE)
   .filter(([conId, value])=>{
     return value.matchInstanceId === matchInstanceId;

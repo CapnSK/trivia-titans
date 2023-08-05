@@ -25,9 +25,9 @@ class WebSocketAPI {
             });
         }).pipe(
             map(data=> data.data),
-            tap(data => console.log("received data from websocket as", data)),
+            // tap(data => console.log("received data from websocket as", data)),
             map(data=> JSON.parse(data)),
-            tap(data => console.log("parsed data is", data)),
+            // tap(data => console.log("parsed data is", data)),
             // finalize(()=>{
             //     this._webSocket.removeEventListener(topicName, this.onEventListenerRemoved);
             // })
