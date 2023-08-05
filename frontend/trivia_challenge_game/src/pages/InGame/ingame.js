@@ -350,7 +350,7 @@ const InGame = () =>{
         <>
             <div className="timer-box">{timerValue}</div>
             <div className="main-game-box">
-                <button onClick={emitEvent}>Join Game</button>
+                {/* <button onClick={emitEvent}>Join Game</button> */}
 
                 {gameStarted && (
                     <>
