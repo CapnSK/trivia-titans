@@ -54,8 +54,12 @@ const TriviaGame = () => {
     }, []);
 
     const handleGameDescriptionChange = (event) => {
-        const { name, value } = event.target;
+        const { value } = event.target;
         setGameDescription(value);
+        setFormData((prevFormData) => ({
+          ...prevFormData,
+          description: value,
+        }));
       };
     
 
