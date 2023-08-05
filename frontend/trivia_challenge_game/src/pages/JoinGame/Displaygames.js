@@ -21,6 +21,7 @@ const Displaygames = () => {
     const navigate  = useNavigate ();
     // eslint-disable-next-line
     const { username } = useContext(AuthContext);
+    console.log("Displaygames :: entering :: logged in user", username);
     useEffect(()=>{
       getTeamID();
       getGameDetails();
@@ -47,7 +48,7 @@ const Displaygames = () => {
     const getTeamID = async () => {
     try {
       const response = await axios.post('https://eytk5os3vl.execute-api.us-east-1.amazonaws.com/first/team_id', {
-        "username":"Abhi1331"
+        "username": username
       });
       if(response.data==null)
       {
