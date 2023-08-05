@@ -24,6 +24,7 @@ const Displaygames = () => {
     console.log("Displaygames :: entering :: logged in user", username);
     useEffect(()=>{
       getTeamID();
+      //dummy change
       getGameDetails();
       listen("JOIN_GAME").pipe(take(1)).subscribe((event)=>{
             console.log(event.data);
