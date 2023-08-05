@@ -243,8 +243,8 @@ const InGame = () =>{
                 console.error("error occurred while submit quiz", e);
             },
             next: (event)=>{
-                console.log("recieved data for submit quiz ", event);
-                alert("Game submitted, Your final score is: ", score);
+                console.log("recieved data for submit quiz ", event.data.score);
+                alert("Game submitted, Your final score is: "+ event.data.score);
                 navigate("/home",{relative: false});
             }
         });
@@ -356,28 +356,40 @@ const InGame = () =>{
             <div className="main-game-box">
                 <button onClick={emitEvent}>Join Game</button>
 
-                <div className="inner-question-container">
-                    <Typography variant="body1">{questionLabel}</Typography>
-                    {questionOptions?.map(option=>{
-                        return (
-                            <>
-                                <div className="cb-container">
-                                    <Checkbox
-                                        disabled={playMode === playModes.MEMBER} 
-                                        onChange={(e)=>{handleOptionSelection(option.id, e.target.checked || false)}} 
-                                        checked={selectedOptionId.includes(option.id)} 
-                                        label={option.label || "dummy label"} />
-                                    <Typography variant="subtitle1">{option.label}</Typography>
-                                </div>
-                            </>
-                        );  
-                    })}
-                </div>
+                {gameStarted && (
+                    <>
+                        <div className="inner-question-container">
+                        <Typography variant="body1">{questionLabel}</Typography>
+                        {questionOptions?.map(option=>{
+                            return (
+                                <>
+                                    <div className="cb-container">
+                                        <Checkbox
+                                            disabled={playMode === playModes.MEMBER} 
+                                            onChange={(e)=>{handleOptionSelection(option.id, e.target.checked || false)}} 
+                                            checked={selectedOptionId.includes(option.id)} 
+                                            label={option.label || "dummy label"} />
+                                        <Typography variant="subtitle1">{option.label}</Typography>
+                                    </div>
+                                </>
+                            );  
+                        })}
+                    </div>
 
-                <div className="buttons-container">
-                    <Button onClick={handleUpdateScore} variant="contained" style={{marginRight: "1em"}}>MARK</Button>
-                    <Button onClick={handleNextQorSubmit} variant="contained" color="secondary">{getQuestionDetailsFromId(currQuestionId)[0] === questionsData?.length-1 ? "SUBMIT" : "Next Question"}</Button>
-                </div>
+                    <div className="buttons-container">
+                        <Button onClick={handleUpdateScore} variant="contained" style={{marginRight: "1em"}}>MARK</Button>
+                        <Button onClick={handleNextQorSubmit} variant="contained" color="secondary">{getQuestionDetailsFromId(currQuestionId)[0] === questionsData?.length-1 ? "SUBMIT" : "Next Question"}</Button>
+                    </div>
+                    
+                    </>
+                )}
+                {
+                    !gameStarted && (
+                        <>
+                            Please wait for the game to start...
+                        </>
+                    )
+                }
             </div>
         </>
     );

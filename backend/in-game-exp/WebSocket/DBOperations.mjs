@@ -90,7 +90,7 @@ const updateAnswer = async ({ matchInstanceId, timestampCreated, questionId, ans
                 },
                 UpdateExpression: "SET match_config.answers = :answers",
                 ExpressionAttributeValues: {
-                    ":answers": marshall(existingMatchAnswers)
+                    ":answers": existingMatchAnswers
                 }
             });
             await docClient.send(command);
@@ -100,7 +100,7 @@ const updateAnswer = async ({ matchInstanceId, timestampCreated, questionId, ans
     }
 }
 
-const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) => {
+const resetScore = async ({ matchInstanceId, timestampCreated}) => {
     try {
         const command = new UpdateCommand({
             TableName: MATCH_TABLE_NAME,
@@ -109,13 +109,61 @@ const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) 
             },
             UpdateExpression: "SET score = :score",
             ExpressionAttributeValues: {
-                ":score": updatedScore+""
+                ":score": "0"
+            }
+        });
+        await docClient.send(command);
+    } catch (e) {
+        console.log("error resetting score", e);
+    }
+}
+
+const updateScore = async ({ matchInstanceId, timestampCreated, updatedScore }) => {
+    let totalScore = updatedScore;
+    try {
+        const getCommand = new GetCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            }
+        });
+        const item = (await docClient.send(getCommand)).Item;
+        console.log("item fetched is", item);
+        totalScore = ((Number(item.score) || 0)+Number(updatedScore));
+        console.log("total score prev score & current score", totalScore, item.score, updatedScore);
+        const command = new UpdateCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            },
+            UpdateExpression: "SET score = :score",
+            ExpressionAttributeValues: {
+                ":score": totalScore+""
             }
         });
         await docClient.send(command);
     } catch (e) {
         console.log("error updating answer to the question", e);
     }
+    return totalScore;
+}
+
+const fetchScore = async ({matchInstanceId}) => {
+    let score;
+    try {
+        const getCommand = new GetCommand({
+            TableName: MATCH_TABLE_NAME,
+            Key: {
+                match_instance_id: matchInstanceId
+            }
+        });
+        const item = (await docClient.send(getCommand)).Item;
+        score = item.score;
+        console.log("fetched score is", score);
+    } catch (e) {
+        console.log("error fetching score", e);
+    }
+    return score;
 }
 
 const updateMatchStatus = async ({ matchInstanceId, timestampCreated, status }) => {
@@ -240,10 +288,10 @@ const getTeamAnswers = async ({ matchInstanceId, timestampCreated }) => {
         });
         matchData = [(await docClient.send(command)).Item].map((item) => {
             const answersRecorded = item.match_config.answers;
-            return answersRecorded ? Object.entries(answersRecorded).map(([key, value]) => {
+            return answersRecorded && Object.entries(answersRecorded) ? Object.entries(answersRecorded).map(([key, value]) => {
                 return {
                     questionId: key,
-                    answerOptionId: value.L.map(v=>v.S)
+                    answerOptionId: value
                 };
             }) : [];
         })[0] || [];
@@ -326,5 +374,7 @@ export {
     getCorrectAnswers,
     syncCache,
     updateMatchStatus,
-    fetchMatchInstanceDetails
+    fetchMatchInstanceDetails,
+    resetScore,
+    fetchScore
 };
