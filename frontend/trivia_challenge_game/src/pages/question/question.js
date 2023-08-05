@@ -4,7 +4,9 @@ import { useLocation } from 'react-router-dom';
 import { TextField, Button, Select, MenuItem, FormControl, InputLabel, Typography, Snackbar, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import Chip from '@mui/material/Chip';
+import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
+import Alert from '@mui/material/Alert';
 
 
 const QuestionForm = () => {
@@ -35,7 +37,7 @@ const QuestionForm = () => {
   const [categoryResponse, setCategoryResponse] = useState([]);
   const [pageHeading, setPageHeading] = useState("Create a New Question...");
   const [pageButtonName, setPageButton] = useState("Create Question");
-
+  const navigate = useNavigate();
   const location = useLocation();
 
 
@@ -79,6 +81,10 @@ const QuestionForm = () => {
     console.log(category);
     return category ? category.subcategory : [];
   }
+
+  const handleCloseSnackbar = () => {
+    setSubmissionStatus(null);
+  };
 
   const handleAnswerChange = (event) => {
     const selectedAnswers = Array.from(new Set(event.target.value));
@@ -225,6 +231,7 @@ const QuestionForm = () => {
         console.log('API Response:', response.data);
         setFormData(initialFormData);
         setSubmissionStatus('success');
+        // navigate('/unauth/question/list');
       })
       .catch((error) => {
         console.error('API Error:', error);
@@ -236,18 +243,40 @@ return (
   <Grid container spacing={2} justifyContent="center">
   <Grid item xs={12} md={10} lg={8}>
     <Box component="div" p={2}>
-      
-      {submissionStatus === 'success' && (
-        <Typography variant="h8" color="success">
-            The new question was created Successfully
-        </Typography>
-      )}
-      {submissionStatus === 'error' && (
-        <Typography variant="h8" color="error">
-          An error occurred while creating the question
-        </Typography>
-      )}
+    
+      <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={submissionStatus === 'success'}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="success" sx={{ width: '100%' }}>
+              The new question was created Successfully
+            </Alert>
+          </Snackbar>
+
+          {/* Snackbar for error message */}
+          <Snackbar
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            open={submissionStatus === 'error'}
+            autoHideDuration={3000}
+            onClose={handleCloseSnackbar}
+          >
+            <Alert onClose={handleCloseSnackbar} severity="error" sx={{ width: '100%' }}>
+              An error occurred while creating the question
+            </Alert>
+          </Snackbar>
       <br />
+      {/* <Button variant="contained" onClick={() => navigate('/unauth/question/list')}>
+            View Questions
+          </Button> */}
+           <br />
+          <Box mt={2} display="flex" justifyContent="center">
+          <Button variant="contained" onClick={() => navigate('/unauth/question/list')}>
+            View Questions
+          </Button>
+        </Box>
+        <br />
       <h2>{pageHeading}</h2>
       <form onSubmit={handleSubmit}>
         <FormControl fullWidth sx={{ my: 1 }}>

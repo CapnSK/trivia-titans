@@ -122,3 +122,4 @@ const GameTable = () => {
 };
 
 export default GameTable;
+

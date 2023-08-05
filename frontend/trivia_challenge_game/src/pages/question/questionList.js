@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Grid, Button, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
@@ -44,6 +44,7 @@ const QuestionList = () => {
       .then(response => {
         if (response.data?.data?.length > 0) {
           setQuestions(response.data.data);
+          console.log(response.data)
         }
       })
       .catch(error => {
@@ -52,10 +53,18 @@ const QuestionList = () => {
   };
 
   return (
+    
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} md={10} lg={8}>
         <Typography variant="h4">List of Questions</Typography>
         <TableContainer component={Paper}>
+        <br /><br /><br /><br /><br /><br /><br /><br />
+        <Box mt={2} display="flex" justifyContent="center">
+          <Button variant="contained" onClick={() => navigate('/unauth/question')}>
+            Create New Question
+          </Button>
+        </Box>
+        <br />
           <Table>
             <TableHead>
               <TableRow>
@@ -69,6 +78,7 @@ const QuestionList = () => {
                 <TableCell sx={{ border: '1px solid #ccc' }}>Points</TableCell>
                 <TableCell sx={{ border: '1px solid #ccc' }}>Time Limit (seconds)</TableCell>
                 <TableCell sx={{ border: '1px solid #ccc' }}>Hints</TableCell>
+                <TableCell sx={{ border: '1px solid #ccc' }}>Tags</TableCell> {/* New field "Extra" */}
                 <TableCell align="center" sx={{ border: '1px solid #ccc' }}>Action</TableCell>
                 <TableCell align="center" sx={{ border: '1px solid #ccc' }}>Action</TableCell>
               </TableRow>
@@ -97,7 +107,15 @@ const QuestionList = () => {
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.points}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.time_limit}</TableCell>
                   <TableCell sx={{ border: '1px solid #ccc' }}>{question.tags.hints}</TableCell>
-            
+                  <TableCell sx={{ border: '1px solid #ccc' }}>
+                    {/* New field "Extra" */}
+                    {question.tags.extra.map((extraItem, index) => (
+                      <span key={index}>
+                        {extraItem}
+                        {index !== question.tags.extra.length - 1 ? ', ' : ''}
+                      </span>
+                    ))}
+                  </TableCell>
                   <TableCell align="center" sx={{ border: '1px solid #ccc' }}>
                   <a
                     href="#"
