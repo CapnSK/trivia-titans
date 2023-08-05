@@ -74,11 +74,13 @@ const Login = () => {
         const response = await axiosJSON.post(cloudFunctionURL + '/getUserDetails', JSON.stringify({ "accessToken":access_token }))
         const data = await response.data
         alert('Login successful')
+        setTimeout(() => {
         if (data.status === 200) {
           setLoggedinUsername(data.username)
           setLoggedinEmail(data.email)
           setLoggedinRole(data.role)
         }
+        }, 2000);
       }
       catch (error) {
         alert(error.response.data.message)
