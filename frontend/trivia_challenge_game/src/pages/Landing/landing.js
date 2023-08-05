@@ -1,12 +1,17 @@
 import {useNavigate} from 'react-router-dom';
 import {axiosJSON} from "../../lib/axios";
 import React, { useState } from 'react';
+import { localStorageUtil } from "../../util";
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
 
 function Landing(){
     const [username, setUsername] = useState('');
     const navigate = useNavigate();
+    const role = localStorageUtil.getItem('user')['role'];
+    console.log(role);
+
+    const isAdmin = role === 'admin';
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
@@ -62,6 +67,24 @@ function Landing(){
                     </button>
                 </div>
             </div>
+            {isAdmin && (
+        <>
+          <div className="auth-inner">
+            <div>
+              <button onClick={() => navigate("/admin/triviagame/list")}>
+                Admin Games
+              </button>
+            </div>
+          </div>
+          <div className="auth-inner">
+            <div>
+              <button onClick={() => navigate("/admin/question/list")}>
+                Admin Questions
+              </button>
+            </div>
+          </div>
+        </>
+      )}
             <div className="auth-inner" >
                 <div>
                     <form onSubmit={handleSubmit}> 
