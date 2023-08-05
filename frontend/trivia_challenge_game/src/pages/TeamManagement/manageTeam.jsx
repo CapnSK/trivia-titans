@@ -176,7 +176,7 @@ function ManageTeam() {
 		console.log(jsonResData)
 		axios({
 			// Endpoint to send files
-			url: `https://4flvzcc2c5.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
+			url: `https://mimooazyk3.execute-api.us-east-1.amazonaws.com/first/getuserprofile`,
 			method: "POST",
 			data: { team_id: [jsonResData['id']] },
 			// data: { team_id: ["1"] },
