@@ -33,7 +33,7 @@ const Displaygames = () => {
             navigate('/in-game');
       })  
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    },[])
+    },[username])
 
     const getGameDetails = async () => {
     try {
@@ -47,20 +47,22 @@ const Displaygames = () => {
     }
 
     const getTeamID = async () => {
+      if (username === undefined || username === null || username === "") {
+        // alert("Please login to join the game")
+        // navigate('/login');
+        return;
+      }
     try {
       const response = await axios.post('https://eytk5os3vl.execute-api.us-east-1.amazonaws.com/first/team_id', {
-        "username": username
+        "username": username,
+        "status":"ACCEPTED"
       });
-      if(response.data==null)
-      {
-        alert("the user doesnot have team id");
-      }
-      else
-      {
-        setTeamID(JSON.stringify(response.data.teamID))
-        setTeamName(JSON.stringify(response.data.teamName))
-        alert("teamName is" + teamName + "team id id" + teamID)
-      }
+      console.log(response)
+      // alert("the user doesnot have team id");
+      setTeamID(response.data[0].teamID)
+      setTeamName(response.data[0].teamName)
+      // alert("teamName is" + teamName + "team id id" + teamID)
+
     } catch (error) {
       console.error(error);
     }
@@ -83,7 +85,7 @@ const Displaygames = () => {
     }
     const joinGame = async (data) => {
     const uuid =uuidv4();
-    const timestamp = Date.now();
+    const timestamp = Date.now()+"";
     try {
       // eslint-disable-next-line
       const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/creatematchinstance', {

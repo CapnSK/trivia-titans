@@ -2,18 +2,22 @@ import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 import Button from '@mui/material/Button';
 import './Displaygames.css';
-
+import { useContext } from "react";
+import { AuthContext, InGameContext  } from "../../contexts"
 
 const TeamAffiliations = () => {
+    const { username } = useContext(AuthContext);
+    console.log(username)
+    
     const [teamDetails, setteamDetails] = useState([""])
     useEffect(()=>{
       getTeamDetails();
-    },[])
+    },[username])
 
     const getTeamDetails = async () => {
     try {
       const response = await axios.post('https://eytk5os3vl.execute-api.us-east-1.amazonaws.com/first/team_id', {
-        "username":"Abhi1331",
+        "username": username,
         "status":"ACCEPTED"
       });
       if(response.data==null)
@@ -49,7 +53,7 @@ const TeamAffiliations = () => {
 
   return (
         <div style={{marginTop:'1%'}}>
-                <h style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '35%'}}>Team Affiliations</h>
+                <h1 style={{ fontWeight: '1800', fontSize: '48px', marginLeft: '35%'}}>Team Affiliations</h1>
             <table style={{ borderCollapse: 'collapse', width: '65%',marginLeft:'15%' }}>
         <tbody>
           <tr>
