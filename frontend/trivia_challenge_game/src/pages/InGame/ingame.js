@@ -38,12 +38,8 @@ const InGame = () =>{
 
     //const [currentQuestionIdx, setCurrentQuestionIdx] = useState(0);
     const [currQuestionId, setCurrQuestionId] = useState("");
-    const [questionLabel, setQuestionLabel] = useState("What is the capital of the great britian and a really unnecessary long question to check UI?");
-    const [questionOptions, setQuestionOptions] = useState([
-        {id: '1', label: '10'},
-        {id: '2', label: '2'},
-        {id: '3', label: '20'}
-    ]);
+    const [questionLabel, setQuestionLabel] = useState("");
+    const [questionOptions, setQuestionOptions] = useState([]);
     // const [lastQuestion, setLastQuestion] = useState(false);
     const [selectedOptionId, setSelectedOptionId] = useState([]);
     const [score, setScore] = useState("0");
