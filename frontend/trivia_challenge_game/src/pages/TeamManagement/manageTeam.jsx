@@ -318,7 +318,7 @@ function ManageTeam() {
 								<tr key={team.match_instance_id}>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.team_name}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.match_status}</td>
-									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.win == true ? "Win": "Loss"}</td>
+									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.win === "true" ? "Win": "Loss"}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>{team.score}</td>
 									<td style={{ border: 'solid 1px gray' , padding: '5px' }}>
 										Trivia Name: {team.match_config.trivia_name}<br />
