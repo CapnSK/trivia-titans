@@ -11,15 +11,23 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Box,
+  Button,
   Typography,
 } from '@mui/material';
+import { useContext } from "react";
+import { AuthContext } from '../../contexts/AuthContext/authcontext';
+import Alert from '@mui/material/Alert';
 
 const GameTable = () => {
   const [gamesData, setGamesData] = useState([]);
+  const [submissionStatus, setSubmissionStatus] = useState(null);
   const navigate = useNavigate();
 //   const history = useHistory();
+const { role } = useContext(AuthContext);
 
   useEffect(() => {
+    CheckUserRole();
     fetchGamesData();
   }, []);
 
@@ -28,6 +36,17 @@ const GameTable = () => {
     return date.toLocaleString(); // Adjust the options as needed
   };
 
+  const CheckUserRole = () => {
+    console.log("reached check user role......")
+    
+    console.log(role);
+    if (role == "player"){
+      navigate("/home");
+    }
+    else if (typeof role === 'undefined') {
+      navigate("/unauth/login");
+    }
+  }
 
   const fetchGamesData = () => {
     const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/game';
@@ -66,7 +85,13 @@ const GameTable = () => {
 
   return (
     <Grid container spacing={2} justifyContent="center">
+      <br />
       <Grid item xs={12} md={10} lg={8}>
+      <Box mt={2} display="flex" justifyContent="center">
+          <Button variant="contained" onClick={() => navigate('/unauth/triviagame')}>
+            Create New Trivia Game
+          </Button>
+        </Box>
         <Typography variant="h4">Trivia Games</Typography>
         <TableContainer component={Paper}>
           <Table sx={{ minWidth: 650 }} aria-label="games table">
@@ -87,7 +112,7 @@ const GameTable = () => {
             <TableBody>
               {gamesData.map((game, index) => (
                 <TableRow key={game.id} style={{ border: '1px solid #ccc' }}>
-                    <TableCell>{index + 1}</TableCell>``
+                    <TableCell>{index + 1}</TableCell>
                   <TableCell style={{ border: '1px solid #ccc' }}>
                     {game.name}
                   </TableCell>

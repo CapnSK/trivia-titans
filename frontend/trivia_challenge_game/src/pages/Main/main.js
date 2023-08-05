@@ -43,6 +43,7 @@ function Main() {
                         <Route element={<ConfirmEmail/>} path="/unauth/confirm-email" exact/>
                         <Route element={<SecondFactorAuthentication/>} path="/unauth/validate-2FA" exact/>
                         
+                        
                         <Route path="/unauth/home/in-game" element={<InGame/>}/>
                     </Route>
                     <Route path="/" element={<RouteGuard/>} exact>
@@ -62,10 +63,11 @@ function Main() {
                         <Route element={<CreateTeam />} path="/createTeam" />
 		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
-                        <Route element={<QuestionForm/>} path="/question" exact/>
-                        <Route element={<QuestionList/>} path="/question/list" exact/>
-                        <Route element={<TriviaGame/>} path="/triviagame" exact/>
-                        <Route element={<GameTable/>} path="/triviagame/list" exact/>
+                        <Route element={<QuestionForm/>} path="/admin/question" exact/>
+                        <Route element={<QuestionList/>} path="/admin/question/list" exact/>
+                        <Route element={<TriviaGame/>} path="/admin/triviagame" exact/>
+                        <Route element={<GameTable/>} path="/admin/triviagame/list" exact/>
+                        
 		     			<Route
 		     				path="/invitation-request/:teamId"
 		     				component={HandleRequest}

@@ -2,19 +2,35 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from "react";
+import { AuthContext } from '../../contexts/AuthContext/authcontext';
 import { Grid, Button, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
+  const { role } = useContext(AuthContext);
 
   useEffect(() => {
+    CheckUserRole();
     fetchQuestions();
   }, []);
 
   const handleEdit = async (question) =>    {
     console.log(question);
     navigate('/unauth/question', {state : question});
+  }
+
+  const CheckUserRole = () => {
+    console.log("reached check user role......")
+    
+    console.log(role);
+    if (role == "player"){
+      navigate("/home");
+    }
+    else if (typeof role === 'undefined') {
+      navigate("/unauth/login");
+    }
   }
 
   const handleDelete = async (question_id) => {

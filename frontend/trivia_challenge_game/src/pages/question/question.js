@@ -7,7 +7,8 @@ import Chip from '@mui/material/Chip';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
-
+import { useContext } from "react";
+import { AuthContext } from '../../contexts/AuthContext/authcontext';
 
 const QuestionForm = () => {
   const initialFormData = {
@@ -39,9 +40,12 @@ const QuestionForm = () => {
   const [pageButtonName, setPageButton] = useState("Create Question");
   const navigate = useNavigate();
   const location = useLocation();
-
+  
+  const { role } = useContext(AuthContext);
 
   useEffect(() => {
+    
+    CheckUserRole();
     fetchCategories();
     console.log(categories);
     fetchDifficulty();
@@ -66,6 +70,18 @@ const QuestionForm = () => {
       fetchDifficulty();
     }
   }, []);
+
+  const CheckUserRole = () => {
+    console.log("reached check user role......")
+    
+    console.log(role);
+    if (role == "player"){
+      navigate("/home");
+    }
+    else if (typeof role === 'undefined') {
+      navigate("/unauth/login");
+    }
+  }
 
   const fetchDifficulty = () => {
     setTimeout(() => {

@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { Grid, Paper, Typography, FormControl, FormControlLabel, FormGroup, Checkbox, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
+import { useContext } from "react";
+import { AuthContext } from '../../contexts/AuthContext/authcontext';
+
+import { Grid, Box, Paper, Typography, SanFormControl, FormControl, FormControlLabel, FormGroup, Checkbox, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
 
 const TriviaGame = () => {
     const navigate = useNavigate();
@@ -21,6 +24,7 @@ const TriviaGame = () => {
     maxPoints: 0,
   });
 
+  const { role } = useContext(AuthContext);
   const [categories, setCategories] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [pageheading, setPageHeading] = useState("Create Trivia Game");
@@ -29,6 +33,7 @@ const TriviaGame = () => {
   const location = useLocation();
 
   useEffect(() => {
+    CheckUserRole();
     fetchCategories();
     fetchQuestions();
     console.log(location.state);
@@ -67,6 +72,18 @@ const TriviaGame = () => {
         console.error('Error fetching questions:', error);
       });
   };
+
+  const CheckUserRole = () => {
+    console.log("reached check user role......")
+    
+    console.log(role);
+    if (role == "player"){
+      navigate("/home");
+    }
+    else if (typeof role === 'undefined') {
+      navigate("/unauth/login");
+    }
+  }
 
   const handleQuestionChange = (event) => {
     const { name, checked } = event.target;
@@ -168,6 +185,12 @@ const handleFormSubmit = async (e) => {
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} md={8}>
+      <Box mt={2} display="flex" justifyContent="center">
+          <Button variant="contained" onClick={() => navigate('/unauth/triviagame/list')}>
+            View Trivia Games
+          </Button>
+        </Box>
+        <br />
         <Typography variant="h4">{pageheading}</Typography>
         <Paper style={{ padding: '20px' }}>
           <form onSubmit={handleFormSubmit}>
