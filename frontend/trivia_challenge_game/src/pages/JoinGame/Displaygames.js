@@ -80,16 +80,17 @@ const Displaygames = () => {
         setGameDetails(filteredTimeLimit)
     }
     const joinGame = async (data) => {
-    const uuid ="t011223";
+    const uuid =uuidv4();
+    const timestamp = Date.now();
     try {
       // eslint-disable-next-line
       const response = await axios.post('https://pq0aowhf98.execute-api.us-east-1.amazonaws.com/first/creatematchinstance', {
         match_instance_id: uuid,
-        timestamp_created: "1689012982155",
+        timestamp_created: timestamp,
         match_status: "IN_LOBBY", 
         team_id: teamID, 
         team_name:teamName,
-        score: "20", 
+        score: "0", 
         win: "default",
         match_config: {
             trivia_id: data.id,
@@ -103,10 +104,10 @@ const Displaygames = () => {
     catch (error) {
       console.error(error);
     }
-    introduce({username:"capsk",teamId:"1"})
-    setTimeout(()=>{
-    join_game({username:"capsk",matchInstanceId: "mt2", timestampCreated: "2023-07-29T02:26:11.460Z", teamId:"1"})
-    }, 2000)
+    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:data.id});
+    // introduce({username:"capsk",teamId:"1"})
+    // setTimeout(()=>{
+    // }, 2000)
 
     }
 
