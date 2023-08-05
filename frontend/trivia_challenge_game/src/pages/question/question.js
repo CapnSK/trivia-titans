@@ -7,10 +7,11 @@ import Chip from '@mui/material/Chip';
 import { useNavigate } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Alert from '@mui/material/Alert';
-import { useContext } from "react";
-import { AuthContext } from '../../contexts/AuthContext/authcontext';
+import { localStorageUtil } from "../../util";
+
 
 const QuestionForm = () => {
+  
   const initialFormData = {
     label: '',
     options: [
@@ -41,7 +42,9 @@ const QuestionForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
   
-  const { role } = useContext(AuthContext);
+  // const { username, email, accessId, tokenId, role } = useContext(AuthContext);
+  const role = localStorageUtil.getItem('user')['role'];
+  console.log(role);
 
   useEffect(() => {
     
@@ -73,14 +76,17 @@ const QuestionForm = () => {
 
   const CheckUserRole = () => {
     console.log("reached check user role......")
-    
-    console.log(role);
-    if (role == "player"){
-      navigate("/home");
-    }
-    else if (typeof role === 'undefined') {
-      navigate("/unauth/login");
-    }
+    setTimeout(() => {
+      console.log(role);
+      if (role === "player"){
+        console.log(role);
+        navigate("/home");
+      }
+      else if (typeof role === 'undefined') {
+        console.log(role);
+        navigate("/unauth/login");
+      }
+    }, 3000);
   }
 
   const fetchDifficulty = () => {
@@ -288,7 +294,7 @@ return (
           </Button> */}
            <br />
           <Box mt={2} display="flex" justifyContent="center">
-          <Button variant="contained" onClick={() => navigate('/unauth/question/list')}>
+          <Button variant="contained" onClick={() => navigate('/admin/question/list')}>
             View Questions
           </Button>
         </Box>

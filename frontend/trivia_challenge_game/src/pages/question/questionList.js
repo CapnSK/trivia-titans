@@ -4,12 +4,14 @@ import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
 import { AuthContext } from '../../contexts/AuthContext/authcontext';
+import { localStorageUtil } from "../../util";
 import { Grid, Button, Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
   const navigate = useNavigate();
-  const { role } = useContext(AuthContext);
+  const role = localStorageUtil.getItem('user')['role'];
+  console.log(role);
 
   useEffect(() => {
     CheckUserRole();
@@ -18,7 +20,7 @@ const QuestionList = () => {
 
   const handleEdit = async (question) =>    {
     console.log(question);
-    navigate('/unauth/question', {state : question});
+    navigate('/admin/question', {state : question});
   }
 
   const CheckUserRole = () => {
@@ -48,7 +50,7 @@ const QuestionList = () => {
       if (!response.ok) {
         throw new Error('Failed to delete Question. Please try again.');
       }
-    navigate('/unauth/question/list');
+    navigate('/admin/question/list');
     } catch (error) {
       console.error('Failed to Delete Question:', error.message);
     }
@@ -76,7 +78,7 @@ const QuestionList = () => {
         <TableContainer component={Paper}>
         <br /><br /><br /><br /><br /><br /><br /><br />
         <Box mt={2} display="flex" justifyContent="center">
-          <Button variant="contained" onClick={() => navigate('/unauth/question')}>
+          <Button variant="contained" onClick={() => navigate('/admin/question')}>
             Create New Question
           </Button>
         </Box>

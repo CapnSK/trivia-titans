@@ -63,10 +63,10 @@ function Main() {
                         <Route element={<CreateTeam />} path="/createTeam" />
 		    			<Route element={<JoinTeam />} path="/joinTeam/:teamId" />
                         <Route element={<ManageTeam/>} path="/manageTeam"/>
-                        <Route element={<QuestionForm/>} path="/admin/question" exact/>
-                        <Route element={<QuestionList/>} path="/admin/question/list" exact/>
-                        <Route element={<TriviaGame/>} path="/admin/triviagame" exact/>
-                        <Route element={<GameTable/>} path="/admin/triviagame/list" exact/>
+                        <Route element={<QuestionForm/>} path="/admin/question"/>
+                        <Route element={<QuestionList/>} path="/admin/question/list"/>
+                        <Route element={<TriviaGame/>} path="/admin/triviagame"/>
+                        <Route element={<GameTable/>} path="/admin/triviagame/list"/>
                         
 		     			<Route
 		     				path="/invitation-request/:teamId"

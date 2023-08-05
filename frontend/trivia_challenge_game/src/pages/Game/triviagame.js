@@ -3,15 +3,18 @@ import axios from 'axios';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from "react";
+import { localStorageUtil } from "../../util";
 import { AuthContext } from '../../contexts/AuthContext/authcontext';
 
 import { Grid, Box, Paper, Typography, SanFormControl, FormControl, FormControlLabel, FormGroup, Checkbox, TextField, Button, Select, MenuItem, InputLabel } from '@mui/material';
 
 const TriviaGame = () => {
     const navigate = useNavigate();
+    const [gameDescription, setGameDescription] = useState('');
   const [formData, setFormData] = useState({
     name: '', 
     id: '',
+    description: '',
     questions: [],
     tags: {
       category: '',
@@ -24,7 +27,8 @@ const TriviaGame = () => {
     maxPoints: 0,
   });
 
-  const { role } = useContext(AuthContext);
+  const role = localStorageUtil.getItem('user')['role'];
+  console.log(role);
   const [categories, setCategories] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [pageheading, setPageHeading] = useState("Create Trivia Game");
@@ -48,6 +52,12 @@ const TriviaGame = () => {
           }));
     }
     }, []);
+
+    const handleGameDescriptionChange = (event) => {
+        const { name, value } = event.target;
+        setGameDescription(value);
+      };
+    
 
   const fetchCategories = () => {
     const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question/category';
@@ -136,6 +146,7 @@ const handleFormSubmit = async (e) => {
   const postData = {
     id: formData.id,
     name: formData.name,
+    description: gameDescription,
     questions: filteredQuestions.map((question) => ({
       label: question.label,
       options: question.options,
@@ -169,7 +180,7 @@ const handleFormSubmit = async (e) => {
     }
     const responseData = await response.json();
     console.log('API call successful:', responseData);
-    navigate('/unauth/triviagame/list');
+    navigate('/admin/triviagame/list');
   } catch (error) {
     console.error('Error making the API call:', error);
   }
@@ -186,7 +197,7 @@ const handleFormSubmit = async (e) => {
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12} md={8}>
       <Box mt={2} display="flex" justifyContent="center">
-          <Button variant="contained" onClick={() => navigate('/unauth/triviagame/list')}>
+          <Button variant="contained" onClick={() => navigate('/admin/triviagame/list')}>
             View Trivia Games
           </Button>
         </Box>
@@ -202,6 +213,17 @@ const handleFormSubmit = async (e) => {
                 name="name"
                 value={formData.name}
                 onChange={handleStartTimeChange}
+                required
+              />
+            </FormControl>
+            <FormControl fullWidth sx={{ my: 1 }}>
+              <TextField
+                label="Game Description"
+                variant="outlined"
+                type="text"
+                name="description"
+                value={formData.description}
+                onChange={handleGameDescriptionChange}
                 required
               />
             </FormControl>

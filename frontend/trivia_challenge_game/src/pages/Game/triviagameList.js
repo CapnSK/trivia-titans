@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useContext } from "react";
+import { localStorageUtil } from "../../util";
 import { AuthContext } from '../../contexts/AuthContext/authcontext';
 import Alert from '@mui/material/Alert';
 
@@ -24,7 +25,8 @@ const GameTable = () => {
   const [submissionStatus, setSubmissionStatus] = useState(null);
   const navigate = useNavigate();
 //   const history = useHistory();
-const { role } = useContext(AuthContext);
+    const role = localStorageUtil.getItem('user')['role'];
+    console.log(role);
 
   useEffect(() => {
     CheckUserRole();
@@ -80,7 +82,7 @@ const { role } = useContext(AuthContext);
     console.log(game.start_time);
     game.start_time = new Date(game.start_time).toISOString();
     console.log(game.start_time);
-    navigate('/unauth/triviagame', {state : game});
+    navigate('/admin/triviagame', {state : game});
   };
 
   return (
@@ -88,7 +90,7 @@ const { role } = useContext(AuthContext);
       <br />
       <Grid item xs={12} md={10} lg={8}>
       <Box mt={2} display="flex" justifyContent="center">
-          <Button variant="contained" onClick={() => navigate('/unauth/triviagame')}>
+          <Button variant="contained" onClick={() => navigate('/admin/triviagame')}>
             Create New Trivia Game
           </Button>
         </Box>
@@ -99,6 +101,7 @@ const { role } = useContext(AuthContext);
               <TableRow style={{ fontWeight: 'bold' }}>
                 <TableCell>Serial Number</TableCell>
                 <TableCell style={{ border: '1px solid #ccc' }}>Game Name</TableCell>
+                <TableCell style={{ border: '1px solid #ccc' }}>Description</TableCell>
                 <TableCell align="center" style={{ border: '1px solid #ccc' }}>Category</TableCell>
                 <TableCell align="center" style={{ border: '1px solid #ccc' }}>Difficulty</TableCell>
                 <TableCell align="center" style={{ border: '1px solid #ccc' }}>Time Limit (seconds)</TableCell>
@@ -116,6 +119,9 @@ const { role } = useContext(AuthContext);
                   <TableCell style={{ border: '1px solid #ccc' }}>
                     {game.name}
                   </TableCell>
+                  <TableCell style={{ border: '1px solid #ccc' }}>
+                    {game.description}
+                    </TableCell>
                   <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.tags.category}</TableCell>
                   <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.tags.difficulty}</TableCell>
                   <TableCell align="center" style={{ border: '1px solid #ccc' }}>{game.time_limit}</TableCell>
