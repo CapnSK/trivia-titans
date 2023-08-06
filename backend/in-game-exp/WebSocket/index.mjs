@@ -162,7 +162,6 @@ async function handleEvent(eventEmitted, connectionId) {
           teamId = context?.matchSpec?.teamId || "";
           await updateMatchStatus({matchInstanceId, timestampCreated, status:"COMPLETED"});
           const finalScore = await fetchScore({matchInstanceId});
-          await uploadScoresToLeaderboard({teamId});
           await postEvent({
             sender: username,
             type: "QUIZ_SUBMITTED",
@@ -171,6 +170,7 @@ async function handleEvent(eventEmitted, connectionId) {
               score: finalScore
             }
           });
+          await uploadScoresToLeaderboard({teamId});
           break;
       }
     } catch (e) {
