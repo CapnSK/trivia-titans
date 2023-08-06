@@ -23,7 +23,7 @@ const Displaygames = () => {
     const { username } = useContext(AuthContext);
     console.log("Displaygames :: entering :: logged in user", username);
     useEffect(()=>{
-      getTeamID();
+      // getTeamID();
       //dummy change
       getGameDetails();
       listen("JOIN_GAME").pipe(take(1)).subscribe((event)=>{
@@ -92,7 +92,7 @@ const Displaygames = () => {
         match_instance_id: uuid,
         timestamp_created: timestamp,
         match_status: "IN_LOBBY", 
-        team_id: teamID, 
+        team_id: "43e33233-5a8f-4a4d-92ab-12b83f5d13ef", 
         team_name:teamName,
         score: "0", 
         win: "default",
@@ -108,7 +108,7 @@ const Displaygames = () => {
     catch (error) {
       console.error(error);
     }
-    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:teamID});
+    join_game({username:username,matchInstanceId: uuid, timestampCreated: timestamp, teamId:"43e33233-5a8f-4a4d-92ab-12b83f5d13ef"});
     // introduce({username:"capsk",teamId:"1"})
     // setTimeout(()=>{
     // }, 2000)

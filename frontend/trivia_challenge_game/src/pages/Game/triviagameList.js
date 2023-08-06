@@ -63,18 +63,38 @@ const GameTable = () => {
       });
   };
 
-  const handleDeleteClick = (id) => {
-    const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/game';
-    axios
-      .delete(apiUrl, { data: { id } })
-      .then((response) => {
-        console.log('Game deleted successfully:', response.data);
-        // Optionally, you can fetch the updated games data after deletion
-        fetchGamesData();
-      })
-      .catch((error) => {
-        console.error('Error deleting game:', error);
+  const handleDeleteClick = async (game_id) => {
+    // const apiUrl = 'https://wfox550vtf.execute-api.us-east-1.amazonaws.com/game';
+    // axios
+    //   .delete(apiUrl, { data: { id } })
+    //   .then((response) => {
+    //     console.log('Game deleted successfully:', response.data);
+    //     // Optionally, you can fetch the updated games data after deletion
+    //     fetchGamesData();
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error deleting game:', error);
+    //   });
+    try {
+        console.log(game_id);
+        const response = await fetch(`https://wfox550vtf.execute-api.us-east-1.amazonaws.com/game`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 'id': game_id }),
       });
+      navigate('/admin/triviagame/list');
+      console.log(response);
+
+      if (!response.ok) {
+        throw new Error('Failed to delete Game. Please try again.');
+      }
+      
+        
+    } catch (error) {
+      console.error('Failed to Delete Game:', error.message);
+    }
   };
 
   const handleEditClick = (game) => {
