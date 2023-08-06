@@ -1,6 +1,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { marshall, unmarshall } from "@aws-sdk/util-dynamodb";
 import { DynamoDBDocumentClient, PutCommand, ScanCommand, DeleteCommand, UpdateCommand, GetCommand } from "@aws-sdk/lib-dynamodb";
+import axios from "axios";
 
 const client = new DynamoDBClient({ region: "us-east-1" });
 const docClient = DynamoDBDocumentClient.from(client);
@@ -9,6 +10,7 @@ const MATCH_TABLE_NAME = `match`;
 const TRIVIA_QUESTION_TABLE_NAME = `questions`; 
 const TRIVIA_TABLE_NAME = `trivia`; 
 const TEAM_TABLE_NAME = `teams`; 
+const GC_URL = `https://us-east1-csci5410-serverless-390903.cloudfunctions.net/updateRawData`;
 
 let CONNECTIONS_CACHE = {};
 
@@ -363,6 +365,23 @@ const _transformConnections = (connections) => {
     return map;
 }
 
+const uploadScoresToLeaderboard = async ({teamId})=>{
+    try{
+        const teamData = await fetchTeamData(teamId);
+        console.log("The original teamData is", teamData);
+        const objToSend = {
+            team_id: teamId,
+            admin: teamData?.admin?.username,
+            team_name: teamData?.team_name || teamData?.name,
+            members: teamData?.members.map(mem=>mem.userName)
+        };
+        console.log("The team data being sent is", objToSend);
+        await axios.post(GC_URL, [objToSend])
+    } catch (e){
+        console.log("error uploading data to GC", e);
+    }
+}
+
 export { 
     storeConnection, 
     removeConnection, 
@@ -376,5 +395,6 @@ export {
     updateMatchStatus,
     fetchMatchInstanceDetails,
     resetScore,
-    fetchScore
+    fetchScore,
+    uploadScoresToLeaderboard
 };
