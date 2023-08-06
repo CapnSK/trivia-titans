@@ -38,7 +38,7 @@ const QuestionList = () => {
   const handleDelete = async (question_id) => {
     try {
         console.log(question_id);
-        const response = await fetch(`https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question/${question_id}`, {
+        const response = await fetch(`https://wfox550vtf.execute-api.us-east-1.amazonaws.com/question`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
