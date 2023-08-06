@@ -65,7 +65,7 @@ def updateRawData(request):
             new_match = {}
             new_match['match_instance_id'] = match['match_instance_id']
             new_match['score'] = int(match['score'])
-            new_match['timestamp_created'] = datetime.fromisoformat(match['timestamp_created'].replace("Z", "+00:00"))
+            new_match['timestamp_created'] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             new_match['win'] = True if match['win'] == 'true' else False
             new_match['category'] = match['match_config']['category']
             new_match['trivia_name'] = match['match_config']['trivia_name']

@@ -67,20 +67,20 @@ const Login = () => {
     const urlParams = new URLSearchParams(urlHash.substring(1));  
     if (urlParams.has('access_token')) {
       // Get the value of the 'access_token' parameter
-      setLoggedInAccessToken(urlParams.get('access_token'));
-      setLoggedInIdToken(urlParams.get('id_token'));
       // Get username and email too
+      const temp_access_token = urlParams.get('access_token');
+      const temp_id_token = urlParams.get('id_token');
       try{
-        const response = await axiosJSON.post(cloudFunctionURL + '/getUserDetails', JSON.stringify({ "accessToken":access_token }))
+        const response = await axiosJSON.post(cloudFunctionURL + '/getUserDetails', JSON.stringify({ "accessToken":temp_access_token }))
         const data = await response.data
         alert('Login successful')
-        setTimeout(() => {
         if (data.status === 200) {
+          setLoggedInAccessToken(temp_access_token);
+          setLoggedInIdToken(temp_id_token);
           setLoggedinUsername(data.username)
           setLoggedinEmail(data.email)
           setLoggedinRole(data.role)
         }
-        }, 2000);
       }
       catch (error) {
         alert(error.response.data.message)
