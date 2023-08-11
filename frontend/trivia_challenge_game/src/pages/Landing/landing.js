@@ -1,17 +1,35 @@
 import {useNavigate} from 'react-router-dom';
 import {axiosJSON} from "../../lib/axios";
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { localStorageUtil } from "../../util";
+import {listen, getInGameData} from '../../util/InGameEventUtils'
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { AuthContext, InGameContext  } from "../../contexts"
 
 const lambdaApiGatewayURL = process.env.REACT_APP_USER_AUTH_REG_LAMBDA_API_GATEWAY_ABHINAV;
-
+const cancelPrevSubscription = new Subject()
 function Landing(){
     const [username, setUsername] = useState('');
     const navigate = useNavigate();
     const role = localStorageUtil.getItem('user')['role'];
+    const { setInGameContext } = useContext(InGameContext);
+    
     console.log(role);
 
     const isAdmin = role === 'admin';
+
+    useEffect(()=>{
+        listen("JOIN_GAME").pipe(takeUntil(cancelPrevSubscription)).subscribe((event)=>{
+            console.log(event.data);
+            const data=getInGameData(event.data);
+            setInGameContext(data);
+            navigate('/in-game');
+        });
+      return ()=>{
+        cancelPrevSubscription.next();
+      }
+    }, [username]);
 
     const handleInputChange = (event) => {
         const { name, value } = event.target
