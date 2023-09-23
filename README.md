@@ -21,7 +21,6 @@ Note: <small>You will need your own AWS & GCP account to deploy the backend</sma
 </ol>
 
 #### SCREENSHOTS
-
+This project was a part of my graduate course at Dalhousie University & UI (being ungraded) was developed with minimal usability and visual appeal.<br/>
 <b>In Game Chat</b>
-This project was a part of my graduate course at Dalhousie University & UI (being ungraded) was developed with minimal usability and visual appeal.
 <img src="screenshots\chat\9PrivateMessage.png"></img>
